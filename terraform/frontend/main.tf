@@ -8,6 +8,15 @@ locals {
   s3_origin_id = "${var.project_name}-frontend-${var.environment}"
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "finance-calculator-terraform-state"
+    key            = "frontend/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-locks"
+  }
+}
+
 # ──────────────────────────────────────────────────────────────────────────────
 # S3 Bucket – static website hosting
 # ──────────────────────────────────────────────────────────────────────────────
@@ -148,9 +157,9 @@ resource "aws_cloudfront_distribution" "frontend" {
     }
   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = var.domain_name == ""
-  }
+  # viewer_certificate {
+  #   cloudfront_default_certificate = var.domain_name == ""
+  # }
 
   tags = local.common_tags
 }
