@@ -1,3 +1,12 @@
+
+terraform {
+  backend "s3" {
+    bucket         = "finance-calculator-terraform-state"
+    key            = "backend/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-locks"
+  }
+}
 # ──────────────────────────────────────────────────────────────────────────────
 # IAM – Lambda execution role
 # ──────────────────────────────────────────────────────────────────────────────

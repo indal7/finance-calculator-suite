@@ -18,3 +18,13 @@ Thumbs.db
 # IDE
 .idea/
 *.swp
+
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Terraform lock file (optional: keep or ignore)
+# .terraform.lock.hcl
