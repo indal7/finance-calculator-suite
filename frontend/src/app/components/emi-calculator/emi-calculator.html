@@ -1,57 +1,109 @@
 <section class="calc-page">
 
+  <!-- ── Internal Nav ──────────────────────────────────────── -->
+  <nav class="calc-nav" aria-label="Calculator navigation">
+    <span class="calc-nav-label">Calculators:</span>
+    <a routerLink="/sip-calculator"  routerLinkActive="active">SIP</a>
+    <a routerLink="/emi-calculator"  routerLinkActive="active">EMI</a>
+    <a routerLink="/fd-calculator"   routerLinkActive="active">FD</a>
+    <a routerLink="/cagr-calculator" routerLinkActive="active">CAGR</a>
+  </nav>
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
   <div class="page-hero">
-    <h1>EMI Calculator</h1>
+    <div class="hero-eyebrow">🏦 Free Tool · India</div>
+    <h1>EMI Calculator <span class="accent">India</span></h1>
     <p>
-      An <strong>Equated Monthly Instalment (EMI)</strong> is the fixed amount paid to a lender
-      each month. Calculate your EMI for home loans, car loans, or personal loans instantly.
+      An <strong>Equated Monthly Instalment (EMI)</strong> is the fixed amount you pay your lender
+      each month. Calculate your EMI for <strong>home loans, car loans, or personal loans</strong> instantly.
     </p>
   </div>
 
+  <!-- ── Input Form ─────────────────────────────────────────── -->
   <div class="card">
     <h2>Enter Loan Details</h2>
     <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
 
+      <!-- Principal -->
       <div class="form-group">
         <label for="principal">Loan Amount (₹)</label>
-        <input id="principal" type="number" formControlName="principal" min="1" placeholder="e.g. 500000"
-               [class.invalid]="f['principal'].invalid && f['principal'].touched">
+        <div class="slider-wrapper">
+          <input id="principal" type="number" formControlName="principal"
+                 min="1" placeholder="e.g. 500000"
+                 [class.invalid]="f['principal'].invalid && f['principal'].touched"
+                 (input)="syncSlider('principal')">
+          <div class="slider-row">
+            <input type="range" min="10000" max="10000000" step="10000"
+                   [value]="f['principal'].value"
+                   (input)="syncFromSlider('principal', $event)"
+                   [style.--pct]="getSliderPct('principal', 10000, 10000000) + '%'">
+            <span class="slider-value-display">₹{{ f['principal'].value | number:'1.0-0' }}</span>
+          </div>
+        </div>
         @if (f['principal'].invalid && f['principal'].touched) {
           <span class="error-msg">Enter a valid loan amount (min ₹1).</span>
         }
       </div>
 
+      <!-- Annual Rate -->
       <div class="form-group">
         <label for="annualRate">Annual Interest Rate (%)</label>
-        <input id="annualRate" type="number" formControlName="annualRate" min="0.01" step="0.1" placeholder="e.g. 8.5"
-               [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched">
+        <div class="slider-wrapper">
+          <input id="annualRate" type="number" formControlName="annualRate"
+                 min="0.01" step="0.1" placeholder="e.g. 8.5"
+                 [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
+                 (input)="syncSlider('annualRate')">
+          <div class="slider-row">
+            <input type="range" min="1" max="24" step="0.25"
+                   [value]="f['annualRate'].value"
+                   (input)="syncFromSlider('annualRate', $event)"
+                   [style.--pct]="getSliderPct('annualRate', 1, 24) + '%'">
+            <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
+          </div>
+        </div>
         @if (f['annualRate'].invalid && f['annualRate'].touched) {
           <span class="error-msg">Enter a valid interest rate.</span>
         }
+        <span class="hint">💡 Home loan rates: 8–10% · Car loan: 9–12% · Personal: 11–18%</span>
       </div>
 
+      <!-- Years -->
       <div class="form-group">
         <label for="years">Loan Tenure (Years)</label>
-        <input id="years" type="number" formControlName="years" min="1" max="30" placeholder="e.g. 5"
-               [class.invalid]="f['years'].invalid && f['years'].touched">
+        <div class="slider-wrapper">
+          <input id="years" type="number" formControlName="years"
+                 min="1" max="30" placeholder="e.g. 5"
+                 [class.invalid]="f['years'].invalid && f['years'].touched"
+                 (input)="syncSlider('years')">
+          <div class="slider-row">
+            <input type="range" min="1" max="30" step="1"
+                   [value]="f['years'].value"
+                   (input)="syncFromSlider('years', $event)"
+                   [style.--pct]="getSliderPct('years', 1, 30) + '%'">
+            <span class="slider-value-display">{{ f['years'].value }} yr</span>
+          </div>
+        </div>
         @if (f['years'].invalid && f['years'].touched) {
           <span class="error-msg">Enter a duration of at least 1 year.</span>
         }
       </div>
 
+      <div class="form-group" aria-hidden="true"></div>
+
       <button type="submit" class="btn-calculate" [disabled]="form.invalid">
-        Calculate EMI
+        Calculate EMI →
       </button>
     </form>
   </div>
 
+  <!-- ── Result Card ────────────────────────────────────────── -->
   @if (result) {
     <div class="result-card" role="region" aria-label="EMI Calculation Result">
       <h2>
-        Result
-        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying via API…</span> }
-        @if (apiStatus === 'success') { <span class="api-badge success">✅ API Verified</span> }
-        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ API Offline (local)</span> }
+        Your Loan Breakdown
+        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying…</span> }
+        @if (apiStatus === 'success') { <span class="api-badge success">✅ Verified</span> }
+        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ Local</span> }
       </h2>
       <div class="result-grid">
         <div class="result-item highlight">
@@ -71,16 +123,83 @@
           <div class="value">₹{{ result.totalPayment | number:'1.0-0' }}</div>
         </div>
       </div>
+
+      <!-- Principal vs Interest donut -->
+      <div class="result-visual">
+        <svg class="donut-chart" viewBox="0 0 90 90" aria-hidden="true">
+          <circle class="donut-bg"   cx="45" cy="45" r="35"/>
+          <circle class="donut-fill" cx="45" cy="45" r="35"
+            [style.stroke-dashoffset]="getDonutOffset(f['principal'].value, result.totalPayment)"/>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-row">
+            <span class="legend-dot invested"></span>
+            Principal: ₹{{ f['principal'].value | number:'1.0-0' }}
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot returns"></span>
+            Interest: ₹{{ result.totalInterest | number:'1.0-0' }}
+          </div>
+          <div class="legend-row" style="color:var(--emerald); font-weight:500">
+            <span class="legend-dot total"></span>
+            Total: ₹{{ result.totalPayment | number:'1.0-0' }}
+          </div>
+        </div>
+      </div>
     </div>
   }
 
+  <!-- ── SEO Content ────────────────────────────────────────── -->
   <div class="card example-section">
     <h2>How EMI Calculation Works</h2>
-    <p>EMI is calculated using:</p>
-    <p><code>EMI = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)</code></p>
-    <p>Where <code>P</code> = principal, <code>r</code> = monthly rate, <code>n</code> = total months.</p>
-    <h2 style="margin-top:1rem">Example</h2>
-    <p>₹5,00,000 loan at 8.5% for 5 years → Monthly EMI: <strong>₹10,253</strong>, Total Interest: <strong>₹1,15,180</strong>.</p>
+    <div class="seo-section">
+      <p>EMI is calculated using the standard reducing balance formula:</p>
+      <p><code>EMI = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)</code></p>
+      <p>Where <strong>P</strong> = principal, <strong>r</strong> = monthly interest rate (annual ÷ 12), <strong>n</strong> = total months.</p>
+
+      <h2>What is EMI?</h2>
+      <p>
+        An Equated Monthly Instalment is a fixed payment made by a borrower to a lender on a specified date each month.
+        It comprises both <strong>principal repayment</strong> and <strong>interest</strong>. In early months, interest forms a larger
+        portion; over time the principal component increases.
+      </p>
+
+      <h2>Example Calculation</h2>
+      <p>₹5,00,000 loan at 8.5% for 5 years → Monthly EMI: <strong>₹10,253</strong>, Total Interest: <strong>₹1,15,180</strong>.</p>
+      <p>₹10,00,000 home loan at 9% for 20 years → Monthly EMI: <strong>₹8,997</strong>, Total Interest: <strong>₹11,59,265</strong>.</p>
+
+      <h2>Tips to Reduce EMI</h2>
+      <p>
+        Make a larger down payment to reduce your principal. Opt for a longer tenure to lower monthly EMI (but pay more interest total).
+        Negotiate a lower interest rate, or make pre-payments when you have surplus funds — this reduces outstanding principal and cuts total interest.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── FAQs ───────────────────────────────────────────────── -->
+  <div class="card">
+    <h2>FAQs — EMI Calculator India</h2>
+    <div class="faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+        <div class="faq-item" [class.open]="openFaq === i">
+          <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
+            {{ faq.q }}
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">{{ faq.a }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ── Related Calculators ────────────────────────────────── -->
+  <div class="card" style="padding: 1.25rem 1.5rem;">
+    <h2>Related Calculators</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:0.5rem;">
+      <a routerLink="/sip-calculator"  style="font-size:0.85rem; color:var(--gold); text-decoration:none; padding:6px 14px; border:1px solid rgba(245,166,35,0.2); border-radius:8px; background:rgba(245,166,35,0.07);">SIP Calculator →</a>
+      <a routerLink="/fd-calculator"   style="font-size:0.85rem; color:var(--emerald); text-decoration:none; padding:6px 14px; border:1px solid rgba(0,200,150,0.2); border-radius:8px; background:rgba(0,200,150,0.07);">FD Calculator →</a>
+      <a routerLink="/cagr-calculator" style="font-size:0.85rem; color:var(--sky); text-decoration:none; padding:6px 14px; border:1px solid rgba(56,189,248,0.2); border-radius:8px; background:rgba(56,189,248,0.07);">CAGR Calculator →</a>
+    </div>
   </div>
 
 </section>
