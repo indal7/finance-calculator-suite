@@ -1,0 +1,20 @@
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
+frontend/.angular/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+backend/.pytest_cache/
+backend/tests/.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
