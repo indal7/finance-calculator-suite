@@ -41,10 +41,8 @@ locals {
 data "archive_file" "lambda_zip" {
   for_each    = toset(local.calculators)
   type        = "zip"
-  source_dir  = "${path.module}/../../backend/${each.key}"
   output_path = "${path.module}/../../backend/${each.key}/lambda_${each.key}.zip"
 
-  # Include shared utils.py alongside the handler
   source {
     content  = file("${path.module}/../../backend/utils.py")
     filename = "utils.py"
