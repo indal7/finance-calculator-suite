@@ -100,7 +100,15 @@ resource "aws_cloudfront_distribution" "frontend" {
   comment             = "Finance Calculator Suite – ${var.environment}"
   price_class         = "PriceClass_100"
 
-  aliases = var.domain_name != "" ? [var.domain_name] : []
+  aliases = [
+    "myinvestmentcalculator.in",
+    "www.myinvestmentcalculator.in"
+  ]
+
+  viewer_certificate {
+    acm_certificate_arn = "arn:aws:acm:us-east-1:492661377251:certificate/679e1c55-24cd-4cf7-a646-e0420d6a6491"
+    ssl_support_method  = "sni-only"
+  }
 
   origin {
     domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name

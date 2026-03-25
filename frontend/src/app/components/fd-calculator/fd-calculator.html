@@ -1,10 +1,19 @@
 <section class="calc-page">
 
+  <nav class="calc-nav" aria-label="Calculator navigation">
+    <span class="calc-nav-label">Calculators:</span>
+    <a routerLink="/sip-calculator"  routerLinkActive="active">SIP</a>
+    <a routerLink="/emi-calculator"  routerLinkActive="active">EMI</a>
+    <a routerLink="/fd-calculator"   routerLinkActive="active">FD</a>
+    <a routerLink="/cagr-calculator" routerLinkActive="active">CAGR</a>
+  </nav>
+
   <div class="page-hero">
-    <h1>FD Calculator</h1>
+    <div class="hero-eyebrow">🏦 Free Tool · India</div>
+    <h1>FD Calculator <span class="accent">India</span></h1>
     <p>
-      A <strong>Fixed Deposit (FD)</strong> is a secure investment offered by banks and NBFCs
-      with a guaranteed return. Calculate your maturity amount and total interest earned.
+      A <strong>Fixed Deposit (FD)</strong> is a safe, guaranteed-return investment offered by banks and NBFCs.
+      Calculate your maturity amount and total interest earned — supports <strong>SBI, HDFC, ICICI</strong> and all bank rates.
     </p>
   </div>
 
@@ -12,33 +21,71 @@
     <h2>Enter FD Details</h2>
     <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
 
+      <!-- Principal -->
       <div class="form-group">
         <label for="principal">Principal Amount (₹)</label>
-        <input id="principal" type="number" formControlName="principal" min="1" placeholder="e.g. 100000"
-               [class.invalid]="f['principal'].invalid && f['principal'].touched">
+        <div class="slider-wrapper">
+          <input id="principal" type="number" formControlName="principal"
+                 min="1" placeholder="e.g. 100000"
+                 [class.invalid]="f['principal'].invalid && f['principal'].touched"
+                 (input)="syncSlider('principal')">
+          <div class="slider-row">
+            <input type="range" min="1000" max="5000000" step="1000"
+                   [value]="f['principal'].value"
+                   (input)="syncFromSlider('principal', $event)"
+                   [style.--pct]="getSliderPct('principal', 1000, 5000000) + '%'">
+            <span class="slider-value-display">₹{{ f['principal'].value | number:'1.0-0' }}</span>
+          </div>
+        </div>
         @if (f['principal'].invalid && f['principal'].touched) {
           <span class="error-msg">Enter a valid principal amount (min ₹1).</span>
         }
       </div>
 
+      <!-- Annual Rate -->
       <div class="form-group">
         <label for="annualRate">Annual Interest Rate (%)</label>
-        <input id="annualRate" type="number" formControlName="annualRate" min="0.01" step="0.1" placeholder="e.g. 7"
-               [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched">
+        <div class="slider-wrapper">
+          <input id="annualRate" type="number" formControlName="annualRate"
+                 min="0.01" step="0.1" placeholder="e.g. 7"
+                 [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
+                 (input)="syncSlider('annualRate')">
+          <div class="slider-row">
+            <input type="range" min="2" max="10" step="0.1"
+                   [value]="f['annualRate'].value"
+                   (input)="syncFromSlider('annualRate', $event)"
+                   [style.--pct]="getSliderPct('annualRate', 2, 10) + '%'">
+            <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
+          </div>
+        </div>
         @if (f['annualRate'].invalid && f['annualRate'].touched) {
           <span class="error-msg">Enter a valid interest rate.</span>
         }
+        <span class="hint">💡 SBI FD: 6.8–7.1% · HDFC FD: 7.0–7.25% · Senior citizen: +0.5%</span>
       </div>
 
+      <!-- Duration -->
       <div class="form-group">
         <label for="years">Duration (Years)</label>
-        <input id="years" type="number" formControlName="years" min="0.08" step="0.25" placeholder="e.g. 3"
-               [class.invalid]="f['years'].invalid && f['years'].touched">
+        <div class="slider-wrapper">
+          <input id="years" type="number" formControlName="years"
+                 min="0.08" step="0.25" placeholder="e.g. 3"
+                 [class.invalid]="f['years'].invalid && f['years'].touched"
+                 (input)="syncSlider('years')">
+          <div class="slider-row">
+            <input type="range" min="0.25" max="10" step="0.25"
+                   [value]="f['years'].value"
+                   (input)="syncFromSlider('years', $event)"
+                   [style.--pct]="getSliderPct('years', 0.25, 10) + '%'">
+            <span class="slider-value-display">{{ f['years'].value }} yr</span>
+          </div>
+        </div>
         @if (f['years'].invalid && f['years'].touched) {
           <span class="error-msg">Enter a valid duration (min 1 month).</span>
         }
       </div>
 
+      <!-- Compounding Frequency -->
       <div class="form-group">
         <label for="compoundingFrequency">Compounding Frequency</label>
         <select id="compoundingFrequency" formControlName="compoundingFrequency" class="form-select">
@@ -46,10 +93,11 @@
             <option [value]="freq.value">{{ freq.label }}</option>
           }
         </select>
+        <span class="hint">💡 Most Indian banks use quarterly compounding.</span>
       </div>
 
       <button type="submit" class="btn-calculate" [disabled]="form.invalid">
-        Calculate Maturity Amount
+        Calculate Maturity Amount →
       </button>
     </form>
   </div>
@@ -57,10 +105,10 @@
   @if (result) {
     <div class="result-card" role="region" aria-label="FD Calculation Result">
       <h2>
-        Result
-        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying via API…</span> }
-        @if (apiStatus === 'success') { <span class="api-badge success">✅ API Verified</span> }
-        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ API Offline (local)</span> }
+        FD Maturity Estimate
+        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying…</span> }
+        @if (apiStatus === 'success') { <span class="api-badge success">✅ Verified</span> }
+        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ Local</span> }
       </h2>
       <div class="result-grid">
         <div class="result-item">
@@ -80,16 +128,77 @@
           <div class="value">{{ (result.totalInterest / result.principal * 100) | number:'1.1-1' }}%</div>
         </div>
       </div>
+
+      <div class="result-visual">
+        <svg class="donut-chart" viewBox="0 0 90 90" aria-hidden="true">
+          <circle class="donut-bg"   cx="45" cy="45" r="35"/>
+          <circle class="donut-fill" cx="45" cy="45" r="35"
+            [style.stroke-dashoffset]="getDonutOffset(result.principal, result.maturityAmount)"/>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-row">
+            <span class="legend-dot invested"></span>
+            Principal: ₹{{ result.principal | number:'1.0-0' }}
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot returns"></span>
+            Interest: ₹{{ result.totalInterest | number:'1.0-0' }}
+          </div>
+          <div class="legend-row" style="color:var(--emerald); font-weight:500">
+            <span class="legend-dot total"></span>
+            Maturity: ₹{{ result.maturityAmount | number:'1.0-0' }}
+          </div>
+        </div>
+      </div>
     </div>
   }
 
   <div class="card example-section">
     <h2>How FD Calculation Works</h2>
-    <p>FD maturity amount is calculated using compound interest:</p>
-    <p><code>A = P × (1 + r/n)^(n×t)</code></p>
-    <p>Where <code>P</code> = principal, <code>r</code> = annual rate, <code>n</code> = compounding frequency, <code>t</code> = years.</p>
-    <h2 style="margin-top:1rem">Example</h2>
-    <p>₹1,00,000 at 7% for 3 years (quarterly) → Maturity: <strong>₹1,23,145</strong>, Interest earned: <strong>₹23,145</strong>.</p>
+    <div class="seo-section">
+      <p>FD maturity is calculated using compound interest:</p>
+      <p><code>A = P × (1 + r/n)^(n×t)</code></p>
+      <p>Where <strong>P</strong> = principal, <strong>r</strong> = annual rate, <strong>n</strong> = compounding frequency, <strong>t</strong> = years.</p>
+
+      <h2>What is a Fixed Deposit?</h2>
+      <p>
+        A Fixed Deposit is a financial instrument that provides a higher rate of interest than a savings account until a given maturity date.
+        FDs are offered by banks and NBFCs and are considered one of the safest investments in India, insured up to ₹5 lakh by DICGC.
+      </p>
+
+      <h2>FD Calculator for SBI, HDFC, ICICI 2026</h2>
+      <p>
+        Use the interest rates specific to your bank: SBI offers 6.8–7.1%, HDFC 7.0–7.25%, ICICI 7.0–7.25%, and small finance banks up to 9%.
+        Senior citizens typically get an additional 0.25–0.5% interest on FDs.
+      </p>
+
+      <h2>Example Calculation</h2>
+      <p>₹1,00,000 at 7% for 3 years (quarterly compounding) → Maturity: <strong>₹1,23,145</strong>, Interest: <strong>₹23,145</strong>.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>FAQs — FD Calculator India</h2>
+    <div class="faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+        <div class="faq-item" [class.open]="openFaq === i">
+          <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
+            {{ faq.q }}
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">{{ faq.a }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="card" style="padding: 1.25rem 1.5rem;">
+    <h2>Related Calculators</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:0.5rem;">
+      <a routerLink="/sip-calculator"  style="font-size:0.85rem; color:var(--gold); text-decoration:none; padding:6px 14px; border:1px solid rgba(245,166,35,0.2); border-radius:8px; background:rgba(245,166,35,0.07);">SIP Calculator →</a>
+      <a routerLink="/emi-calculator"  style="font-size:0.85rem; color:var(--sky); text-decoration:none; padding:6px 14px; border:1px solid rgba(56,189,248,0.2); border-radius:8px; background:rgba(56,189,248,0.07);">EMI Calculator →</a>
+      <a routerLink="/cagr-calculator" style="font-size:0.85rem; color:var(--emerald); text-decoration:none; padding:6px 14px; border:1px solid rgba(0,200,150,0.2); border-radius:8px; background:rgba(0,200,150,0.07);">CAGR Calculator →</a>
+    </div>
   </div>
 
 </section>

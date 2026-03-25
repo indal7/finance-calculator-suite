@@ -21,7 +21,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.3",
+    "@angular-devkit/build-angular": "^21.2.3",
     "@angular/cli": "^21.2.3",
     "@angular/compiler-cli": "^21.2.0",
     "@vitest/browser-playwright": "^4.1.1",
