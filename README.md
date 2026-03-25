@@ -45,6 +45,41 @@ finance-calculator-suite/
 
 ---
 
+## CI/CD Pipelines (GitHub Actions)
+
+This repo uses three separate pipelines:
+
+1. **Frontend CI** (`.github/workflows/frontend-ci.yml`)
+  - Triggers on frontend changes
+  - Runs Angular install, build, and tests
+
+2. **Backend CI** (`.github/workflows/backend-ci.yml`)
+  - Triggers on backend changes
+  - Runs Python tests with coverage
+
+3. **CD Pipeline** (`.github/workflows/cd.yml`)
+  - Triggers on `main` (or manual dispatch)
+  - Applies Terraform for backend first, then frontend
+  - Builds and uploads frontend assets to S3
+  - Invalidates CloudFront cache
+
+### When are AWS resources created?
+
+AWS resources are created/updated **during the CD pipeline**, specifically in these steps:
+
+1. `terraform apply` in `terraform/backend` creates/updates IAM roles, Lambda functions, CloudWatch log groups, API Gateway, and permissions.
+2. `terraform apply` in `terraform/frontend` creates/updates S3 bucket, CloudFront OAC, bucket policy, and CloudFront distribution.
+
+So the order is: **CI pass -> merge to main -> CD runs -> Terraform provisions resources -> app deploys**.
+
+### Required GitHub secret for CD
+
+Add this repository secret:
+
+- `AWS_GITHUB_ACTIONS_ROLE_ARN`: IAM role ARN assumed by GitHub Actions via OIDC.
+
+---
+
 ## Frontend (Angular)
 
 ### Features

@@ -11,6 +11,11 @@ on:
     paths:
       - 'frontend/**'
       - '.github/workflows/frontend-ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: frontend-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
@@ -40,7 +45,7 @@ jobs:
 
       - name: Run tests
         working-directory: frontend
-        run: npm run test -- --watch=false
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
 
       - name: Upload build artifact
         if: github.ref == 'refs/heads/main'

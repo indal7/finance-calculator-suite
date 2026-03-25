@@ -1,0 +1,156 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'terraform/**'
+      - '.github/workflows/cd.yml'
+  workflow_dispatch:
+
+# Keep branch protection enabled with required checks:
+# 1) Backend CI
+# 2) Frontend CI
+# So CD only runs on code that has already passed CI before merge to main.
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: us-east-1
+  TF_IN_AUTOMATION: true
+
+jobs:
+  terraform-backend:
+    name: Provision Backend AWS Resources
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init (backend)
+        working-directory: terraform/backend
+        run: terraform init
+
+      - name: Terraform Apply (backend)
+        working-directory: terraform/backend
+        run: terraform apply -auto-approve
+
+      - name: Export backend outputs
+        id: backend_outputs
+        working-directory: terraform/backend
+        run: |
+          echo "api_gateway_url=$(terraform output -raw api_gateway_url)" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      api_gateway_url: ${{ steps.backend_outputs.outputs.api_gateway_url }}
+
+  terraform-frontend:
+    name: Provision Frontend AWS Resources
+    needs: terraform-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init (frontend)
+        working-directory: terraform/frontend
+        run: terraform init
+
+      - name: Terraform Apply (frontend)
+        working-directory: terraform/frontend
+        run: terraform apply -auto-approve
+
+      - name: Export frontend outputs
+        id: frontend_outputs
+        working-directory: terraform/frontend
+        run: |
+          echo "s3_bucket_name=$(terraform output -raw s3_bucket_name)" >> "$GITHUB_OUTPUT"
+          echo "cloudfront_distribution_id=$(terraform output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      s3_bucket_name: ${{ steps.frontend_outputs.outputs.s3_bucket_name }}
+      cloudfront_distribution_id: ${{ steps.frontend_outputs.outputs.cloudfront_distribution_id }}
+
+  deploy-frontend:
+    name: Build and Deploy Frontend
+    needs: [terraform-backend, terraform-frontend]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Inject API URL into production environment
+        run: |
+          sed -i "s|https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/prod|${{ needs.terraform-backend.outputs.api_gateway_url }}|g" frontend/src/environments/environment.prod.ts
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build production bundle
+        working-directory: frontend
+        run: npm run build -- --configuration production
+
+      - name: Resolve frontend build directory
+        id: build_dir
+        run: |
+          if [ -d "frontend/dist/browser" ]; then
+            echo "path=frontend/dist/browser" >> "$GITHUB_OUTPUT"
+          elif [ -d "frontend/dist/frontend/browser" ]; then
+            echo "path=frontend/dist/frontend/browser" >> "$GITHUB_OUTPUT"
+          elif [ -d "frontend/dist/frontend" ]; then
+            echo "path=frontend/dist/frontend" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unable to find Angular build output under frontend/dist"
+            exit 1
+          fi
+
+      - name: Upload assets to S3
+        run: |
+          aws s3 sync "${{ steps.build_dir.outputs.path }}/" s3://${{ needs.terraform-frontend.outputs.s3_bucket_name }} --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ needs.terraform-frontend.outputs.cloudfront_distribution_id }} --paths '/*'
