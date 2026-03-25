@@ -1,0 +1,86 @@
+<section class="calc-page">
+
+  <div class="page-hero">
+    <h1>EMI Calculator</h1>
+    <p>
+      An <strong>Equated Monthly Instalment (EMI)</strong> is the fixed amount paid to a lender
+      each month. Calculate your EMI for home loans, car loans, or personal loans instantly.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Enter Loan Details</h2>
+    <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
+
+      <div class="form-group">
+        <label for="principal">Loan Amount (₹)</label>
+        <input id="principal" type="number" formControlName="principal" min="1" placeholder="e.g. 500000"
+               [class.invalid]="f['principal'].invalid && f['principal'].touched">
+        @if (f['principal'].invalid && f['principal'].touched) {
+          <span class="error-msg">Enter a valid loan amount (min ₹1).</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="annualRate">Annual Interest Rate (%)</label>
+        <input id="annualRate" type="number" formControlName="annualRate" min="0.01" step="0.1" placeholder="e.g. 8.5"
+               [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched">
+        @if (f['annualRate'].invalid && f['annualRate'].touched) {
+          <span class="error-msg">Enter a valid interest rate.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="years">Loan Tenure (Years)</label>
+        <input id="years" type="number" formControlName="years" min="1" max="30" placeholder="e.g. 5"
+               [class.invalid]="f['years'].invalid && f['years'].touched">
+        @if (f['years'].invalid && f['years'].touched) {
+          <span class="error-msg">Enter a duration of at least 1 year.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-calculate" [disabled]="form.invalid">
+        Calculate EMI
+      </button>
+    </form>
+  </div>
+
+  @if (result) {
+    <div class="result-card" role="region" aria-label="EMI Calculation Result">
+      <h2>
+        Result
+        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying via API…</span> }
+        @if (apiStatus === 'success') { <span class="api-badge success">✅ API Verified</span> }
+        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ API Offline (local)</span> }
+      </h2>
+      <div class="result-grid">
+        <div class="result-item highlight">
+          <div class="label">Monthly EMI</div>
+          <div class="value">₹{{ result.emi | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Principal Amount</div>
+          <div class="value">₹{{ f['principal'].value | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Total Interest</div>
+          <div class="value">₹{{ result.totalInterest | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Total Payment</div>
+          <div class="value">₹{{ result.totalPayment | number:'1.0-0' }}</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="card example-section">
+    <h2>How EMI Calculation Works</h2>
+    <p>EMI is calculated using:</p>
+    <p><code>EMI = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)</code></p>
+    <p>Where <code>P</code> = principal, <code>r</code> = monthly rate, <code>n</code> = total months.</p>
+    <h2 style="margin-top:1rem">Example</h2>
+    <p>₹5,00,000 loan at 8.5% for 5 years → Monthly EMI: <strong>₹10,253</strong>, Total Interest: <strong>₹1,15,180</strong>.</p>
+  </div>
+
+</section>

@@ -1,0 +1,24 @@
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f5f7fa; color: #2d3748; line-height: 1.6; }
+
+/* ─── Layout ────────────────────────────────────────────────────────────────── */
+.container { max-width: 900px; margin: 0 auto; padding: 0 1rem; }
+
+/* ─── Header ────────────────────────────────────────────────────────────────── */
+.site-header { background: #1a202c; color: #fff; padding: 0.75rem 0; box-shadow: 0 2px 6px rgba(0,0,0,.3); position: sticky; top: 0; z-index: 100; }
+.site-header .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+.logo { color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 700; white-space: nowrap; }
+.main-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+.main-nav a { color: #a0aec0; text-decoration: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-weight: 500; transition: background .2s, color .2s; }
+.main-nav a:hover, .main-nav a.active { background: #2d3748; color: #fff; }
+
+/* ─── Main Content ──────────────────────────────────────────────────────────── */
+.main-content { min-height: calc(100vh - 130px); padding: 2rem 0; }
+
+/* ─── Footer ────────────────────────────────────────────────────────────────── */
+.site-footer { background: #1a202c; color: #718096; text-align: center; padding: 1.25rem 0; font-size: 0.875rem; }
+
+/* ─── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) { .logo { font-size: 1rem; } .main-nav a { padding: 0.35rem 0.6rem; font-size: 0.9rem; } }

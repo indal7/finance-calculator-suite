@@ -1,0 +1,21 @@
+<header class="site-header">
+  <div class="container">
+    <a routerLink="/" class="logo">📊 Finance Calculator Suite</a>
+    <nav class="main-nav">
+      <a routerLink="/sip-calculator" routerLinkActive="active">SIP</a>
+      <a routerLink="/emi-calculator" routerLinkActive="active">EMI</a>
+      <a routerLink="/fd-calculator" routerLinkActive="active">FD</a>
+      <a routerLink="/cagr-calculator" routerLinkActive="active">CAGR</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main-content">
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; 2025 Finance Calculator Suite. All calculators are for informational purposes only.</p>
+  </div>
+</footer>

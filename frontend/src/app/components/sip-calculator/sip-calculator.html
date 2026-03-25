@@ -1,0 +1,91 @@
+<section class="calc-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <div class="page-hero">
+    <h1>SIP Calculator</h1>
+    <p>
+      A <strong>Systematic Investment Plan (SIP)</strong> lets you invest a fixed amount every month
+      in mutual funds. Use this calculator to estimate your corpus at maturity.
+    </p>
+  </div>
+
+  <!-- ── Input Form ─────────────────────────────────────────── -->
+  <div class="card">
+    <h2>Enter SIP Details</h2>
+    <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
+
+      <div class="form-group">
+        <label for="monthlyInvestment">Monthly Investment (₹)</label>
+        <input id="monthlyInvestment" type="number" formControlName="monthlyInvestment" min="1" placeholder="e.g. 5000"
+               [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched">
+        @if (f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched) {
+          <span class="error-msg">Enter a valid monthly investment amount (min ₹1).</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="annualRate">Expected Annual Return (%)</label>
+        <input id="annualRate" type="number" formControlName="annualRate" min="0.01" step="0.1" placeholder="e.g. 12"
+               [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched">
+        @if (f['annualRate'].invalid && f['annualRate'].touched) {
+          <span class="error-msg">Enter a valid annual return rate (e.g. 12).</span>
+        }
+        <span class="hint">Historical average equity mutual fund return: 10–14% p.a.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="years">Investment Period (Years)</label>
+        <input id="years" type="number" formControlName="years" min="1" max="40" placeholder="e.g. 10"
+               [class.invalid]="f['years'].invalid && f['years'].touched">
+        @if (f['years'].invalid && f['years'].touched) {
+          <span class="error-msg">Enter a duration of at least 1 year.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-calculate" [disabled]="form.invalid">
+        Calculate SIP Returns
+      </button>
+    </form>
+  </div>
+
+  <!-- ── Result Card ────────────────────────────────────────── -->
+  @if (result) {
+    <div class="result-card" role="region" aria-label="SIP Calculation Result">
+      <h2>
+        Result
+        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying via API…</span> }
+        @if (apiStatus === 'success') { <span class="api-badge success">✅ API Verified</span> }
+        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ API Offline (local)</span> }
+      </h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">Total Invested</div>
+          <div class="value">₹{{ result.totalInvested | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Estimated Returns</div>
+          <div class="value">₹{{ result.estimatedReturns | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item highlight">
+          <div class="label">Total Value</div>
+          <div class="value">₹{{ result.totalValue | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Return Ratio</div>
+          <div class="value">{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}%</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── Example & SEO content ──────────────────────────────── -->
+  <div class="card example-section">
+    <h2>How SIP Calculation Works</h2>
+    <p>The SIP future value is calculated using the formula:</p>
+    <p><code>FV = P × ((1+r)ⁿ − 1) / r × (1+r)</code></p>
+    <p>Where <code>P</code> = monthly amount, <code>r</code> = monthly rate, <code>n</code> = total months.</p>
+    <h2 style="margin-top:1rem">Example</h2>
+    <p>₹5,000/month at 12% p.a. for 10 years → Total invested: <strong>₹6,00,000</strong>, estimated corpus: <strong>₹11,61,695</strong>.</p>
+  </div>
+
+</section>

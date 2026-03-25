@@ -1,0 +1,87 @@
+<section class="calc-page">
+
+  <div class="page-hero">
+    <h1>CAGR Calculator</h1>
+    <p>
+      <strong>Compound Annual Growth Rate (CAGR)</strong> measures the mean annual growth rate
+      of an investment over a specified time period. It smooths out volatility and shows the
+      true annualised return.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Enter Investment Details</h2>
+    <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
+
+      <div class="form-group">
+        <label for="beginningValue">Beginning Value (₹)</label>
+        <input id="beginningValue" type="number" formControlName="beginningValue" min="0.01" placeholder="e.g. 50000"
+               [class.invalid]="f['beginningValue'].invalid && f['beginningValue'].touched">
+        @if (f['beginningValue'].invalid && f['beginningValue'].touched) {
+          <span class="error-msg">Enter a valid beginning value.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="endingValue">Ending Value (₹)</label>
+        <input id="endingValue" type="number" formControlName="endingValue" min="0.01" placeholder="e.g. 100000"
+               [class.invalid]="f['endingValue'].invalid && f['endingValue'].touched">
+        @if (f['endingValue'].invalid && f['endingValue'].touched) {
+          <span class="error-msg">Enter a valid ending value.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="years">Investment Period (Years)</label>
+        <input id="years" type="number" formControlName="years" min="0.08" step="0.25" placeholder="e.g. 5"
+               [class.invalid]="f['years'].invalid && f['years'].touched">
+        @if (f['years'].invalid && f['years'].touched) {
+          <span class="error-msg">Enter a duration of at least 1 month.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-calculate" [disabled]="form.invalid">
+        Calculate CAGR
+      </button>
+    </form>
+  </div>
+
+  @if (result) {
+    <div class="result-card" role="region" aria-label="CAGR Calculation Result">
+      <h2>
+        Result
+        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying via API…</span> }
+        @if (apiStatus === 'success') { <span class="api-badge success">✅ API Verified</span> }
+        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ API Offline (local)</span> }
+      </h2>
+      <div class="result-grid">
+        <div class="result-item highlight">
+          <div class="label">CAGR</div>
+          <div class="value">{{ result.cagr | number:'1.2-2' }}%</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Absolute Return</div>
+          <div class="value">{{ result.absoluteReturn | number:'1.2-2' }}%</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Total Gain</div>
+          <div class="value">₹{{ result.totalGain | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Ending Value</div>
+          <div class="value">₹{{ f['endingValue'].value | number:'1.0-0' }}</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="card example-section">
+    <h2>How CAGR Calculation Works</h2>
+    <p>CAGR is calculated using:</p>
+    <p><code>CAGR = (Ending Value / Beginning Value)^(1/n) − 1</code></p>
+    <p>Where <code>n</code> = number of years.</p>
+    <h2 style="margin-top:1rem">Example</h2>
+    <p>Investment grew from ₹50,000 to ₹1,00,000 in 5 years → <strong>CAGR = 14.87%</strong>, Absolute Return = 100%.</p>
+  </div>
+
+</section>

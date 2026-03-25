@@ -1,0 +1,95 @@
+<section class="calc-page">
+
+  <div class="page-hero">
+    <h1>FD Calculator</h1>
+    <p>
+      A <strong>Fixed Deposit (FD)</strong> is a secure investment offered by banks and NBFCs
+      with a guaranteed return. Calculate your maturity amount and total interest earned.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Enter FD Details</h2>
+    <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
+
+      <div class="form-group">
+        <label for="principal">Principal Amount (₹)</label>
+        <input id="principal" type="number" formControlName="principal" min="1" placeholder="e.g. 100000"
+               [class.invalid]="f['principal'].invalid && f['principal'].touched">
+        @if (f['principal'].invalid && f['principal'].touched) {
+          <span class="error-msg">Enter a valid principal amount (min ₹1).</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="annualRate">Annual Interest Rate (%)</label>
+        <input id="annualRate" type="number" formControlName="annualRate" min="0.01" step="0.1" placeholder="e.g. 7"
+               [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched">
+        @if (f['annualRate'].invalid && f['annualRate'].touched) {
+          <span class="error-msg">Enter a valid interest rate.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="years">Duration (Years)</label>
+        <input id="years" type="number" formControlName="years" min="0.08" step="0.25" placeholder="e.g. 3"
+               [class.invalid]="f['years'].invalid && f['years'].touched">
+        @if (f['years'].invalid && f['years'].touched) {
+          <span class="error-msg">Enter a valid duration (min 1 month).</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="compoundingFrequency">Compounding Frequency</label>
+        <select id="compoundingFrequency" formControlName="compoundingFrequency" class="form-select">
+          @for (freq of frequencies; track freq.value) {
+            <option [value]="freq.value">{{ freq.label }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="submit" class="btn-calculate" [disabled]="form.invalid">
+        Calculate Maturity Amount
+      </button>
+    </form>
+  </div>
+
+  @if (result) {
+    <div class="result-card" role="region" aria-label="FD Calculation Result">
+      <h2>
+        Result
+        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying via API…</span> }
+        @if (apiStatus === 'success') { <span class="api-badge success">✅ API Verified</span> }
+        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ API Offline (local)</span> }
+      </h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">Principal</div>
+          <div class="value">₹{{ result.principal | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Total Interest</div>
+          <div class="value">₹{{ result.totalInterest | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item highlight">
+          <div class="label">Maturity Amount</div>
+          <div class="value">₹{{ result.maturityAmount | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Effective Yield</div>
+          <div class="value">{{ (result.totalInterest / result.principal * 100) | number:'1.1-1' }}%</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="card example-section">
+    <h2>How FD Calculation Works</h2>
+    <p>FD maturity amount is calculated using compound interest:</p>
+    <p><code>A = P × (1 + r/n)^(n×t)</code></p>
+    <p>Where <code>P</code> = principal, <code>r</code> = annual rate, <code>n</code> = compounding frequency, <code>t</code> = years.</p>
+    <h2 style="margin-top:1rem">Example</h2>
+    <p>₹1,00,000 at 7% for 3 years (quarterly) → Maturity: <strong>₹1,23,145</strong>, Interest earned: <strong>₹23,145</strong>.</p>
+  </div>
+
+</section>
