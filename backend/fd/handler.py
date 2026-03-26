@@ -26,6 +26,10 @@ from utils import ok, bad_request, parse_body, require_positive, calculate_fd
 
 
 def handler(event: dict, context) -> dict:
+    
+    ip = event.get("requestContext", {}).get("http", {}).get("sourceIp")
+    print(f"Request received from IP: {ip}")
+    
     if event.get("httpMethod") == "OPTIONS":
         from utils import CORS_HEADERS
         return {"statusCode": 200, "headers": CORS_HEADERS, "body": ""}

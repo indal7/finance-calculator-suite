@@ -25,6 +25,10 @@ from utils import ok, bad_request, parse_body, require_positive, calculate_sip
 
 
 def handler(event: dict, context) -> dict:
+    ip = event.get("requestContext", {}).get("http", {}).get("sourceIp")
+    print(f"Request received from IP: {ip}")
+    ip = event.get("requestContext", {}).get("http", {}).get("sourceIp")
+    print(f"Request received from IP: {ip}")
     # Handle CORS preflight
     if event.get("httpMethod") == "OPTIONS":
         from utils import CORS_HEADERS
