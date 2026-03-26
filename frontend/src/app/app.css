@@ -98,6 +98,94 @@ body {
   margin-top: 10px;
 }
 
+/* ─── Responsive & Visual Enhancements ─────────────────────────────── */
+@media (max-width: 700px) {
+  .container {
+    padding: 0 0.5rem;
+    max-width: 100%;
+  }
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .main-nav {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+  }
+  .main-nav a {
+    width: 100%;
+    text-align: left;
+    padding: 0.6rem 1rem;
+  }
+  .main-content {
+    padding: 1rem 0;
+  }
+  .site-footer {
+    font-size: 0.95rem;
+    padding: 1rem 0;
+  }
+}
+
+/* Use global theme variables for premium look */
+:root {
+  /* These will fallback if not imported from styles.css */
+  --navy: #0B1437;
+  --gold: #F5A623;
+  --text-primary: #F0F4FF;
+  --text-secondary: #A8B4D4;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+body {
+  background: var(--navy, #0B1437);
+  color: var(--text-primary, #F0F4FF);
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+}
+
+.site-header {
+  background: var(--navy, #0B1437);
+  color: var(--text-primary, #F0F4FF);
+  box-shadow: 0 2px 12px rgba(11,20,55,0.18);
+}
+
+.logo {
+  color: var(--gold, #F5A623);
+  font-family: var(--font-display, 'Syne', sans-serif);
+  letter-spacing: 0.5px;
+}
+
+.main-nav a {
+  color: var(--text-secondary, #A8B4D4);
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.main-nav a:hover,
+.main-nav a.active {
+  background: var(--gold, #F5A623);
+  color: var(--navy, #0B1437);
+  box-shadow: 0 2px 8px rgba(245,166,35,0.12);
+}
+
+.site-footer {
+  background: var(--navy, #0B1437);
+  color: var(--text-secondary, #A8B4D4);
+  border-top: 1px solid rgba(245,166,35,0.08);
+}
+
+.footer-links a {
+  color: var(--gold, #F5A623);
+  margin: 0 0.5rem;
+  text-decoration: underline dotted;
+  transition: color 0.2s;
+}
+.footer-links a:hover {
+  color: var(--text-primary, #F0F4FF);
+}
+
 .footer-links a {
   color: #a0aec0;
   text-decoration: none;

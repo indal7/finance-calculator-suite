@@ -57,8 +57,9 @@ export class EmiCalculator implements OnDestroy {
       content: 'Free EMI Calculator India 2026. Calculate home loan, car loan or personal loan EMI instantly. See monthly EMI, total interest and payment breakdown.' });
     this.meta.updateTag({ name: 'keywords',
       content: 'emi calculator india online free, home loan emi calculator india, car loan emi calculator india, emi calculator with prepayment, 10 lakh loan 5 years emi' });
-    this.meta.updateTag({ property: 'og:title', content: 'EMI Calculator India – Free Loan EMI Calculator' });
     this.meta.updateTag({ property: 'og:description', content: 'Calculate your monthly EMI for home, car or personal loans. Free and instant.' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/emi-calculator' });
+    this.meta.updateTag({ rel: 'canonical', href: 'https://www.myinvestmentcalculator.in/emi-calculator' });
   }
 
   get f() { return this.form.controls; }

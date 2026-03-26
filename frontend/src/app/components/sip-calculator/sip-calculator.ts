@@ -1,4 +1,5 @@
 import { Component, inject, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
@@ -19,6 +20,7 @@ function positiveNumber(min = 0.01) {
   styleUrls: ['./sip-calculator.css']
 })
 export class SipCalculator implements OnDestroy {
+  public router = inject(Router);
   private readonly fb    = inject(FormBuilder);
   private readonly svc   = inject(CalculatorService);
   private readonly title = inject(Title);
@@ -36,6 +38,30 @@ export class SipCalculator implements OnDestroy {
   apiError = '';
 
   openFaq: number | null = null;
+
+copied = false;
+private copyTimer?: ReturnType<typeof setTimeout>;
+
+  copyResult(): void {
+    if (!this.result) return;
+    const { totalInvested, estimatedReturns, totalValue } = this.result;
+    const { monthlyInvestment, annualRate, years } = this.form.getRawValue() as any;
+    const text = [
+      `SIP Calculator Result`,
+      `Monthly Investment: ₹${monthlyInvestment?.toLocaleString('en-IN')}`,
+      `Annual Return: ${annualRate}%`,
+      `Period: ${years} years`,
+      `─────────────────`,
+      `Total Invested:  ₹${totalInvested?.toLocaleString('en-IN')}`,
+      `Estimated Gains: ₹${estimatedReturns?.toLocaleString('en-IN')}`,
+      `Total Value:     ₹${totalValue?.toLocaleString('en-IN')}`,
+      `Calculated at www.myinvestmentcalculator.in`
+    ].join('\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+    this.copied = true;
+    clearTimeout(this.copyTimer);
+    this.copyTimer = setTimeout(() => { this.copied = false; }, 2200);
+  }
 
   readonly faqs = [
     {
@@ -68,6 +94,8 @@ export class SipCalculator implements OnDestroy {
       content: 'sip calculator india free, sip calculator monthly investment india, 5000 sip return in 10 years, sip calculator with inflation india, best sip calculator 2026, sip 1000 per month 20 years' });
     this.meta.updateTag({ property: 'og:title', content: 'SIP Calculator India – Free Online SIP Return Calculator' });
     this.meta.updateTag({ property: 'og:description', content: 'Calculate your SIP returns instantly. Free, accurate, no login required.' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/sip-calculator' });
+    this.meta.updateTag({ rel: 'canonical', href: 'https://www.myinvestmentcalculator.in/sip-calculator' });
   }
 
   get f() { return this.form.controls; }

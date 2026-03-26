@@ -57,6 +57,8 @@ export class CagrCalculator implements OnDestroy {
       content: 'Free CAGR Calculator India. Calculate Compound Annual Growth Rate for stocks, mutual funds and investments. Compare annualised returns easily.' });
     this.meta.updateTag({ name: 'keywords',
       content: 'cagr calculator india, stock return calculator india, annual return calculator investment, cagr calculator for mutual funds india, compound annual growth rate' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/cagr-calculator' });
+    this.meta.updateTag({ rel: 'canonical', href: 'https://www.myinvestmentcalculator.in/cagr-calculator' });
   }
 
   get f() { return this.form.controls; }

@@ -1,12 +1,31 @@
 <section class="calc-page">
 
+  <!-- JSON-LD: SIP Calculator -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SIP Calculator India",
+    "url": "https://www.myinvestmentcalculator.in/sip-calculator",
+    "description": "Free SIP Calculator India 2026. Calculate monthly SIP returns with compounding for any mutual fund.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+    "inLanguage": "en-IN"
+  }
+</script>
+
   <!-- ── Internal Nav ──────────────────────────────────────── -->
   <nav class="calc-nav" aria-label="Calculator navigation">
     <span class="calc-nav-label">Calculators:</span>
-    <a routerLink="/sip-calculator"  routerLinkActive="active">SIP</a>
-    <a routerLink="/emi-calculator"  routerLinkActive="active">EMI</a>
-    <a routerLink="/fd-calculator"   routerLinkActive="active">FD</a>
-    <a routerLink="/cagr-calculator" routerLinkActive="active">CAGR</a>
+    <a routerLink="/sip-calculator" routerLinkActive="active"
+      [attr.aria-current]="router.url === '/sip-calculator' ? 'page' : null">SIP</a>
+    <a routerLink="/emi-calculator" routerLinkActive="active"
+      [attr.aria-current]="router.url === '/emi-calculator' ? 'page' : null">EMI</a>
+    <a routerLink="/fd-calculator" routerLinkActive="active"
+      [attr.aria-current]="router.url === '/fd-calculator' ? 'page' : null">FD</a>
+    <a routerLink="/cagr-calculator" routerLinkActive="active"
+      [attr.aria-current]="router.url === '/cagr-calculator' ? 'page' : null">CAGR</a>
   </nav>
 
   <!-- ── Hero ──────────────────────────────────────────────── -->
@@ -28,20 +47,18 @@
       <div class="form-group">
         <label for="monthlyInvestment">Monthly Investment (₹)</label>
         <div class="slider-wrapper">
-          <input id="monthlyInvestment" type="number" formControlName="monthlyInvestment"
-                 min="500" max="500000" placeholder="e.g. 5000"
-                 [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched"
-                 (input)="syncSlider('monthlyInvestment')">
+          <input id="monthlyInvestment" type="number" formControlName="monthlyInvestment" min="500" max="500000"
+            placeholder="e.g. 5000" [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched"
+            (input)="syncSlider('monthlyInvestment')">
           <div class="slider-row">
-            <input type="range" min="500" max="100000" step="500"
-                   [value]="f['monthlyInvestment'].value"
-                   (input)="syncFromSlider('monthlyInvestment', $event)"
-                   [style.--pct]="getSliderPct('monthlyInvestment', 500, 100000) + '%'">
+            <input type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value"
+              (input)="syncFromSlider('monthlyInvestment', $event)"
+              [style.--pct]="getSliderPct('monthlyInvestment', 500, 100000) + '%'">
             <span class="slider-value-display">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span>
           </div>
         </div>
         @if (f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched) {
-          <span class="error-msg">Enter a valid monthly investment amount (min ₹500).</span>
+        <span class="error-msg">Enter a valid monthly investment amount (min ₹500).</span>
         }
       </div>
 
@@ -49,20 +66,17 @@
       <div class="form-group">
         <label for="annualRate">Expected Annual Return (%)</label>
         <div class="slider-wrapper">
-          <input id="annualRate" type="number" formControlName="annualRate"
-                 min="1" max="30" step="0.5" placeholder="e.g. 12"
-                 [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
-                 (input)="syncSlider('annualRate')">
+          <input id="annualRate" type="number" formControlName="annualRate" min="1" max="30" step="0.5"
+            placeholder="e.g. 12" [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
+            (input)="syncSlider('annualRate')">
           <div class="slider-row">
-            <input type="range" min="1" max="30" step="0.5"
-                   [value]="f['annualRate'].value"
-                   (input)="syncFromSlider('annualRate', $event)"
-                   [style.--pct]="getSliderPct('annualRate', 1, 30) + '%'">
+            <input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value"
+              (input)="syncFromSlider('annualRate', $event)" [style.--pct]="getSliderPct('annualRate', 1, 30) + '%'">
             <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
           </div>
         </div>
         @if (f['annualRate'].invalid && f['annualRate'].touched) {
-          <span class="error-msg">Enter a valid annual return rate (e.g. 12).</span>
+        <span class="error-msg">Enter a valid annual return rate (e.g. 12).</span>
         }
         <span class="hint">💡 Historical equity mutual fund avg: 10–14% p.a.</span>
       </div>
@@ -71,27 +85,23 @@
       <div class="form-group">
         <label for="years">Investment Period (Years)</label>
         <div class="slider-wrapper">
-          <input id="years" type="number" formControlName="years"
-                 min="1" max="40" placeholder="e.g. 10"
-                 [class.invalid]="f['years'].invalid && f['years'].touched"
-                 (input)="syncSlider('years')">
+          <input id="years" type="number" formControlName="years" min="1" max="40" placeholder="e.g. 10"
+            [class.invalid]="f['years'].invalid && f['years'].touched" (input)="syncSlider('years')">
           <div class="slider-row">
-            <input type="range" min="1" max="40" step="1"
-                   [value]="f['years'].value"
-                   (input)="syncFromSlider('years', $event)"
-                   [style.--pct]="getSliderPct('years', 1, 40) + '%'">
+            <input type="range" min="1" max="40" step="1" [value]="f['years'].value"
+              (input)="syncFromSlider('years', $event)" [style.--pct]="getSliderPct('years', 1, 40) + '%'">
             <span class="slider-value-display">{{ f['years'].value }} yr</span>
           </div>
         </div>
         @if (f['years'].invalid && f['years'].touched) {
-          <span class="error-msg">Enter a duration of at least 1 year.</span>
+        <span class="error-msg">Enter a duration of at least 1 year.</span>
         }
       </div>
 
       <!-- Empty spacer for grid alignment on desktop -->
       <div class="form-group" aria-hidden="true"></div>
 
-      <button type="submit" class="btn-calculate" [disabled]="form.invalid">
+      <button type="submit" class="btn-calculate accent-btn" [disabled]="form.invalid">
         Calculate SIP Returns →
       </button>
     </form>
@@ -99,55 +109,55 @@
 
   <!-- ── Result Card ────────────────────────────────────────── -->
   @if (result) {
-    <div class="result-card" role="region" aria-label="SIP Calculation Result">
-      <h2>
-        Your SIP Estimate
-        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying…</span> }
-        @if (apiStatus === 'success') { <span class="api-badge success">✅ Verified</span> }
-        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ Local</span> }
-      </h2>
-      <div class="result-grid">
-        <div class="result-item">
-          <div class="label">Total Invested</div>
-          <div class="value">₹{{ result.totalInvested | number:'1.0-0' }}</div>
-        </div>
-        <div class="result-item">
-          <div class="label">Estimated Returns</div>
-          <div class="value">₹{{ result.estimatedReturns | number:'1.0-0' }}</div>
-        </div>
-        <div class="result-item highlight">
-          <div class="label">Total Value</div>
-          <div class="value">₹{{ result.totalValue | number:'1.0-0' }}</div>
-        </div>
-        <div class="result-item">
-          <div class="label">Return Ratio</div>
-          <div class="value">{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}%</div>
-        </div>
+  <div class="result-card" role="region" aria-label="SIP Calculation Result">
+    <h2>
+      Your SIP Estimate
+      <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
+        {{ copied ? '✓ Copied' : '⎘ Copy' }}
+      </button>
+    </h2>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="label">Total Invested</div>
+        <div class="value">₹{{ result.totalInvested | number:'1.0-0' }}</div>
       </div>
+      <div class="result-item">
+        <div class="label">Estimated Returns</div>
+        <div class="value">₹{{ result.estimatedReturns | number:'1.0-0' }}</div>
+      </div>
+      <div class="result-item highlight">
+        <div class="label">Total Value</div>
+        <div class="value">₹{{ result.totalValue | number:'1.0-0' }}</div>
+      </div>
+      <div class="result-item">
+        <div class="label">Return Ratio</div>
+        <div class="value">{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}%</div>
+      </div>
+    </div>
 
-      <!-- Wealth split visual -->
-      <div class="result-visual">
-        <svg class="donut-chart" viewBox="0 0 90 90" aria-hidden="true">
-          <circle class="donut-bg"   cx="45" cy="45" r="35"/>
-          <circle class="donut-fill" cx="45" cy="45" r="35"
-            [style.stroke-dashoffset]="getDonutOffset(result.totalInvested, result.totalValue)"/>
-        </svg>
-        <div class="donut-legend">
-          <div class="legend-row">
-            <span class="legend-dot invested"></span>
-            Invested: ₹{{ result.totalInvested | number:'1.0-0' }}
-          </div>
-          <div class="legend-row">
-            <span class="legend-dot returns"></span>
-            Gains: ₹{{ result.estimatedReturns | number:'1.0-0' }}
-          </div>
-          <div class="legend-row" style="color: var(--emerald); font-weight:500">
-            <span class="legend-dot total"></span>
-            Corpus: ₹{{ result.totalValue | number:'1.0-0' }}
-          </div>
+    <!-- Wealth split visual -->
+    <div class="result-visual">
+      <svg class="donut-chart" viewBox="0 0 90 90" aria-hidden="true">
+        <circle class="donut-bg" cx="45" cy="45" r="35" />
+        <circle class="donut-fill" cx="45" cy="45" r="35"
+          [style.stroke-dashoffset]="getDonutOffset(result.totalInvested, result.totalValue)" />
+      </svg>
+      <div class="donut-legend">
+        <div class="legend-row">
+          <span class="legend-dot invested"></span>
+          Invested: ₹{{ result.totalInvested | number:'1.0-0' }}
+        </div>
+        <div class="legend-row">
+          <span class="legend-dot returns"></span>
+          Gains: ₹{{ result.estimatedReturns | number:'1.0-0' }}
+        </div>
+        <div class="legend-row" style="color: var(--emerald); font-weight:500">
+          <span class="legend-dot total"></span>
+          Corpus: ₹{{ result.totalValue | number:'1.0-0' }}
         </div>
       </div>
     </div>
+  </div>
   }
 
   <!-- ── SEO Rich Content ───────────────────────────────────── -->
@@ -156,7 +166,8 @@
     <div class="seo-section">
       <p>The SIP future value is calculated using the compound interest formula:</p>
       <p><code>FV = P × ((1+r)ⁿ − 1) / r × (1+r)</code></p>
-      <p>Where <strong>P</strong> = monthly investment, <strong>r</strong> = monthly rate (annual ÷ 12), <strong>n</strong> = total months.</p>
+      <p>Where <strong>P</strong> = monthly investment, <strong>r</strong> = monthly rate (annual ÷ 12),
+        <strong>n</strong> = total months.</p>
 
       <h2>What is SIP?</h2>
       <p>
@@ -168,7 +179,8 @@
       <h2>How SIP Works</h2>
       <p>
         Each month, a fixed amount is auto-debited from your bank and invested in mutual fund units at the current NAV.
-        When markets are low, you buy more units; when markets are high, you buy fewer — this averages your cost over time.
+        When markets are low, you buy more units; when markets are high, you buy fewer — this averages your cost over
+        time.
       </p>
 
       <h2>Example Calculation</h2>
@@ -191,13 +203,13 @@
     <h2>FAQs — SIP Calculator India</h2>
     <div class="faq-list">
       @for (faq of faqs; track faq.q; let i = $index) {
-        <div class="faq-item" [class.open]="openFaq === i">
-          <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
-            {{ faq.q }}
-            <span class="faq-toggle">+</span>
-          </button>
-          <div class="faq-answer">{{ faq.a }}</div>
-        </div>
+      <div class="faq-item" [class.open]="openFaq === i">
+        <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
+          {{ faq.q }}
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">{{ faq.a }}</div>
+      </div>
       }
     </div>
   </div>
@@ -206,9 +218,15 @@
   <div class="card" style="padding: 1.25rem 1.5rem;">
     <h2>Related Calculators</h2>
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:0.5rem;">
-      <a routerLink="/emi-calculator"  style="font-size:0.85rem; color:var(--sky); text-decoration:none; padding:6px 14px; border:1px solid rgba(56,189,248,0.2); border-radius:8px; background:rgba(56,189,248,0.07);">EMI Calculator →</a>
-      <a routerLink="/fd-calculator"   style="font-size:0.85rem; color:var(--emerald); text-decoration:none; padding:6px 14px; border:1px solid rgba(0,200,150,0.2); border-radius:8px; background:rgba(0,200,150,0.07);">FD Calculator →</a>
-      <a routerLink="/cagr-calculator" style="font-size:0.85rem; color:var(--gold); text-decoration:none; padding:6px 14px; border:1px solid rgba(245,166,35,0.2); border-radius:8px; background:rgba(245,166,35,0.07);">CAGR Calculator →</a>
+      <a routerLink="/emi-calculator"
+        style="font-size:0.85rem; color:var(--sky); text-decoration:none; padding:6px 14px; border:1px solid rgba(56,189,248,0.2); border-radius:8px; background:rgba(56,189,248,0.07);">EMI
+        Calculator →</a>
+      <a routerLink="/fd-calculator"
+        style="font-size:0.85rem; color:var(--emerald); text-decoration:none; padding:6px 14px; border:1px solid rgba(0,200,150,0.2); border-radius:8px; background:rgba(0,200,150,0.07);">FD
+        Calculator →</a>
+      <a routerLink="/cagr-calculator"
+        style="font-size:0.85rem; color:var(--gold); text-decoration:none; padding:6px 14px; border:1px solid rgba(245,166,35,0.2); border-radius:8px; background:rgba(245,166,35,0.07);">CAGR
+        Calculator →</a>
     </div>
   </div>
 
