@@ -1,3 +1,9 @@
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+}
 /* ── SIP Calculator Enhancements ───────────────────────────── */
 .accent-btn {
   background: var(--gold, #F5A623);
