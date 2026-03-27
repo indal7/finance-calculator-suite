@@ -220,12 +220,10 @@ body {
     display: none;
   }
 
-  /* FIX #2: Nav on mobile — full-width scrollable pill row */
+  /* ✅ FIX: Nav fits in one row — no scrolling, no overflow */
   .main-nav {
     width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    overflow-x: visible;
     padding-bottom: 2px;
   }
 
@@ -235,19 +233,27 @@ body {
 
   .main-nav ul {
     flex-wrap: nowrap;
-    gap: 4px;
+    gap: 3px;
     padding: 0.25rem 0 0.3rem;
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* ⭐ Key fix — li elements are the actual flex children of ul */
+  .main-nav li {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .main-nav a {
-    padding: 0.45rem 0.8rem;
-    font-size: 0.82rem;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.78rem;
     border-radius: 8px;
-    flex-shrink: 0;
-    /* Active state on mobile: gold background */
+    display: flex;
+    justify-content: center;
+    text-align: center;
     min-height: 36px;
+    width: 100%;
   }
 
   .main-content {
@@ -271,9 +277,14 @@ body {
 
 /* Very small screens */
 @media (max-width: 380px) {
+  .main-nav li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .main-nav a {
-    padding: 0.4rem 0.65rem;
-    font-size: 0.78rem;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.72rem;
   }
 
   .logo, .logo h1 {
