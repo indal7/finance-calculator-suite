@@ -1,11 +1,11 @@
-import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CalculatorService, EmiResult } from '../../services/calculator';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-emi-calculator',
@@ -17,9 +17,7 @@ import { CalculatorService, EmiResult } from '../../services/calculator';
 export class EmiCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
-  private readonly title    = inject(Title);
-  private readonly meta     = inject(Meta);
-  private readonly document = inject(DOCUMENT);
+  private readonly seo      = inject(SeoService);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -126,28 +124,17 @@ export class EmiCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.title.setTitle('EMI Calculator India – Home Loan, Car Loan EMI Calculator Online Free 2026');
-    this.meta.updateTag({ name: 'description',
-      content: 'Free EMI Calculator India 2026. Calculate home loan, car loan or personal loan EMI instantly. See monthly EMI, total interest and payment breakdown.' });
-    this.meta.updateTag({ name: 'keywords',
-      content: 'emi calculator india online free, home loan emi calculator india, car loan emi calculator india, emi calculator with prepayment, 10 lakh loan 5 years emi' });
-    this.meta.updateTag({ property: 'og:description', content: 'Calculate your monthly EMI for home, car or personal loans. Free and instant.' });
-    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/emi-calculator' });
+    this.seo.setTitle('EMI Calculator India – Home Loan, Car Loan EMI Calculator Online Free 2026');
+    this.seo.setDescription('Free EMI Calculator India. Calculate monthly EMI for home loan, car loan, personal loan. Get complete interest breakdown and amortization schedule.');
+    this.seo.updateOgTags(
+      'EMI Calculator India – Free Loan EMI Calculator Online',
+      'Calculate your loan EMI instantly. Full amortization schedule. Free, accurate, no login required.',
+      'https://www.myinvestmentcalculator.in/emi-calculator'
+    );
   }
 
   ngOnInit(): void {
-    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/emi-calculator');
-  }
-
-  private setCanonicalUrl(url: string): void {
-    const head = this.document.head;
-    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!link) {
-      link = this.document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      head.appendChild(link);
-    }
-    link.setAttribute('href', url);
+    this.seo.updateCanonical('https://www.myinvestmentcalculator.in/emi-calculator');
   }
 
   get f() { return this.form.controls; }

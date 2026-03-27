@@ -1,11 +1,11 @@
-import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CalculatorService, FdResult } from '../../services/calculator';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-fd-calculator',
@@ -17,9 +17,7 @@ import { CalculatorService, FdResult } from '../../services/calculator';
 export class FdCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
-  private readonly title    = inject(Title);
-  private readonly meta     = inject(Meta);
-  private readonly document = inject(DOCUMENT);
+  private readonly seo      = inject(SeoService);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -126,27 +124,17 @@ export class FdCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.title.setTitle('FD Calculator India 2026 – Fixed Deposit Interest Calculator SBI HDFC ICICI');
-    this.meta.updateTag({ name: 'description',
-      content: 'Free FD Calculator India 2026. Calculate Fixed Deposit maturity amount and interest for SBI, HDFC, ICICI and all banks. Supports quarterly, monthly and yearly compounding.' });
-    this.meta.updateTag({ name: 'keywords',
-      content: 'fd calculator india 2026, fixed deposit calculator sbi hdfc, fd interest calculator monthly, fd calculator quarterly compounding india' });
-    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/fd-calculator' });
+    this.seo.setTitle('FD Calculator India 2026 – Fixed Deposit Interest Calculator SBI HDFC ICICI');
+    this.seo.setDescription('Free FD Calculator India 2026. Calculate Fixed Deposit maturity amount with monthly, quarterly, or yearly compounding. Compare SBI, HDFC, ICICI FD rates.');
+    this.seo.updateOgTags(
+      'FD Calculator India – Free Fixed Deposit Calculator Online',
+      'Calculate your FD maturity amount instantly. Free, accurate, no login required.',
+      'https://www.myinvestmentcalculator.in/fd-calculator'
+    );
   }
 
   ngOnInit(): void {
-    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/fd-calculator');
-  }
-
-  private setCanonicalUrl(url: string): void {
-    const head = this.document.head;
-    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!link) {
-      link = this.document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      head.appendChild(link);
-    }
-    link.setAttribute('href', url);
+    this.seo.updateCanonical('https://www.myinvestmentcalculator.in/fd-calculator');
   }
 
   get f() { return this.form.controls; }

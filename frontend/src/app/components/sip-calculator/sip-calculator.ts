@@ -1,12 +1,12 @@
-import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CalculatorService, SipResult } from '../../services/calculator';
+import { SeoService } from '../../services/seo.service';
 
 function positiveNumber(min = 0.01) {
   return Validators.compose([Validators.required, Validators.min(min)])!;
@@ -42,9 +42,7 @@ export class SipCalculator implements OnInit, OnDestroy {
   public router = inject(Router);
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
-  private readonly title    = inject(Title);
-  private readonly meta     = inject(Meta);
-  private readonly document = inject(DOCUMENT);
+  private readonly seo      = inject(SeoService);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -158,29 +156,17 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   }
 
   constructor() {
-    this.title.setTitle('SIP Calculator India – Calculate Monthly SIP Returns Online Free 2026');
-    this.meta.updateTag({ name: 'description',
-      content: 'Free SIP Calculator India 2026. Calculate returns on ₹1000, ₹5000 or any monthly SIP investment. See how compounding grows your wealth over 5, 10, 20 years.' });
-    this.meta.updateTag({ name: 'keywords',
-      content: 'sip calculator india free, sip calculator monthly investment india, 5000 sip return in 10 years, sip calculator with inflation india, best sip calculator 2026, sip 1000 per month 20 years' });
-    this.meta.updateTag({ property: 'og:title', content: 'SIP Calculator India – Free Online SIP Return Calculator' });
-    this.meta.updateTag({ property: 'og:description', content: 'Calculate your SIP returns instantly. Free, accurate, no login required.' });
-    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/sip-calculator' });
+    this.seo.setTitle('SIP Calculator India – Calculate Monthly SIP Returns Online Free 2026');
+    this.seo.setDescription('Free SIP Calculator India 2026. Calculate returns on ₹1000, ₹5000 or any monthly SIP investment. See how compounding grows your wealth over 5, 10, 20 years.');
+    this.seo.updateOgTags(
+      'SIP Calculator India – Free Online SIP Return Calculator',
+      'Calculate your SIP returns instantly. Free, accurate, no login required.',
+      'https://www.myinvestmentcalculator.in/sip-calculator'
+    );
   }
 
   ngOnInit(): void {
-    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/sip-calculator');
-  }
-
-  private setCanonicalUrl(url: string): void {
-    const head = this.document.head;
-    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!link) {
-      link = this.document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      head.appendChild(link);
-    }
-    link.setAttribute('href', url);
+    this.seo.updateCanonical('https://www.myinvestmentcalculator.in/sip-calculator');
   }
 
   get f() { return this.form.controls; }
