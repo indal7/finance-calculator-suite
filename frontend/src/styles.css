@@ -95,49 +95,12 @@
   cursor: not-allowed;
 }
 
-.result-card {
-  background: var(--card-bg, rgba(17,29,74,0.7));
-  border-radius: var(--radius-lg, 20px);
-  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.4));
-  padding: 2rem 1.5rem;
-  margin-top: 2rem;
-  color: var(--text-primary, #F0F4FF);
-}
 .animate-fadein {
   animation: fadeInUp 0.7s cubic-bezier(0.4,0,0.2,1) both;
 }
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Share / Copy result button ──────────────────────────────── */
-.copy-result-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 4px 12px;
-  cursor: pointer;
-  margin-left: auto;
-  transition: color var(--transition), border-color var(--transition), background var(--transition);
-}
-
-.copy-result-btn:hover {
-  color: var(--gold);
-  border-color: rgba(245,166,35,0.3);
-  background: var(--gold-dim);
-}
-
-.copy-result-btn.copied {
-  color: var(--emerald);
-  border-color: rgba(0,200,150,0.3);
-  background: var(--emerald-dim);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -198,10 +161,11 @@ body {
 }
 
 /* ── Page Layout ────────────────────────────────────────────── */
+/* FIX #4: Wider layout on desktop — was 780px, now 1060px */
 .calc-page {
-  max-width: 780px;
+  max-width: 1060px;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 5rem;
+  padding: 2.5rem 2rem 5rem;
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
@@ -216,7 +180,7 @@ body {
 /* ── Hero ───────────────────────────────────────────────────── */
 .page-hero {
   position: relative;
-  padding: 2.5rem 2rem 2rem;
+  padding: 2.5rem 2.5rem 2rem;
   border-radius: var(--radius-xl);
   background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy-mid) 100%);
   border: 1px solid var(--border);
@@ -260,7 +224,7 @@ body {
 
 .page-hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -273,9 +237,9 @@ body {
 }
 
 .page-hero p {
-  font-size: 0.975rem;
+  font-size: 1rem;
   color: var(--text-secondary);
-  max-width: 560px;
+  max-width: 680px;
   line-height: 1.7;
 }
 
@@ -291,7 +255,7 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1.75rem 2rem;
+  padding: 2rem 2.5rem;
   box-shadow: var(--shadow-card);
   transition: border-color var(--transition);
 }
@@ -302,7 +266,7 @@ body {
 
 .card h2 {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 1.4rem;
@@ -322,10 +286,11 @@ body {
 }
 
 /* ── Form Grid ──────────────────────────────────────────────── */
+/* FIX #4: Better desktop form layout with more spacing */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.1rem;
+  gap: 1.5rem;
 }
 
 .form-group {
@@ -356,7 +321,7 @@ select.form-select {
   background: var(--input-bg);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 0.7rem 1rem;
+  padding: 0.8rem 1.1rem;
   font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 500;
@@ -511,7 +476,6 @@ input[type="range"]:hover::-webkit-slider-thumb {
   transform: translateX(100%);
 }
 
-
 .btn-calculate:hover:not(:disabled) {
   background: var(--emerald);
   color: #fff;
@@ -533,14 +497,10 @@ input[type="range"]:hover::-webkit-slider-thumb {
   border: 1px solid rgba(245,166,35,0.25);
   background: linear-gradient(135deg, rgba(17,29,74,0.95) 0%, rgba(11,20,55,0.95) 100%);
   box-shadow: var(--shadow-card), var(--shadow-glow);
-  padding: 1.75rem 2rem;
+  padding: 2rem 2.5rem;
   animation: resultIn 0.4s cubic-bezier(0.34,1.4,0.64,1) both;
   position: relative;
   overflow: hidden;
-}
-
-.result-card {
-  animation: fadeInUp 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .result-card::before {
@@ -556,6 +516,8 @@ input[type="range"]:hover::-webkit-slider-thumb {
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* FIX #1: Result card h2 — flex layout fixed so copy button
+   stays in line on desktop and wraps cleanly on mobile */
 .result-card h2 {
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -564,18 +526,55 @@ input[type="range"]:hover::-webkit-slider-thumb {
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 1.25rem;
+  /* Use grid for perfect two-area layout: label left, actions right */
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
+  row-gap: 6px;
 }
 
 .result-card h2::before { display: none; }
 
+/* FIX #1: Copy button — properly contained, never overflows */
+.copy-result-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px 12px;
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-height: 28px;
+  min-width: 72px;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.copy-result-btn:hover {
+  color: var(--gold);
+  border-color: rgba(245,166,35,0.3);
+  background: var(--gold-dim);
+}
+
+.copy-result-btn.copied {
+  color: var(--emerald);
+  border-color: rgba(0,200,150,0.3);
+  background: var(--emerald-dim);
+}
+
 /* ── Result Grid ─────────────────────────────────────────────── */
+/* FIX #4: 4 columns on desktop so result cards spread out nicely */
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
@@ -583,7 +582,7 @@ input[type="range"]:hover::-webkit-slider-thumb {
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 1.1rem 1.2rem;
+  padding: 1.25rem 1.4rem;
   transition: transform var(--transition), border-color var(--transition);
 }
 
@@ -614,12 +613,12 @@ input[type="range"]:hover::-webkit-slider-thumb {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .result-item .value {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -637,6 +636,7 @@ input[type="range"]:hover::-webkit-slider-thumb {
   padding: 3px 10px;
   border-radius: 100px;
   letter-spacing: 0.02em;
+  flex-shrink: 0;
 }
 
 .api-badge.loading {
@@ -671,7 +671,7 @@ input[type="range"]:hover::-webkit-slider-thumb {
 }
 
 .example-section p {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
   line-height: 1.7;
@@ -711,7 +711,7 @@ code {
 .seo-section h2:first-child { margin-top: 0; }
 
 .seo-section p {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.75;
 }
@@ -739,11 +739,11 @@ code {
   width: 100%;
   background: transparent;
   border: none;
-  padding: 0.85rem 1rem;
+  padding: 0.95rem 1.1rem;
   text-align: left;
   color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   display: flex;
@@ -772,23 +772,24 @@ code {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
-  font-size: 0.84rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.7;
-  padding: 0 1rem;
+  padding: 0 1.1rem;
 }
 
 .faq-item.open .faq-answer {
   max-height: 300px;
-  padding: 0 1rem 0.9rem;
+  padding: 0 1.1rem 0.9rem;
 }
 
-/* ── Internal Links Bar ──────────────────────────────────────── */
+/* ── Internal Links Bar (calc-nav) ──────────────────────────── */
 .calc-nav {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 1rem 1.5rem;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -804,6 +805,7 @@ code {
   display: flex;
   align-items: center;
   margin-right: 4px;
+  white-space: nowrap;
 }
 
 .calc-nav a {
@@ -815,6 +817,7 @@ code {
   border-radius: 100px;
   border: 1px solid transparent;
   transition: all var(--transition);
+  white-space: nowrap;
 }
 
 .calc-nav a:hover,
@@ -826,15 +829,15 @@ code {
 
 /* ── Progress / Doughnut Visual ──────────────────────────────── */
 .result-visual {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .donut-chart {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   flex-shrink: 0;
 }
 
@@ -857,7 +860,7 @@ code {
 .donut-legend {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
 }
 
@@ -865,12 +868,12 @@ code {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
 }
 
 .legend-dot {
-  width: 8px; height: 8px;
+  width: 9px; height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -879,22 +882,87 @@ code {
 .legend-dot.returns  { background: var(--gold); }
 .legend-dot.total    { background: var(--emerald); }
 
-/* ── Responsive ──────────────────────────────────────────────── */
-/* ── Mobile touch improvements ───────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 900px)
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .calc-page {
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Drop to 2-col result grid at tablet */
+  .result-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FIX #1 + #2: MOBILE (≤ 600px)
+   ══════════════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
-  /* Bigger tap targets on mobile */
+  .calc-page {
+    padding: 1rem 0.875rem 3rem;
+    gap: 1.25rem;
+  }
+
+  /* Card padding reduced */
+  .card {
+    padding: 1.25rem 1rem;
+  }
+
+  /* Result card padding reduced */
+  .result-card {
+    padding: 1.25rem 1rem;
+  }
+
+  /* FIX #1: copy button — on mobile reset margin-left:auto
+     so it sits flush after the title text and wraps cleanly */
+  .result-card h2 {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .copy-result-btn {
+    margin-left: 0;
+    /* Put the copy btn right after the heading text */
+  }
+
+  /* FIX #1: Result grid 2 columns on mobile */
+  .result-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .result-item {
+    padding: 0.85rem 0.9rem;
+  }
+
+  .result-item .value {
+    font-size: 1.15rem;
+  }
+
+  /* Hero compact */
+  .page-hero {
+    padding: 1.5rem 1.1rem 1.25rem;
+  }
+
+  .page-hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.65rem;
+  }
+
+  .page-hero p {
+    font-size: 0.9rem;
+  }
+
+  /* Bigger tap targets */
   .faq-question {
     padding: 1rem;
     font-size: 0.9rem;
     min-height: 48px;
-  }
-
-  .calc-nav a {
-    padding: 7px 14px;
-    font-size: 0.82rem;
-    min-height: 36px;
-    display: flex;
-    align-items: center;
   }
 
   .btn-calculate {
@@ -903,15 +971,7 @@ code {
     min-height: 52px;
   }
 
-  .result-item {
-    padding: 0.9rem 1rem;
-  }
-
-  .result-item .value {
-    font-size: 1.25rem;
-  }
-
-  /* Stack donut chart nicely on small screens */
+  /* Stack donut chart on small screens */
   .result-visual {
     flex-direction: column;
     align-items: center;
@@ -929,40 +989,61 @@ code {
     font-size: 0.85rem;
   }
 
-  /* Full-width related calculator links on mobile */
+  /* FIX #2: calc-nav on mobile — horizontally scrollable pill row,
+     prevents layout breakage */
+  .calc-nav {
+    padding: 0.65rem 0.875rem;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .calc-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .calc-nav a {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .calc-nav-label {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+  }
+
+  /* Related calculator links wrap to 2-per-row on mobile */
   .card [style*="display:flex"] a {
     flex: 1 1 calc(50% - 5px);
     text-align: center;
     justify-content: center;
   }
-
-  /* Hero text tighter on small screens */
-  .page-hero {
-    padding: 1.5rem 1rem 1.25rem;
-  }
-
-  .hero-eyebrow {
-    font-size: 0.65rem;
-  }
 }
 
+/* ── Very small screens (≤ 380px) ─────────────────────────── */
 @media (max-width: 380px) {
-  .calc-nav {
-    gap: 5px;
-    padding: 0.75rem 1rem;
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .result-item .value {
+    font-size: 1rem;
   }
 
   .calc-nav a {
-    padding: 6px 10px;
-    font-size: 0.78rem;
+    padding: 5px 9px;
+    font-size: 0.74rem;
   }
 }
 
-@media (max-width: 380px) {
-  .result-grid { grid-template-columns: 1fr; }
-}
-
-/* ── Skeleton loader (for API verify state) ──────────────────── */
+/* ── Skeleton loader ─────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
   100% { background-position: 400px 0; }

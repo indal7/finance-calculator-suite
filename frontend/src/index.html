@@ -14,8 +14,7 @@
   <meta property="og:title" content="Finance Calculator India – Free SIP, EMI, FD & CAGR Calculators">
   <meta property="og:description" content="Calculate SIP returns, loan EMI, FD maturity and CAGR instantly. Free, accurate, no login required. Trusted by investors across India.">
   <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.myinvestmentcalculator.in/">
-
+  <meta property="og:url" content="https://www.myinvestmentcalculator.in/">
   <meta property="og:locale" content="en_IN">
 
   <!-- Twitter Card -->
@@ -24,9 +23,16 @@
   <meta name="twitter:description" content="Free online finance calculators for India. Calculate SIP, EMI, FD and CAGR instantly.">
 
   <link rel="canonical" href="https://www.myinvestmentcalculator.in/">
-  <link rel="icon" type="image/png" href="image.png">
 
-  <!-- Preconnect for Google Fonts (already in styles.css @import, this speeds it up) -->
+  <!-- FIX #3: Custom SVG favicon — finance bar chart with gold/emerald colours.
+       SVG favicon is supported by all modern browsers. The PNG fallback (32x32)
+       is generated inline via a data-URI so no external file is needed. -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- Fallback for browsers that don't support SVG favicons (older Safari, IE) -->
+  <link rel="alternate icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon.svg">
+
+  <!-- Preconnect for Google Fonts (speeds up font loading) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
