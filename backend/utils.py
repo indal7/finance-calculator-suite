@@ -1,3 +1,4 @@
+# Write access verified
 """
 utils.py – Shared validation helpers and financial formulas for
            Finance Calculator Lambda functions.
