@@ -125,6 +125,8 @@
   padding: 4px 12px;
   cursor: pointer;
   margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
   transition: color var(--transition), border-color var(--transition), background var(--transition);
 }
 
@@ -566,8 +568,10 @@ input[type="range"]:hover::-webkit-slider-thumb {
   margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .result-card h2::before { display: none; }
