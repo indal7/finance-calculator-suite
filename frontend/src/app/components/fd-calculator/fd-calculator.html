@@ -14,6 +14,21 @@
   }
   </script>
 
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is the FD interest rate in SBI in 2026?", "acceptedAnswer": { "@type": "Answer", "text": "SBI FD rates in 2026 are approximately 6.8% for 1 year, 7.0% for 2–3 years, and 7.1% for 5 years. Senior citizens get an additional 0.5% interest." } },
+      { "@type": "Question", "name": "Is FD interest taxable in India?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. FD interest is taxed as per your income tax slab. Banks deduct TDS at 10% if annual FD interest exceeds ₹40,000. Submit Form 15G/15H to avoid TDS if eligible." } },
+      { "@type": "Question", "name": "Which FD gives the highest interest rate in India?", "acceptedAnswer": { "@type": "Answer", "text": "Small Finance Banks like Unity, Suryoday, and Utkarsh SFB offer the highest FD rates (8.5–9.5%). For safety, consider HDFC, ICICI or SBI FDs." } },
+      { "@type": "Question", "name": "What is the maximum DICGC insurance cover for FD?", "acceptedAnswer": { "@type": "Answer", "text": "DICGC insures bank deposits up to ₹5 lakh per depositor per bank across all deposit types and branches of the same bank." } },
+      { "@type": "Question", "name": "Is FD better than SIP in India?", "acceptedAnswer": { "@type": "Answer", "text": "FD offers guaranteed returns (6–9%) with zero market risk — ideal for conservative investors or short-term goals. SIP in equity mutual funds offers potentially higher returns (10–15%) for long-term wealth creation." } }
+    ]
+  }
+  </script>
+
   <nav class="calc-nav" aria-label="Calculator navigation">
     <span class="calc-nav-label">Calculators:</span>
     <a routerLink="/sip-calculator"  routerLinkActive="active">SIP</a>
@@ -165,29 +180,79 @@
         </div>
       </div>
     </div>
+
+    <!-- ── FD Year-by-Year Growth Table ──────────────────────── -->
+    @if ((f['years'].value ?? 0) >= 1) {
+    <div class="card">
+      <h2>Year-by-Year FD Growth</h2>
+      <div class="projection-table-wrap">
+        <table class="projection-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Interest Earned</th>
+              <th>Maturity Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of getFdProjectionRows(f['principal'].value, f['annualRate'].value, f['years'].value, f['compoundingFrequency'].value); track row.year) {
+            <tr [class.highlight-row]="row.year === f['years'].value">
+              <td>{{ row.year }}</td>
+              <td class="gains-col">₹{{ row.interest | number:'1.0-0' }}</td>
+              <td class="value-col">₹{{ row.maturity | number:'1.0-0' }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
   }
 
   <div class="card example-section">
-    <h2>How FD Calculation Works</h2>
+    <h2>What is a Fixed Deposit (FD)?</h2>
     <div class="seo-section">
+      <p>
+        A <strong>Fixed Deposit (FD)</strong> is a financial instrument offered by banks and NBFCs where you deposit
+        a lump sum amount for a fixed tenure at a predetermined interest rate. FDs are one of the safest investments
+        in India, guaranteed by the bank and insured up to <strong>₹5 lakh by DICGC</strong>.
+      </p>
+
+      <h2>FD Formula – How Maturity Is Calculated</h2>
       <p>FD maturity is calculated using compound interest:</p>
       <p><code>A = P × (1 + r/n)^(n×t)</code></p>
-      <p>Where <strong>P</strong> = principal, <strong>r</strong> = annual rate, <strong>n</strong> = compounding frequency, <strong>t</strong> = years.</p>
-
-      <h2>What is a Fixed Deposit?</h2>
-      <p>
-        A Fixed Deposit is a financial instrument that provides a higher rate of interest than a savings account until a given maturity date.
-        FDs are offered by banks and NBFCs and are considered one of the safest investments in India, insured up to ₹5 lakh by DICGC.
-      </p>
+      <p>Where <strong>P</strong> = principal, <strong>r</strong> = annual rate (decimal), <strong>n</strong> = compounding frequency per year, <strong>t</strong> = years.</p>
 
       <h2>FD Calculator for SBI, HDFC, ICICI 2026</h2>
       <p>
-        Use the interest rates specific to your bank: SBI offers 6.8–7.1%, HDFC 7.0–7.25%, ICICI 7.0–7.25%, and small finance banks up to 9%.
-        Senior citizens typically get an additional 0.25–0.5% interest on FDs.
+        Use the interest rates specific to your bank: <strong>SBI</strong> offers 6.8–7.1%, <strong>HDFC</strong> 7.0–7.25%,
+        <strong>ICICI</strong> 7.0–7.25%, and small finance banks up to 9%. Senior citizens typically get an additional
+        0.25–0.5% interest on FDs.
       </p>
 
-      <h2>Example Calculation</h2>
-      <p>₹1,00,000 at 7% for 3 years (quarterly compounding) → Maturity: <strong>₹1,23,145</strong>, Interest: <strong>₹23,145</strong>.</p>
+      <h2>Real-Life FD Calculation Examples</h2>
+      <p><strong>Example 1:</strong> ₹1,00,000 at 7% for 3 years (quarterly compounding) → Maturity: <strong>₹1,23,145</strong>, Interest: <strong>₹23,145</strong>.</p>
+      <p><strong>Example 2:</strong> ₹5,00,000 at 7.25% for 5 years (quarterly) → Maturity: <strong>₹7,12,890</strong>, Interest: <strong>₹2,12,890</strong>.</p>
+      <p><strong>Example 3:</strong> ₹10,00,000 at 8% for 10 years (quarterly) → Maturity: <strong>₹22,08,040</strong> — more than double the original investment!</p>
+
+      <h2>Benefits of Fixed Deposit in India</h2>
+      <ul class="seo-list">
+        <li><strong>Guaranteed Returns:</strong> Unlike market-linked investments, FD returns are fixed and certain.</li>
+        <li><strong>Capital Safety:</strong> DICGC insures deposits up to ₹5 lakh per depositor per bank.</li>
+        <li><strong>Flexible Tenure:</strong> FDs are available from 7 days to 10 years.</li>
+        <li><strong>Senior Citizen Benefits:</strong> Extra 0.25–0.50% interest for depositors aged 60+.</li>
+        <li><strong>Tax-Saving FD:</strong> 5-year FDs qualify for Section 80C deduction up to ₹1.5 lakh/year.</li>
+        <li><strong>Loan Against FD:</strong> You can take loans up to 90% of FD value without breaking it.</li>
+        <li><strong>Auto-Renewal:</strong> FDs can be set to auto-renew at maturity for continued compounding.</li>
+      </ul>
+
+      <h2>FD vs RD vs SIP: Which is Best?</h2>
+      <p>
+        <strong>FD</strong> is best for lump sum investments with a guaranteed return — ideal for emergency funds or
+        short-term goals. <strong>RD (Recurring Deposit)</strong> is like a monthly FD — good for systematic savings
+        with guaranteed returns. <strong>SIP</strong> in equity mutual funds is best for long-term wealth creation
+        (10+ years), with historically higher returns but market-linked risk.
+      </p>
     </div>
   </div>
 

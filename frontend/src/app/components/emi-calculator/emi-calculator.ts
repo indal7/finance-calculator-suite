@@ -48,8 +48,57 @@ export class EmiCalculator implements OnDestroy {
     {
       q: 'What is the maximum loan I can get based on my salary?',
       a: 'Most Indian banks limit your total EMI outgo to 40–50% of your net monthly salary. So if you earn ₹50,000/month, you can typically afford EMIs up to ₹20,000–₹25,000/month.'
+    },
+    {
+      q: 'What is the current home loan interest rate in India 2026?',
+      a: 'Home loan interest rates in India in 2026 range from 8.40% to 9.50% p.a. for salaried individuals. SBI home loans start at 8.50%, HDFC at 8.70%, and ICICI Bank at 8.75%. Rates vary based on your credit score, loan amount, and loan tenure.'
+    },
+    {
+      q: 'How does EMI change with a longer loan tenure?',
+      a: 'Increasing your loan tenure reduces the monthly EMI but significantly increases the total interest paid. For example, a ₹30 lakh home loan at 9% for 10 years has an EMI of ₹38,002 (total interest ₹15.6L), while the same loan for 20 years has an EMI of ₹26,992 (total interest ₹34.8L). Choose tenure based on your monthly budget and long-term financial goals.'
+    },
+    {
+      q: 'Is it better to take a longer tenure home loan and invest the EMI difference?',
+      a: 'This strategy works if your investments earn more than your loan interest rate. For a home loan at 8.5%, if you invest the monthly EMI savings in equity SIP at 12%, you may come out ahead over 20 years. However, this requires discipline and market-linked returns are not guaranteed.'
+    },
+    {
+      q: 'What is a floating vs fixed interest rate for EMI?',
+      a: 'Fixed rate EMIs remain constant throughout the loan tenure, offering predictability. Floating rate EMIs change with the RBI repo rate — when rates fall, your EMI decreases (and vice versa). In India, most home loans are at floating rates linked to external benchmarks (EBLR or MCLR).'
+    },
+    {
+      q: 'How is car loan EMI calculated in India?',
+      a: 'Car loan EMI uses the same formula: EMI = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1). Car loans in India typically range from 9% to 12% at tenures of 1–7 years. For example, a ₹8 lakh car loan at 10% for 5 years = monthly EMI of ₹16,997.'
+    },
+    {
+      q: 'Can I get a tax benefit on EMI payments?',
+      a: 'Yes, for home loans: principal repayment qualifies for deduction up to ₹1.5 lakh/year under Section 80C, and interest paid is deductible up to ₹2 lakh/year under Section 24(b) for self-occupied property. Personal loan and car loan EMIs do not get tax benefits, though business loans may.'
     }
   ];
+
+  /** Amortization schedule: year-end principal remaining and interest paid per year */
+  getAmortizationRows(principal: number | null, annualRate: number | null, years: number | null): Array<{year: number, emi: number, principalPaid: number, interestPaid: number, balance: number}> {
+    const p = principal ?? 0;
+    const ar = annualRate ?? 0;
+    const y = years ?? 0;
+    const r = ar / 100 / 12;
+    const n = y * 12;
+    const emi = r === 0 ? p / n : (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const rows = [];
+    let balance = p;
+    for (let yr = 1; yr <= y; yr++) {
+      let yearInterest = 0;
+      let yearPrincipal = 0;
+      for (let m = 1; m <= 12; m++) {
+        const interestForMonth = balance * r;
+        const principalForMonth = emi - interestForMonth;
+        yearInterest += interestForMonth;
+        yearPrincipal += principalForMonth;
+        balance = Math.max(0, balance - principalForMonth);
+      }
+      rows.push({ year: yr, emi: +emi.toFixed(0), principalPaid: +yearPrincipal.toFixed(0), interestPaid: +yearInterest.toFixed(0), balance: +balance.toFixed(0) });
+    }
+    return rows;
+  }
 
   constructor() {
     this.title.setTitle('EMI Calculator India – Home Loan, Car Loan EMI Calculator Online Free 2026');

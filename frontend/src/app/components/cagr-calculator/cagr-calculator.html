@@ -5,12 +5,27 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "CAGR Calculator India",
-    "url": "https://www.myinvestmentcalculator.in/agr-calculator",
+    "url": "https://www.myinvestmentcalculator.in/cagr-calculator",
     "description": "Free CAGR Calculator India 2026. Calculate Compound Annual Growth Rate for stocks, mutual funds and portfolios.",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
     "inLanguage": "en-IN"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is a good CAGR for mutual funds in India?", "acceptedAnswer": { "@type": "Answer", "text": "A CAGR of 12–15% is considered good for equity mutual funds in India over a long-term horizon (10+ years). Large-cap funds typically deliver 10–13%, while mid-cap and small-cap funds may deliver 14–18%." } },
+      { "@type": "Question", "name": "What is the CAGR formula?", "acceptedAnswer": { "@type": "Answer", "text": "CAGR = (Ending Value / Beginning Value)^(1/n) − 1, where n = number of years. For example, ₹50,000 growing to ₹1,00,000 in 5 years gives a CAGR of 14.87%." } },
+      { "@type": "Question", "name": "What is the CAGR of Nifty 50?", "acceptedAnswer": { "@type": "Answer", "text": "Nifty 50 has delivered approximately 12–13% CAGR over the last 20 years (2004–2024)." } },
+      { "@type": "Question", "name": "Can CAGR be negative?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. If your ending value is less than your beginning value, CAGR will be negative, indicating capital erosion." } },
+      { "@type": "Question", "name": "How is CAGR different from absolute return?", "acceptedAnswer": { "@type": "Answer", "text": "Absolute return shows total percentage gain regardless of time. CAGR normalises it to an annual rate, making it ideal for comparing investments over different time periods." } }
+    ]
   }
   </script>
 
@@ -155,31 +170,102 @@
         </div>
       </div>
     </div>
+
+    <!-- ── CAGR Benchmark Comparison ──────────────────────────── -->
+    <div class="card">
+      <h2>How Your CAGR Compares</h2>
+      <div class="projection-table-wrap">
+        <table class="projection-table">
+          <thead>
+            <tr>
+              <th>Asset Class</th>
+              <th>Typical CAGR</th>
+              <th>Your Investment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr [class.highlight-row]="result.cagr >= 15">
+              <td>Small/Mid Cap Mutual Funds</td>
+              <td class="value-col">14–18%</td>
+              <td [class.gains-col]="result.cagr >= 14" [class.value-col]="result.cagr < 14">{{ result.cagr | number:'1.2-2' }}%</td>
+            </tr>
+            <tr [class.highlight-row]="result.cagr >= 12 && result.cagr < 15">
+              <td>Large Cap / Nifty 50</td>
+              <td class="value-col">10–13%</td>
+              <td [class.gains-col]="result.cagr >= 10" [class.value-col]="result.cagr < 10">{{ result.cagr | number:'1.2-2' }}%</td>
+            </tr>
+            <tr>
+              <td>Gold (INR)</td>
+              <td>10–12%</td>
+              <td>{{ result.cagr | number:'1.2-2' }}%</td>
+            </tr>
+            <tr>
+              <td>Fixed Deposit</td>
+              <td>6–9%</td>
+              <td>{{ result.cagr | number:'1.2-2' }}%</td>
+            </tr>
+            <tr>
+              <td>Savings Account</td>
+              <td>3–4%</td>
+              <td>{{ result.cagr | number:'1.2-2' }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   }
 
   <div class="card example-section">
-    <h2>How CAGR Calculation Works</h2>
+    <h2>What is CAGR (Compound Annual Growth Rate)?</h2>
     <div class="seo-section">
-      <p>CAGR is calculated using:</p>
-      <p><code>CAGR = (Ending Value / Beginning Value)^(1/n) − 1</code></p>
-      <p>Where <strong>n</strong> = number of years.</p>
-
-      <h2>What is CAGR?</h2>
       <p>
-        CAGR (Compound Annual Growth Rate) represents the rate at which an investment would have grown
+        <strong>CAGR (Compound Annual Growth Rate)</strong> represents the rate at which an investment would have grown
         if it grew at a steady rate annually. Unlike absolute returns, CAGR accounts for the effect of compounding
-        and the time period — making it ideal for comparing mutual funds, stocks, and portfolios.
+        and the time period — making it the most reliable metric for comparing mutual funds, stocks, and portfolios
+        over different time periods.
       </p>
 
-      <h2>CAGR vs Absolute Return</h2>
+      <h2>CAGR Formula – How It Is Calculated</h2>
+      <p>CAGR is calculated using:</p>
+      <p><code>CAGR = (Ending Value / Beginning Value)^(1/n) − 1</code></p>
+      <p>Where <strong>n</strong> = number of years. The result is expressed as a percentage.</p>
+
+      <h2>Real-Life CAGR Examples</h2>
+      <p><strong>Example 1:</strong> Investment grew from ₹50,000 to ₹1,00,000 in 5 years → <strong>CAGR = 14.87%</strong>, Absolute Return = 100%.</p>
+      <p><strong>Example 2:</strong> ₹1,00,000 grew to ₹5,00,000 in 15 years → <strong>CAGR = 11.59%</strong> (similar to a good large-cap mutual fund).</p>
+      <p><strong>Example 3:</strong> Nifty 50 from 2004 to 2024: approximately ₹1,000 → ₹10,000 → <strong>CAGR ≈ 12.2%</strong>.</p>
+
+      <h2>CAGR vs Absolute Return — What's the Difference?</h2>
       <p>
         Absolute return shows total percentage gain regardless of time. CAGR normalises it per year.
         A 100% absolute return over 2 years is a 41.4% CAGR — very different from 100% over 10 years (7.2% CAGR).
+        Always use CAGR when comparing investments held for different durations.
       </p>
 
-      <h2>Example Calculation</h2>
-      <p>Investment grew from ₹50,000 to ₹1,00,000 in 5 years → <strong>CAGR = 14.87%</strong>, Absolute Return = 100%.</p>
-      <p>Nifty 50 has delivered a CAGR of approximately 12–13% over the last 20 years.</p>
+      <h2>Benefits of Using CAGR for Investment Analysis</h2>
+      <ul class="seo-list">
+        <li><strong>Normalised Comparison:</strong> Compare investments held for 2 years vs 10 years on equal footing.</li>
+        <li><strong>Smooths Volatility:</strong> Removes the noise of year-to-year fluctuations to show the real trend.</li>
+        <li><strong>Mutual Fund Evaluation:</strong> The standard metric used in all SEBI-mandated fund fact sheets.</li>
+        <li><strong>Business Growth Metric:</strong> Used to measure revenue, profit, and customer growth in business analysis.</li>
+        <li><strong>Portfolio Benchmarking:</strong> Compare your portfolio's CAGR against Nifty 50, Sensex or category averages.</li>
+      </ul>
+
+      <h2>CAGR Benchmarks for Indian Investors 2026</h2>
+      <p>
+        <strong>Nifty 50:</strong> ~12–13% CAGR over 20 years. <strong>Sensex:</strong> ~12–14% CAGR since inception.
+        <strong>Gold (INR):</strong> ~10–12% CAGR over 20 years. <strong>Real Estate:</strong> 7–12% depending on location.
+        <strong>Fixed Deposits:</strong> 6–9%. <strong>Savings Account:</strong> 3–4%. A CAGR above 12% in India is
+        generally considered excellent for most asset classes.
+      </p>
+
+      <h2>How to Use This CAGR Calculator</h2>
+      <p>
+        Enter your <strong>beginning investment value</strong> (what you originally invested), your
+        <strong>ending value</strong> (current or final value), and the <strong>number of years</strong> you held the investment.
+        The calculator will instantly compute your CAGR, absolute return, and total gain — helping you evaluate
+        whether your investment has performed well compared to benchmarks.
+      </p>
     </div>
   </div>
 

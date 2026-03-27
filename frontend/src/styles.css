@@ -4,6 +4,73 @@
     gap: 1rem;
   }
 }
+
+/* ── Projection / Amortization Table ──────────────────────── */
+.projection-table-wrap {
+  overflow-x: auto;
+  margin-top: 1rem;
+  border-radius: var(--radius-md, 14px);
+  border: 1px solid var(--border, rgba(255,255,255,0.07));
+}
+.projection-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  color: var(--text-primary, #F0F4FF);
+}
+.projection-table th {
+  background: rgba(255,255,255,0.05);
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary, #A8B4D4);
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.07));
+  white-space: nowrap;
+}
+.projection-table td {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  white-space: nowrap;
+}
+.projection-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.projection-table tbody tr:hover td {
+  background: rgba(255,255,255,0.03);
+}
+.projection-table .gains-col {
+  color: var(--rose, #FF5C7A);
+}
+.projection-table .value-col {
+  color: var(--emerald, #00C896);
+  font-weight: 600;
+}
+.projection-table .highlight-row td {
+  background: rgba(245,166,35,0.08);
+  font-weight: 700;
+  color: var(--gold, #F5A623);
+}
+.projection-table .highlight-row .gains-col {
+  color: var(--gold, #F5A623);
+}
+.projection-table .highlight-row .value-col {
+  color: var(--gold, #F5A623);
+}
+
+/* ── SEO list ──────────────────────────────────────────────── */
+.seo-list {
+  padding-left: 1.25rem;
+  margin: 0.75rem 0;
+  line-height: 1.8;
+  color: var(--text-secondary, #A8B4D4);
+}
+.seo-list li {
+  margin-bottom: 0.35rem;
+}
+.seo-list li strong {
+  color: var(--text-primary, #F0F4FF);
+}
+
 /* ── SIP Calculator Enhancements ───────────────────────────── */
 .accent-btn {
   background: var(--gold, #F5A623);
