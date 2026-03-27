@@ -6,6 +6,9 @@ locals {
   }
 
   s3_origin_id = "${var.project_name}-frontend-${var.environment}"
+
+  root_domain = "myinvestmentcalculator.in"
+  www_domain  = "www.myinvestmentcalculator.in"
 }
 
 terraform {
@@ -99,6 +102,37 @@ resource "aws_s3_bucket_policy" "frontend" {
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
+# CloudFront Function – redirect bare root domain → www
+# ──────────────────────────────────────────────────────────────────────────────
+
+resource "aws_cloudfront_function" "www_redirect" {
+  name    = "${var.project_name}-www-redirect-${var.environment}"
+  runtime = "cloudfront-js-1.0"
+  comment = "Redirect myinvestmentcalculator.in to www.myinvestmentcalculator.in"
+  publish = true
+
+  code = <<-EOT
+    function handler(event) {
+      var request = event.request;
+      // request.uri contains the path only; query string is forwarded automatically
+      var host = request.headers.host ? request.headers.host.value : '';
+
+      if (host === '${local.root_domain}') {
+        return {
+          statusCode: 301,
+          statusDescription: 'Moved Permanently',
+          headers: {
+            location: { value: 'https://${local.www_domain}' + request.uri }
+          }
+        };
+      }
+
+      return request;
+    }
+  EOT
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
 # CloudFront Distribution
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -110,13 +144,14 @@ resource "aws_cloudfront_distribution" "frontend" {
   price_class         = "PriceClass_100"
 
   aliases = [
-    "myinvestmentcalculator.in",
-    "www.myinvestmentcalculator.in"
+    local.root_domain,
+    local.www_domain
   ]
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:492661377251:certificate/679e1c55-24cd-4cf7-a646-e0420d6a6491"
-    ssl_support_method  = "sni-only"
+    acm_certificate_arn      = "arn:aws:acm:us-east-1:492661377251:certificate/679e1c55-24cd-4cf7-a646-e0420d6a6491"
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   origin {
@@ -134,6 +169,11 @@ resource "aws_cloudfront_distribution" "frontend" {
 
     # AWS managed CachingOptimized policy
     cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.www_redirect.arn
+    }
   }
 
   # SPA routing – return index.html for Angular client-side routes
@@ -157,9 +197,40 @@ resource "aws_cloudfront_distribution" "frontend" {
     }
   }
 
-  # viewer_certificate {
-  #   cloudfront_default_certificate = var.domain_name == ""
-  # }
-
   tags = local.common_tags
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Route 53 – hosted zone and DNS records
+# ──────────────────────────────────────────────────────────────────────────────
+
+resource "aws_route53_zone" "main" {
+  name = local.root_domain
+  tags = local.common_tags
+}
+
+# Root domain ALIAS → CloudFront
+resource "aws_route53_record" "root" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = local.root_domain
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.frontend.domain_name
+    zone_id                = aws_cloudfront_distribution.frontend.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+# www ALIAS → CloudFront
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = local.www_domain
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.frontend.domain_name
+    zone_id                = aws_cloudfront_distribution.frontend.hosted_zone_id
+    evaluate_target_health = false
+  }
 }
