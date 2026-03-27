@@ -300,7 +300,100 @@ In API Gateway:
 
 ---
 
-## SEO
+## DNS & Domain Configuration
+
+The site is reachable at **https://www.myinvestmentcalculator.in** and the root
+domain **myinvestmentcalculator.in** automatically redirects there.
+
+### How it works
+
+| Layer | Resource | Purpose |
+|-------|----------|---------|
+| DNS | Route 53 hosted zone | Authoritative DNS for `myinvestmentcalculator.in` |
+| DNS | Route 53 A (ALIAS) – `@` | Points root domain to CloudFront |
+| DNS | Route 53 A (ALIAS) – `www` | Points www to CloudFront |
+| Edge | CloudFront Function `www_redirect` | 301-redirects bare root requests to `https://www.…` |
+| TLS | ACM certificate | Covers both `myinvestmentcalculator.in` and `www.myinvestmentcalculator.in` |
+
+### Step 1 – Apply Terraform
+
+```bash
+cd terraform/frontend
+terraform init
+terraform apply
+```
+
+After a successful apply, grab the four Route 53 name servers from the output:
+
+```bash
+terraform output route53_name_servers
+# Example output:
+# [
+#   "ns-123.awsdns-45.com",
+#   "ns-678.awsdns-90.net",
+#   "ns-111.awsdns-22.co.uk",
+#   "ns-333.awsdns-44.org",
+# ]
+```
+
+### Step 2 – Update GoDaddy name servers
+
+1. Log in to **GoDaddy → My Products → DNS → Manage** for `myinvestmentcalculator.in`.
+2. Click **Change** next to "Nameservers".
+3. Select **"Enter my own nameservers (advanced)"**.
+4. Replace the existing name servers with the four values from `terraform output route53_name_servers`.
+5. Save – propagation typically takes 0–48 hours.
+
+> **Note:** Once you point GoDaddy to Route 53, all DNS for the domain is managed
+> by Terraform. Do **not** add conflicting A / CNAME records in GoDaddy.
+
+### ACM certificate – verify both SANs are present
+
+The Terraform configuration references a pre-issued ACM certificate:
+
+```
+arn:aws:acm:us-east-1:492661377251:certificate/679e1c55-24cd-4cf7-a646-e0420d6a6491
+```
+
+Confirm it covers **both** SANs in the AWS Console
+(*ACM → Certificates → select cert → Domains*):
+
+| Domain | Status |
+|--------|--------|
+| `myinvestmentcalculator.in` | Issued |
+| `www.myinvestmentcalculator.in` | Issued |
+
+If either SAN is missing, re-issue (or add a SAN to) the certificate before
+applying Terraform, then update the `acm_certificate_arn` value in
+`terraform/frontend/main.tf`.
+
+### Verifying the redirect
+
+Once DNS has propagated:
+
+```bash
+# Root domain should return HTTP 301 → www
+curl -I http://myinvestmentcalculator.in
+# HTTP/1.1 301 Moved Permanently
+# Location: https://www.myinvestmentcalculator.in/
+
+# www should return HTTP 200
+curl -I https://www.myinvestmentcalculator.in
+# HTTP/2 200
+```
+
+### Google AdSense verification
+
+AdSense requires the domain it verifies to resolve correctly. After completing
+the steps above:
+
+1. Both `myinvestmentcalculator.in` and `www.myinvestmentcalculator.in` will
+   return valid HTTPS responses (root redirects to www).
+2. Submit `https://www.myinvestmentcalculator.in` as the site URL in AdSense.
+3. Add the AdSense meta-tag or `ads.txt` file to the Angular app's `src/` folder
+   so it is included in the S3/CloudFront deployment.
+
+---
 
 Each calculator page includes:
 - Unique `<title>` set via Angular `Title` service
