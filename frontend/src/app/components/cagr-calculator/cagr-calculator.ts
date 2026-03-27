@@ -1,11 +1,11 @@
-import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CalculatorService, CagrResult } from '../../services/calculator';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-cagr-calculator',
@@ -17,9 +17,7 @@ import { CalculatorService, CagrResult } from '../../services/calculator';
 export class CagrCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
-  private readonly title    = inject(Title);
-  private readonly meta     = inject(Meta);
-  private readonly document = inject(DOCUMENT);
+  private readonly seo      = inject(SeoService);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -121,27 +119,17 @@ export class CagrCalculator implements OnInit, OnDestroy {
   ];
 
   constructor() {
-    this.title.setTitle('CAGR Calculator India – Stock Return & Annual Growth Rate Calculator 2026');
-    this.meta.updateTag({ name: 'description',
-      content: 'Free CAGR Calculator India. Calculate Compound Annual Growth Rate for stocks, mutual funds and investments. Compare annualised returns easily.' });
-    this.meta.updateTag({ name: 'keywords',
-      content: 'cagr calculator india, stock return calculator india, annual return calculator investment, cagr calculator for mutual funds india, compound annual growth rate' });
-    this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/cagr-calculator' });
+    this.seo.setTitle('CAGR Calculator India – Stock Return & Annual Growth Rate Calculator 2026');
+    this.seo.setDescription('Free CAGR Calculator India. Calculate the compound annual growth rate for stocks, mutual funds, real estate and more. Compare your returns with Nifty 50 benchmarks.');
+    this.seo.updateOgTags(
+      'CAGR Calculator India – Free Annual Growth Rate Calculator',
+      'Calculate your investment CAGR instantly. Free, accurate, no login required.',
+      'https://www.myinvestmentcalculator.in/cagr-calculator'
+    );
   }
 
   ngOnInit(): void {
-    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/cagr-calculator');
-  }
-
-  private setCanonicalUrl(url: string): void {
-    const head = this.document.head;
-    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!link) {
-      link = this.document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      head.appendChild(link);
-    }
-    link.setAttribute('href', url);
+    this.seo.updateCanonical('https://www.myinvestmentcalculator.in/cagr-calculator');
   }
 
   get f() { return this.form.controls; }

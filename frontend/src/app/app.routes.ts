@@ -1,7 +1,11 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/sip-calculator', pathMatch: 'full' },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./components/home/home').then(m => m.HomeComponent)
+  },
   {
     path: 'sip-calculator',
     loadComponent: () =>
