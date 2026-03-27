@@ -130,6 +130,9 @@
     <div class="result-card" role="region" aria-label="EMI Calculation Result">
       <h2>
         Your Loan Breakdown
+        <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
+          {{ copied ? '✓ Copied' : '⎘ Copy' }}
+        </button>
         @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying…</span> }
         @if (apiStatus === 'success') { <span class="api-badge success">✅ Verified</span> }
         @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ Local</span> }

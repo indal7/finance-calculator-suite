@@ -33,6 +33,31 @@ export class FdCalculator implements OnDestroy {
   apiError = '';
   openFaq: number | null = null;
 
+  copied = false;
+  private copyTimer?: ReturnType<typeof setTimeout>;
+
+  copyResult(): void {
+    if (!this.result) return;
+    const { principal, maturityAmount, totalInterest } = this.result;
+    const { annualRate, years, compoundingFrequency } = this.form.getRawValue() as any;
+    const freqLabel = this.frequencies.find(f => f.value === compoundingFrequency)?.label ?? compoundingFrequency;
+    const text = [
+      `FD Calculator Result`,
+      `Principal: ₹${principal?.toLocaleString('en-IN')}`,
+      `Annual Rate: ${annualRate}%`,
+      `Tenure: ${years} years`,
+      `Compounding: ${freqLabel}`,
+      `─────────────────`,
+      `Maturity Amount: ₹${maturityAmount?.toLocaleString('en-IN')}`,
+      `Total Interest:  ₹${totalInterest?.toLocaleString('en-IN')}`,
+      `Calculated at www.myinvestmentcalculator.in`
+    ].join('\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+    this.copied = true;
+    clearTimeout(this.copyTimer);
+    this.copyTimer = setTimeout(() => { this.copied = false; }, 2200);
+  }
+
   readonly frequencies = [
     { label: 'Monthly (12)',    value: 12 },
     { label: 'Quarterly (4)',   value: 4  },

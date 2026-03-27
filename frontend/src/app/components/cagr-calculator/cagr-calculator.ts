@@ -32,6 +32,50 @@ export class CagrCalculator implements OnDestroy {
   apiError = '';
   openFaq: number | null = null;
 
+  copied = false;
+  private copyTimer?: ReturnType<typeof setTimeout>;
+
+  copyResult(): void {
+    if (!this.result) return;
+    const { cagr, absoluteReturn, totalGain } = this.result;
+    const { beginningValue, endingValue, years } = this.form.getRawValue() as any;
+    const text = [
+      `CAGR Calculator Result`,
+      `Beginning Value: ₹${beginningValue?.toLocaleString('en-IN')}`,
+      `Ending Value:    ₹${endingValue?.toLocaleString('en-IN')}`,
+      `Period: ${years} years`,
+      `─────────────────`,
+      `CAGR:            ${cagr?.toFixed(2)}%`,
+      `Absolute Return: ${absoluteReturn?.toFixed(2)}%`,
+      `Total Gain:      ₹${totalGain?.toLocaleString('en-IN')}`,
+      `Calculated at www.myinvestmentcalculator.in`
+    ].join('\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+    this.copied = true;
+    clearTimeout(this.copyTimer);
+    this.copyTimer = setTimeout(() => { this.copied = false; }, 2200);
+  }
+
+  /** Year-by-year CAGR growth projection */
+  getCagrProjectionRows(
+    beginningValue: number | null,
+    endingValue: number | null,
+    totalYears: number | null
+  ): Array<{ year: number; value: number; gain: number }> {
+    const bv = beginningValue ?? 0;
+    const ev = endingValue ?? 0;
+    const ty = totalYears ?? 0;
+    if (bv <= 0 || ev <= 0 || ty <= 0) return [];
+    const annualRate = Math.pow(ev / bv, 1 / ty) - 1;
+    const rows = [];
+    for (let y = 1; y <= Math.ceil(ty); y++) {
+      const t = Math.min(y, ty);
+      const value = Math.round(bv * Math.pow(1 + annualRate, t));
+      rows.push({ year: y, value, gain: value - bv });
+    }
+    return rows;
+  }
+
   readonly faqs = [
     {
       q: 'What is a good CAGR for mutual funds in India?',

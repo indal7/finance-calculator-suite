@@ -25,6 +25,10 @@ beforeAll(async () => {
     '@angular',
     'core',
     'fesm2022',
+    // NOTE: This path references Angular's internal fesm bundle that exports
+    // resolveComponentResources. It is not part of the public API and may
+    // need to be updated if Angular reorganises its internal package layout.
+    // Tested against Angular 21.x. See tsconfig.spec.json for Node type support.
     '_debug_node-chunk.mjs',
   );
   const chunkUrl = pathToFileURL(chunkAbsPath).href;
