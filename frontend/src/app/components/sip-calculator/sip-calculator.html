@@ -113,6 +113,17 @@
         }
       </div>
 
+      <!-- Inflation Toggle -->
+      <div class="form-group inflate-toggle-group">
+        <label class="toggle-label">
+          <input type="checkbox" [(ngModel)]="adjustForInflation" [ngModelOptions]="{standalone: true}">
+          <span class="toggle-text">Adjust for inflation ({{ inflationRate }}%)</span>
+        </label>
+        @if (adjustForInflation) {
+        <span class="hint">📉 Shows your corpus in today's purchasing power</span>
+        }
+      </div>
+
       <!-- Empty spacer for grid alignment on desktop -->
       <div class="form-group" aria-hidden="true"></div>
 
@@ -149,6 +160,31 @@
         <div class="value">{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}%</div>
       </div>
     </div>
+
+    <!-- Inflation-adjusted result -->
+    @if (adjustForInflation) {
+    <div class="inflation-result">
+      <div class="inflation-header">📉 Inflation-Adjusted ({{ inflationRate }}% p.a.) — Today's Purchasing Power</div>
+      <div class="result-grid inflation-grid">
+        <div class="result-item">
+          <div class="label">Actual Corpus</div>
+          <div class="value">₹{{ result.totalValue | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item highlight-inflation">
+          <div class="label">Real Corpus (After Inflation)</div>
+          <div class="value inflation-val">₹{{ getRealValue(result.totalValue, f['years'].value ?? 0) | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Real Gains</div>
+          <div class="value">₹{{ getRealReturns(result.totalValue, result.totalInvested, f['years'].value ?? 0) | number:'1.0-0' }}</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Inflation Erosion</div>
+          <div class="value erosion-val">₹{{ (result.totalValue - getRealValue(result.totalValue, f['years'].value ?? 0)) | number:'1.0-0' }}</div>
+        </div>
+      </div>
+    </div>
+    }
 
     <!-- Wealth split visual -->
     <div class="result-visual">
@@ -270,6 +306,197 @@
         3-year, 5-year and 10-year CAGR before investing.
       </p>
     </div>
+  </div>
+
+  <!-- ── SIP ₹5000 Returns Section ─────────────────────────── -->
+  <div class="card sip-returns-section">
+    <h2>SIP ₹5,000 per Month — Returns at 12% p.a.</h2>
+    <p class="section-intro">How ₹5,000/month grows over time at a 12% annual return (historical equity mutual fund average):</p>
+    <div class="projection-table-wrap">
+      <table class="projection-table sip-ref-table">
+        <thead>
+          <tr>
+            <th>Investment Period</th>
+            <th>Total Invested</th>
+            <th>Estimated Gains</th>
+            <th>Final Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of getSipReturnsBreakdown(5000); track row.years) {
+          <tr>
+            <td><strong>{{ row.years }} {{ row.years === 1 ? 'Year' : 'Years' }}</strong></td>
+            <td>₹{{ row.invested | number:'1.0-0' }}</td>
+            <td class="gains-col">₹{{ row.returns | number:'1.0-0' }}</td>
+            <td class="value-col">₹{{ row.value | number:'1.0-0' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SIP ₹10000 Returns Section ────────────────────────── -->
+  <div class="card sip-returns-section">
+    <h2>SIP ₹10,000 per Month — Returns at 12% p.a.</h2>
+    <p class="section-intro">How ₹10,000/month grows over time at a 12% annual return:</p>
+    <div class="projection-table-wrap">
+      <table class="projection-table sip-ref-table">
+        <thead>
+          <tr>
+            <th>Investment Period</th>
+            <th>Total Invested</th>
+            <th>Estimated Gains</th>
+            <th>Final Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of getSipReturnsBreakdown(10000); track row.years) {
+          <tr>
+            <td><strong>{{ row.years }} {{ row.years === 1 ? 'Year' : 'Years' }}</strong></td>
+            <td>₹{{ row.invested | number:'1.0-0' }}</td>
+            <td class="gains-col">₹{{ row.returns | number:'1.0-0' }}</td>
+            <td class="value-col">₹{{ row.value | number:'1.0-0' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SIP Reference Table (SEO) ─────────────────────────── -->
+  <div class="card">
+    <h2>SIP Returns Reference Table — ₹5,000 &amp; ₹10,000 at 12% p.a.</h2>
+    <p class="section-intro">Quick reference for common SIP amounts and durations (assumes 12% annual return):</p>
+    <div class="projection-table-wrap">
+      <table class="projection-table sip-ref-table">
+        <thead>
+          <tr>
+            <th>Monthly SIP</th>
+            <th>Years</th>
+            <th>Estimated Return</th>
+            <th>Final Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of getSipReferenceTable(); track (row.monthlySip + '-' + row.years)) {
+          <tr>
+            <td>₹{{ row.monthlySip | number:'1.0-0' }}</td>
+            <td>{{ row.years }} {{ row.years === 1 ? 'Year' : 'Years' }}</td>
+            <td class="gains-col">₹{{ row.expectedReturn | number:'1.0-0' }}</td>
+            <td class="value-col">₹{{ row.finalValue | number:'1.0-0' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Compare SIP ────────────────────────────────────────── -->
+  <div class="card compare-sip-card">
+    <h2>⚖️ Compare SIP — Side by Side</h2>
+    <p class="section-intro">Compare two SIP options to see which builds more wealth.</p>
+    <form [formGroup]="compareForm" (ngSubmit)="compareSip()" class="compare-form" novalidate>
+      <div class="compare-inputs">
+        <div class="compare-option">
+          <div class="compare-option-label">Option A</div>
+          <div class="form-group">
+            <label>Monthly SIP (₹)</label>
+            <input type="number" formControlName="sip1Amount" min="500" placeholder="e.g. 5000"
+              [class.invalid]="cf['sip1Amount'].invalid && cf['sip1Amount'].touched">
+            @if (cf['sip1Amount'].invalid && cf['sip1Amount'].touched) {
+            <span class="error-msg">Min ₹500</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Period (Years)</label>
+            <input type="number" formControlName="sip1Years" min="1" placeholder="e.g. 10"
+              [class.invalid]="cf['sip1Years'].invalid && cf['sip1Years'].touched">
+            @if (cf['sip1Years'].invalid && cf['sip1Years'].touched) {
+            <span class="error-msg">Min 1 year</span>
+            }
+          </div>
+        </div>
+
+        <div class="compare-vs">VS</div>
+
+        <div class="compare-option">
+          <div class="compare-option-label">Option B</div>
+          <div class="form-group">
+            <label>Monthly SIP (₹)</label>
+            <input type="number" formControlName="sip2Amount" min="500" placeholder="e.g. 10000"
+              [class.invalid]="cf['sip2Amount'].invalid && cf['sip2Amount'].touched">
+            @if (cf['sip2Amount'].invalid && cf['sip2Amount'].touched) {
+            <span class="error-msg">Min ₹500</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Period (Years)</label>
+            <input type="number" formControlName="sip2Years" min="1" placeholder="e.g. 20"
+              [class.invalid]="cf['sip2Years'].invalid && cf['sip2Years'].touched">
+            @if (cf['sip2Years'].invalid && cf['sip2Years'].touched) {
+            <span class="error-msg">Min 1 year</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-rate-row">
+        <div class="form-group compare-rate-group">
+          <label>Expected Annual Return (%)</label>
+          <input type="number" formControlName="compareRate" min="1" max="30" step="0.5" placeholder="e.g. 12"
+            [class.invalid]="cf['compareRate'].invalid && cf['compareRate'].touched">
+          @if (cf['compareRate'].invalid && cf['compareRate'].touched) {
+          <span class="error-msg">Enter a valid rate</span>
+          }
+        </div>
+      </div>
+
+      <button type="submit" class="btn-calculate accent-btn" [disabled]="compareForm.invalid">
+        Compare SIPs →
+      </button>
+    </form>
+
+    @if (compareResults) {
+    <div class="compare-results">
+      <div class="compare-result-grid">
+        @for (r of compareResults; track r.label) {
+        <div class="compare-result-card" [class.winner]="isWinner(r)">
+          <div class="compare-result-label">{{ r.label }}</div>
+          @if (isWinner(r)) {
+          <div class="winner-badge">🏆 Higher Corpus</div>
+          }
+          <div class="compare-stat">
+            <span class="stat-name">Monthly SIP</span>
+            <span class="stat-val">₹{{ r.monthlySip | number:'1.0-0' }}</span>
+          </div>
+          <div class="compare-stat">
+            <span class="stat-name">Period</span>
+            <span class="stat-val">{{ r.years }} years</span>
+          </div>
+          <div class="compare-stat">
+            <span class="stat-name">Total Invested</span>
+            <span class="stat-val">₹{{ r.totalInvested | number:'1.0-0' }}</span>
+          </div>
+          <div class="compare-stat">
+            <span class="stat-name">Estimated Gains</span>
+            <span class="stat-val gains-col">₹{{ r.estimatedReturns | number:'1.0-0' }}</span>
+          </div>
+          <div class="compare-stat highlight-stat">
+            <span class="stat-name">Final Corpus</span>
+            <span class="stat-val value-col">₹{{ r.totalValue | number:'1.0-0' }}</span>
+          </div>
+          @if (r.realValue !== undefined) {
+          <div class="compare-stat">
+            <span class="stat-name">Real Value (Inflation adj.)</span>
+            <span class="stat-val inflation-val">₹{{ r.realValue | number:'1.0-0' }}</span>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
   </div>
 
   <!-- ── FAQs ───────────────────────────────────────────────── -->

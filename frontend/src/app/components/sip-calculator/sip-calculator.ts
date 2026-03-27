@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -12,10 +12,29 @@ function positiveNumber(min = 0.01) {
   return Validators.compose([Validators.required, Validators.min(min)])!;
 }
 
+export interface SipTableRow {
+  monthlySip: number;
+  years: number;
+  expectedReturn: number;
+  finalValue: number;
+  totalInvested: number;
+}
+
+export interface CompareResult {
+  label: string;
+  monthlySip: number;
+  years: number;
+  annualRate: number;
+  totalInvested: number;
+  estimatedReturns: number;
+  totalValue: number;
+  realValue?: number;
+}
+
 @Component({
   selector: 'app-sip-calculator',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, RouterLinkActive, DecimalPipe],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterLink, RouterLinkActive, DecimalPipe],
   templateUrl: './sip-calculator.html',
   styleUrls: ['./sip-calculator.css']
 })
@@ -36,6 +55,20 @@ export class SipCalculator implements OnDestroy {
   result: (SipResult & { localCalc: true }) | null = null;
   apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
   apiError = '';
+
+  /** Inflation toggle (6% annual inflation) */
+  adjustForInflation = false;
+  readonly inflationRate = 6;
+
+  /** Compare SIP form */
+  compareForm = this.fb.group({
+    sip1Amount:  [5000,  positiveNumber(500)],
+    sip1Years:   [10,    positiveNumber(1)],
+    sip2Amount:  [10000, positiveNumber(500)],
+    sip2Years:   [20,    positiveNumber(1)],
+    compareRate: [12,    positiveNumber(1)]
+  });
+  compareResults: CompareResult[] | null = null;
 
   openFaq: number | null = null;
 
@@ -186,6 +219,92 @@ private copyTimer?: ReturnType<typeof setTimeout>;
       next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; },
       error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   }
     });
+  }
+
+  /** Calculates SIP future value using: FV = P × [((1 + r)^n − 1) / r] × (1 + r),
+   *  where P = monthly payment, r = monthly rate (annual rate ÷ 12), n = total months */
+  private calcSipFV(monthly: number, annualRate: number, years: number): number {
+    const r = annualRate / 100 / 12;
+    const n = years * 12;
+    return r === 0 ? monthly * n : monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+  }
+
+  /** Inflation-adjusted (real) value: deflate FV by inflation over the same period */
+  getRealValue(nominalValue: number, years: number): number {
+    return nominalValue / Math.pow(1 + this.inflationRate / 100, years);
+  }
+
+  /** Inflation-adjusted returns = real corpus − total invested */
+  getRealReturns(nominalValue: number, totalInvested: number, years: number): number {
+    return this.getRealValue(nominalValue, years) - totalInvested;
+  }
+
+  /** Generate the SIP reference table rows for SEO section */
+  getSipReferenceTable(): SipTableRow[] {
+    const scenarios = [
+      { sip: 5000, years: 1 },
+      { sip: 5000, years: 3 },
+      { sip: 5000, years: 5 },
+      { sip: 5000, years: 10 },
+      { sip: 10000, years: 1 },
+      { sip: 10000, years: 3 },
+      { sip: 10000, years: 5 },
+      { sip: 10000, years: 10 },
+    ];
+    return scenarios.map(s => {
+      const finalValue   = +this.calcSipFV(s.sip, 12, s.years).toFixed(0);
+      const totalInvested = s.sip * s.years * 12;
+      return {
+        monthlySip: s.sip,
+        years: s.years,
+        expectedReturn: +(finalValue - totalInvested).toFixed(0),
+        finalValue,
+        totalInvested
+      };
+    });
+  }
+
+  /** Get returns breakdown for a specific SIP amount (1, 3, 5, 10 years at 12%) */
+  getSipReturnsBreakdown(monthlySip: number): Array<{ years: number; invested: number; returns: number; value: number }> {
+    return [1, 3, 5, 10].map(years => {
+      const invested = monthlySip * years * 12;
+      const value    = +this.calcSipFV(monthlySip, 12, years).toFixed(0);
+      return { years, invested, returns: value - invested, value };
+    });
+  }
+
+  /** Compare two SIP configurations side by side */
+  compareSip(): void {
+    if (this.compareForm.invalid) { this.compareForm.markAllAsTouched(); return; }
+
+    const { sip1Amount, sip1Years, sip2Amount, sip2Years, compareRate } =
+      this.compareForm.getRawValue() as {
+        sip1Amount: number; sip1Years: number;
+        sip2Amount: number; sip2Years: number;
+        compareRate: number;
+      };
+
+    const buildResult = (label: string, monthly: number, years: number, rate: number): CompareResult => {
+      const totalInvested    = +(monthly * years * 12).toFixed(0);
+      const totalValue       = +this.calcSipFV(monthly, rate, years).toFixed(0);
+      const estimatedReturns = totalValue - totalInvested;
+      const realValue        = +this.getRealValue(totalValue, years).toFixed(0);
+      return { label, monthlySip: monthly, years, annualRate: rate, totalInvested, estimatedReturns, totalValue, realValue };
+    };
+
+    this.compareResults = [
+      buildResult('Option A', sip1Amount, sip1Years, compareRate),
+      buildResult('Option B', sip2Amount, sip2Years, compareRate),
+    ];
+  }
+
+  get cf() { return this.compareForm.controls; }
+
+  /** Returns true if this compare result has the highest total corpus */
+  isWinner(r: CompareResult): boolean {
+    if (!this.compareResults || this.compareResults.length < 2) return false;
+    const max = Math.max(...this.compareResults.map(c => c.totalValue));
+    return r.totalValue === max && this.compareResults[0].totalValue !== this.compareResults[1].totalValue;
   }
 
   ngOnDestroy(): void { this.sub?.unsubscribe(); }
