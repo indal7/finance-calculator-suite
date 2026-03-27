@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
@@ -14,11 +14,12 @@ import { CalculatorService, FdResult } from '../../services/calculator';
   templateUrl: './fd-calculator.html',
   styleUrls: ['./fd-calculator.css']
 })
-export class FdCalculator implements OnDestroy {
-  private readonly fb    = inject(FormBuilder);
-  private readonly svc   = inject(CalculatorService);
-  private readonly title = inject(Title);
-  private readonly meta  = inject(Meta);
+export class FdCalculator implements OnInit, OnDestroy {
+  private readonly fb       = inject(FormBuilder);
+  private readonly svc      = inject(CalculatorService);
+  private readonly title    = inject(Title);
+  private readonly meta     = inject(Meta);
+  private readonly document = inject(DOCUMENT);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -131,7 +132,21 @@ export class FdCalculator implements OnDestroy {
     this.meta.updateTag({ name: 'keywords',
       content: 'fd calculator india 2026, fixed deposit calculator sbi hdfc, fd interest calculator monthly, fd calculator quarterly compounding india' });
     this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/fd-calculator' });
-    this.meta.updateTag({ rel: 'canonical', href: 'https://www.myinvestmentcalculator.in/fd-calculator' });
+  }
+
+  ngOnInit(): void {
+    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/fd-calculator');
+  }
+
+  private setCanonicalUrl(url: string): void {
+    const head = this.document.head;
+    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = this.document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      head.appendChild(link);
+    }
+    link.setAttribute('href', url);
   }
 
   get f() { return this.form.controls; }

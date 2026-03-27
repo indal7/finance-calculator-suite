@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule, DecimalPipe } from '@angular/common';
@@ -14,11 +14,12 @@ import { CalculatorService, EmiResult } from '../../services/calculator';
   templateUrl: './emi-calculator.html',
   styleUrls: ['./emi-calculator.css']
 })
-export class EmiCalculator implements OnDestroy {
-  private readonly fb    = inject(FormBuilder);
-  private readonly svc   = inject(CalculatorService);
-  private readonly title = inject(Title);
-  private readonly meta  = inject(Meta);
+export class EmiCalculator implements OnInit, OnDestroy {
+  private readonly fb       = inject(FormBuilder);
+  private readonly svc      = inject(CalculatorService);
+  private readonly title    = inject(Title);
+  private readonly meta     = inject(Meta);
+  private readonly document = inject(DOCUMENT);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -132,7 +133,21 @@ export class EmiCalculator implements OnDestroy {
       content: 'emi calculator india online free, home loan emi calculator india, car loan emi calculator india, emi calculator with prepayment, 10 lakh loan 5 years emi' });
     this.meta.updateTag({ property: 'og:description', content: 'Calculate your monthly EMI for home, car or personal loans. Free and instant.' });
     this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/emi-calculator' });
-    this.meta.updateTag({ rel: 'canonical', href: 'https://www.myinvestmentcalculator.in/emi-calculator' });
+  }
+
+  ngOnInit(): void {
+    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/emi-calculator');
+  }
+
+  private setCanonicalUrl(url: string): void {
+    const head = this.document.head;
+    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = this.document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      head.appendChild(link);
+    }
+    link.setAttribute('href', url);
   }
 
   get f() { return this.form.controls; }
