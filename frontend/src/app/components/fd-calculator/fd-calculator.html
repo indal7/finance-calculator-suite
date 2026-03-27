@@ -175,7 +175,7 @@
             <span class="legend-dot returns"></span>
             Interest: ₹{{ result.totalInterest | number:'1.0-0' }}
           </div>
-          <div class="legend-row" style="color:var(--emerald); font-weight:500">
+          <div class="legend-row legend-row--total">
             <span class="legend-dot total"></span>
             Maturity: ₹{{ result.maturityAmount | number:'1.0-0' }}
           </div>
@@ -273,12 +273,12 @@
     </div>
   </div>
 
-  <div class="card" style="padding: 1.25rem 1.5rem;">
+  <div class="card card--compact">
     <h2>Related Calculators</h2>
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:0.5rem;">
-      <a routerLink="/sip-calculator"  style="font-size:0.85rem; color:var(--gold); text-decoration:none; padding:6px 14px; border:1px solid rgba(245,166,35,0.2); border-radius:8px; background:rgba(245,166,35,0.07);">SIP Calculator →</a>
-      <a routerLink="/emi-calculator"  style="font-size:0.85rem; color:var(--sky); text-decoration:none; padding:6px 14px; border:1px solid rgba(56,189,248,0.2); border-radius:8px; background:rgba(56,189,248,0.07);">EMI Calculator →</a>
-      <a routerLink="/cagr-calculator" style="font-size:0.85rem; color:var(--emerald); text-decoration:none; padding:6px 14px; border:1px solid rgba(0,200,150,0.2); border-radius:8px; background:rgba(0,200,150,0.07);">CAGR Calculator →</a>
+    <div class="related-links">
+      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator →</a>
+      <a routerLink="/emi-calculator"  class="related-link related-link--sky">EMI Calculator →</a>
+      <a routerLink="/cagr-calculator" class="related-link related-link--emerald">CAGR Calculator →</a>
     </div>
   </div>
 
