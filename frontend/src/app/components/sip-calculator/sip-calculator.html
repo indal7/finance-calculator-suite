@@ -30,17 +30,11 @@
   }
   </script>
 
-  <!-- ── Internal Nav ──────────────────────────────────────── -->
-  <nav class="calc-nav" aria-label="Calculator navigation">
-    <span class="calc-nav-label">Calculators:</span>
-    <a routerLink="/sip-calculator" routerLinkActive="active"
-      [attr.aria-current]="router.url === '/sip-calculator' ? 'page' : null">SIP</a>
-    <a routerLink="/emi-calculator" routerLinkActive="active"
-      [attr.aria-current]="router.url === '/emi-calculator' ? 'page' : null">EMI</a>
-    <a routerLink="/fd-calculator" routerLinkActive="active"
-      [attr.aria-current]="router.url === '/fd-calculator' ? 'page' : null">FD</a>
-    <a routerLink="/cagr-calculator" routerLinkActive="active"
-      [attr.aria-current]="router.url === '/cagr-calculator' ? 'page' : null">CAGR</a>
+  <!-- ── Breadcrumb ──────────────────────────────────────────── -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span class="breadcrumb-current">SIP Calculator</span>
   </nav>
 
   <!-- ── Hero ──────────────────────────────────────────────── -->

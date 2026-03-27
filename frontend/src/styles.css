@@ -827,6 +827,36 @@ code {
   border-color: rgba(245,166,35,0.25);
 }
 
+/* ── Breadcrumb ──────────────────────────────────────────────── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.breadcrumb a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.breadcrumb a:hover {
+  opacity: 0.8;
+}
+
+.breadcrumb-sep {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.breadcrumb-current {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
 /* ── Progress / Doughnut Visual ──────────────────────────────── */
 .result-visual {
   margin-top: 1.25rem;
