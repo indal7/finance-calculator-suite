@@ -62,8 +62,9 @@
       <div class="form-group">
         <label for="monthlyInvestment">Monthly Investment (₹)</label>
         <div class="slider-wrapper">
-          <input id="monthlyInvestment" type="number" formControlName="monthlyInvestment" min="500" max="500000"
-            placeholder="e.g. 5000" [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched"
+          <input id="monthlyInvestment" name="monthlyInvestment" type="number" formControlName="monthlyInvestment"
+            min="500" max="500000" placeholder="e.g. 5000" autocomplete="off"
+            [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched"
             (input)="syncSlider('monthlyInvestment')">
           <div class="slider-row">
             <input type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value"
@@ -81,8 +82,9 @@
       <div class="form-group">
         <label for="annualRate">Expected Annual Return (%)</label>
         <div class="slider-wrapper">
-          <input id="annualRate" type="number" formControlName="annualRate" min="1" max="30" step="0.5"
-            placeholder="e.g. 12" [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
+          <input id="annualRate" name="annualRate" type="number" formControlName="annualRate" min="1" max="30"
+            step="0.5" placeholder="e.g. 12" autocomplete="off"
+            [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
             (input)="syncSlider('annualRate')">
           <div class="slider-row">
             <input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value"
@@ -100,7 +102,8 @@
       <div class="form-group">
         <label for="years">Investment Period (Years)</label>
         <div class="slider-wrapper">
-          <input id="years" type="number" formControlName="years" min="1" max="40" placeholder="e.g. 10"
+          <input id="years" name="years" type="number" formControlName="years" min="1" max="40"
+            placeholder="e.g. 10" autocomplete="off"
             [class.invalid]="f['years'].invalid && f['years'].touched" (input)="syncSlider('years')">
           <div class="slider-row">
             <input type="range" min="1" max="40" step="1" [value]="f['years'].value"
@@ -115,8 +118,9 @@
 
       <!-- Inflation Toggle -->
       <div class="form-group inflate-toggle-group">
-        <label class="toggle-label">
-          <input type="checkbox" [(ngModel)]="adjustForInflation" [ngModelOptions]="{standalone: true}">
+        <label class="toggle-label" for="adjustForInflation">
+          <input type="checkbox" id="adjustForInflation" name="adjustForInflation"
+            [(ngModel)]="adjustForInflation" [ngModelOptions]="{standalone: true}">
           <span class="toggle-text">Adjust for inflation ({{ inflationRate }}%)</span>
         </label>
         @if (adjustForInflation) {
@@ -401,16 +405,18 @@
         <div class="compare-option">
           <div class="compare-option-label">Option A</div>
           <div class="form-group">
-            <label>Monthly SIP (₹)</label>
-            <input type="number" formControlName="sip1Amount" min="500" placeholder="e.g. 5000"
+            <label for="sip1Amount">Monthly SIP (₹)</label>
+            <input type="number" id="sip1Amount" name="sip1Amount" formControlName="sip1Amount" min="500"
+              placeholder="e.g. 5000" autocomplete="off"
               [class.invalid]="cf['sip1Amount'].invalid && cf['sip1Amount'].touched">
             @if (cf['sip1Amount'].invalid && cf['sip1Amount'].touched) {
             <span class="error-msg">Min ₹500</span>
             }
           </div>
           <div class="form-group">
-            <label>Period (Years)</label>
-            <input type="number" formControlName="sip1Years" min="1" placeholder="e.g. 10"
+            <label for="sip1Years">Period (Years)</label>
+            <input type="number" id="sip1Years" name="sip1Years" formControlName="sip1Years" min="1"
+              placeholder="e.g. 10" autocomplete="off"
               [class.invalid]="cf['sip1Years'].invalid && cf['sip1Years'].touched">
             @if (cf['sip1Years'].invalid && cf['sip1Years'].touched) {
             <span class="error-msg">Min 1 year</span>
@@ -423,16 +429,18 @@
         <div class="compare-option">
           <div class="compare-option-label">Option B</div>
           <div class="form-group">
-            <label>Monthly SIP (₹)</label>
-            <input type="number" formControlName="sip2Amount" min="500" placeholder="e.g. 10000"
+            <label for="sip2Amount">Monthly SIP (₹)</label>
+            <input type="number" id="sip2Amount" name="sip2Amount" formControlName="sip2Amount" min="500"
+              placeholder="e.g. 10000" autocomplete="off"
               [class.invalid]="cf['sip2Amount'].invalid && cf['sip2Amount'].touched">
             @if (cf['sip2Amount'].invalid && cf['sip2Amount'].touched) {
             <span class="error-msg">Min ₹500</span>
             }
           </div>
           <div class="form-group">
-            <label>Period (Years)</label>
-            <input type="number" formControlName="sip2Years" min="1" placeholder="e.g. 20"
+            <label for="sip2Years">Period (Years)</label>
+            <input type="number" id="sip2Years" name="sip2Years" formControlName="sip2Years" min="1"
+              placeholder="e.g. 20" autocomplete="off"
               [class.invalid]="cf['sip2Years'].invalid && cf['sip2Years'].touched">
             @if (cf['sip2Years'].invalid && cf['sip2Years'].touched) {
             <span class="error-msg">Min 1 year</span>
@@ -443,8 +451,9 @@
 
       <div class="compare-rate-row">
         <div class="form-group compare-rate-group">
-          <label>Expected Annual Return (%)</label>
-          <input type="number" formControlName="compareRate" min="1" max="30" step="0.5" placeholder="e.g. 12"
+          <label for="compareRate">Expected Annual Return (%)</label>
+          <input type="number" id="compareRate" name="compareRate" formControlName="compareRate" min="1" max="30"
+            step="0.5" placeholder="e.g. 12" autocomplete="off"
             [class.invalid]="cf['compareRate'].invalid && cf['compareRate'].touched">
           @if (cf['compareRate'].invalid && cf['compareRate'].touched) {
           <span class="error-msg">Enter a valid rate</span>
