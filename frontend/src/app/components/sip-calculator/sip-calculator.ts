@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, DOCUMENT } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
@@ -38,12 +38,13 @@ export interface CompareResult {
   templateUrl: './sip-calculator.html',
   styleUrls: ['./sip-calculator.css']
 })
-export class SipCalculator implements OnDestroy {
+export class SipCalculator implements OnInit, OnDestroy {
   public router = inject(Router);
-  private readonly fb    = inject(FormBuilder);
-  private readonly svc   = inject(CalculatorService);
-  private readonly title = inject(Title);
-  private readonly meta  = inject(Meta);
+  private readonly fb       = inject(FormBuilder);
+  private readonly svc      = inject(CalculatorService);
+  private readonly title    = inject(Title);
+  private readonly meta     = inject(Meta);
+  private readonly document = inject(DOCUMENT);
   private sub?: Subscription;
 
   form = this.fb.group({
@@ -165,7 +166,21 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     this.meta.updateTag({ property: 'og:title', content: 'SIP Calculator India – Free Online SIP Return Calculator' });
     this.meta.updateTag({ property: 'og:description', content: 'Calculate your SIP returns instantly. Free, accurate, no login required.' });
     this.meta.updateTag({ property: 'og:url', content: 'https://www.myinvestmentcalculator.in/sip-calculator' });
-    this.meta.updateTag({ rel: 'canonical', href: 'https://www.myinvestmentcalculator.in/sip-calculator' });
+  }
+
+  ngOnInit(): void {
+    this.setCanonicalUrl('https://www.myinvestmentcalculator.in/sip-calculator');
+  }
+
+  private setCanonicalUrl(url: string): void {
+    const head = this.document.head;
+    let link = head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = this.document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      head.appendChild(link);
+    }
+    link.setAttribute('href', url);
   }
 
   get f() { return this.form.controls; }
