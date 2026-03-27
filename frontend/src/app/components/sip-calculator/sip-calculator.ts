@@ -83,8 +83,45 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     {
       q: 'What is Step-Up SIP?',
       a: 'A Step-Up SIP increases your monthly contribution by a fixed percentage each year. For example, starting at ₹5,000 with a 10% annual step-up means investing ₹5,500 in year 2, ₹6,050 in year 3, and so on — significantly boosting your final corpus.'
+    },
+    {
+      q: 'Which mutual fund category gives the highest SIP returns in India?',
+      a: 'Small-cap and mid-cap mutual funds have historically delivered the highest long-term SIP returns (15–20% CAGR over 10+ years), but with higher volatility. Large-cap funds offer more stability at 10–13%. For most investors, a diversified equity fund or flexi-cap fund balances risk and return effectively.'
+    },
+    {
+      q: 'How does rupee cost averaging work in SIP?',
+      a: 'When markets fall, your fixed SIP amount buys more mutual fund units at a lower NAV. When markets rise, you buy fewer units at a higher NAV. Over time, this averages your purchase cost per unit — known as rupee cost averaging — reducing the impact of market volatility on your overall portfolio.'
+    },
+    {
+      q: 'What is the minimum period to invest via SIP?',
+      a: 'Technically, you can invest in SIP for as short as 6 months. However, to truly benefit from compounding and rupee cost averaging, a minimum of 3–5 years is recommended. For wealth creation goals like retirement or children\'s education, 10–20 year SIPs are ideal.'
+    },
+    {
+      q: 'Is SIP better than a lump sum investment?',
+      a: 'SIP is generally better for regular salaried investors who cannot invest a large lump sum at once. It removes the need to time the market and averages out costs. However, if you have a large sum available during a market correction, lump sum investment can outperform SIP over the same period.'
+    },
+    {
+      q: 'How is SIP taxed in India?',
+      a: 'Each SIP instalment is treated as a separate investment for tax purposes. For equity mutual funds, gains held less than 12 months are taxed at 20% (Short Term Capital Gains). Gains held for more than 12 months above ₹1.25 lakh per year are taxed at 12.5% (Long Term Capital Gains) from FY 2024–25.'
     }
   ];
+
+  /** Year-by-year SIP projection table */
+  getProjectionRows(monthlyInvestment: number | null, annualRate: number | null, totalYears: number | null): Array<{year: number, invested: number, value: number, gains: number}> {
+    const mi = monthlyInvestment ?? 0;
+    const ar = annualRate ?? 0;
+    const ty = totalYears ?? 0;
+    const rows = [];
+    const r = ar / 100 / 12;
+    for (let y = 1; y <= ty; y++) {
+      const n = y * 12;
+      const fv = r === 0 ? mi * n : mi * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+      const invested = +(mi * n).toFixed(0);
+      const value = +fv.toFixed(0);
+      rows.push({ year: y, invested, value, gains: value - invested });
+    }
+    return rows;
+  }
 
   constructor() {
     this.title.setTitle('SIP Calculator India – Calculate Monthly SIP Returns Online Free 2026');

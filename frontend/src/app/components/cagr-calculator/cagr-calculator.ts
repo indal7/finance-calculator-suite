@@ -48,6 +48,30 @@ export class CagrCalculator implements OnDestroy {
     {
       q: 'Can CAGR be negative?',
       a: 'Yes. If your ending value is less than your beginning value, CAGR will be negative. For example, ₹1,00,000 invested falling to ₹70,000 in 5 years gives a CAGR of -6.9%, indicating capital erosion.'
+    },
+    {
+      q: 'How do I use CAGR to compare two investments?',
+      a: 'CAGR is the perfect tool for comparing investments of different time periods. If Investment A grew from ₹1 lakh to ₹2 lakh in 5 years (CAGR: 14.87%) and Investment B grew from ₹1 lakh to ₹3 lakh in 10 years (CAGR: 11.61%), Investment A actually performed better on an annualised basis despite a lower absolute return.'
+    },
+    {
+      q: 'What is the CAGR formula?',
+      a: 'CAGR = (Ending Value / Beginning Value)^(1/n) − 1, where n = number of years. For example, ₹50,000 growing to ₹1,00,000 in 5 years: CAGR = (1,00,000/50,000)^(1/5) − 1 = 2^0.2 − 1 = 14.87%.'
+    },
+    {
+      q: 'What is the difference between CAGR and IRR?',
+      a: 'CAGR measures the smoothed annual growth rate of a single investment from start to end. IRR (Internal Rate of Return) is more comprehensive — it accounts for multiple cash flows (like SIP investments) at different time periods. For a single lump sum investment, CAGR and IRR are equivalent.'
+    },
+    {
+      q: 'What CAGR should I expect from real estate in India?',
+      a: 'Indian real estate has historically delivered 7–12% CAGR in major cities over the long term, varying significantly by location. Prime locations in Mumbai, Delhi, and Bangalore have seen 10–15% CAGR over 15–20 years. However, real estate has lower liquidity and requires higher capital compared to mutual funds.'
+    },
+    {
+      q: 'How is CAGR used in business performance analysis?',
+      a: 'Businesses use CAGR to measure revenue growth, profit growth, and market share expansion over multiple years. A company with 20%+ revenue CAGR over 5 years is considered a high-growth company. CAGR is also used in business valuations and investor presentations.'
+    },
+    {
+      q: 'What is the historical CAGR of gold in India?',
+      a: 'Gold has delivered approximately 10–12% CAGR in India over the last 20 years (2004–2024) in INR terms, partly due to currency depreciation. However, gold does not generate income and has longer periods of underperformance compared to equity markets.'
     }
   ];
 

@@ -13,7 +13,22 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
     "inLanguage": "en-IN"
   }
-</script>
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is a good SIP amount to start with in India?", "acceptedAnswer": { "@type": "Answer", "text": "You can start SIP with as low as ₹500/month. A common starting point is ₹1,000–₹5,000/month. The key is consistency — even ₹1,000/month at 12% for 20 years grows to nearly ₹10 lakh." } },
+      { "@type": "Question", "name": "Is ₹5,000 SIP for 10 years a good investment?", "acceptedAnswer": { "@type": "Answer", "text": "₹5,000/month for 10 years at 12% annual return grows to approximately ₹11.6 lakh — nearly double your total investment of ₹6 lakh." } },
+      { "@type": "Question", "name": "What is Step-Up SIP?", "acceptedAnswer": { "@type": "Answer", "text": "A Step-Up SIP increases your monthly contribution by a fixed percentage each year, significantly boosting your final corpus through the power of compounding." } },
+      { "@type": "Question", "name": "How is SIP taxed in India?", "acceptedAnswer": { "@type": "Answer", "text": "For equity mutual funds, STCG (held under 12 months) is taxed at 20%. LTCG above ₹1.25 lakh per year is taxed at 12.5% from FY 2024–25." } },
+      { "@type": "Question", "name": "Is SIP better than a lump sum investment?", "acceptedAnswer": { "@type": "Answer", "text": "SIP is generally better for regular salaried investors as it removes the need to time the market and averages out costs through rupee cost averaging." } }
+    ]
+  }
+  </script>
 
   <!-- ── Internal Nav ──────────────────────────────────────── -->
   <nav class="calc-nav" aria-label="Calculator navigation">
@@ -158,42 +173,101 @@
       </div>
     </div>
   </div>
+
+  <!-- ── Year-by-Year Projection Table ─────────────────────── -->
+  <div class="card">
+    <h2>Year-by-Year SIP Growth</h2>
+    <div class="projection-table-wrap">
+      <table class="projection-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Amount Invested</th>
+            <th>Estimated Gains</th>
+            <th>Total Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of getProjectionRows(f['monthlyInvestment'].value, f['annualRate'].value, f['years'].value); track row.year) {
+          <tr [class.highlight-row]="row.year === f['years'].value">
+            <td>{{ row.year }}</td>
+            <td>₹{{ row.invested | number:'1.0-0' }}</td>
+            <td class="gains-col">₹{{ row.gains | number:'1.0-0' }}</td>
+            <td class="value-col">₹{{ row.value | number:'1.0-0' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
   }
 
   <!-- ── SEO Rich Content ───────────────────────────────────── -->
   <div class="card example-section">
-    <h2>How SIP Calculation Works</h2>
+    <h2>What is SIP (Systematic Investment Plan)?</h2>
     <div class="seo-section">
-      <p>The SIP future value is calculated using the compound interest formula:</p>
-      <p><code>FV = P × ((1+r)ⁿ − 1) / r × (1+r)</code></p>
-      <p>Where <strong>P</strong> = monthly investment, <strong>r</strong> = monthly rate (annual ÷ 12),
-        <strong>n</strong> = total months.</p>
-
-      <h2>What is SIP?</h2>
       <p>
-        A Systematic Investment Plan (SIP) is a disciplined way to invest in mutual funds. Instead of investing
+        A <strong>Systematic Investment Plan (SIP)</strong> is a disciplined way to invest in mutual funds. Instead of investing
         a lump sum, you contribute a fixed amount every month — benefiting from <strong>rupee cost averaging</strong>
-        and <strong>power of compounding</strong> over time.
+        and <strong>power of compounding</strong> over time. SIP is one of the most popular investment methods in India,
+        with over 9 crore active SIP accounts as of 2026.
       </p>
 
       <h2>How SIP Works</h2>
       <p>
-        Each month, a fixed amount is auto-debited from your bank and invested in mutual fund units at the current NAV.
+        Each month, a fixed amount is auto-debited from your bank and invested in mutual fund units at the current NAV (Net Asset Value).
         When markets are low, you buy more units; when markets are high, you buy fewer — this averages your cost over
-        time.
+        time. This process is called <strong>rupee cost averaging</strong> and is one of the key advantages of SIP investing.
       </p>
 
-      <h2>Example Calculation</h2>
+      <h2>SIP Formula – How Returns Are Calculated</h2>
+      <p>The SIP future value is calculated using the compound interest formula:</p>
+      <p><code>FV = P × ((1+r)ⁿ − 1) / r × (1+r)</code></p>
+      <p>Where <strong>P</strong> = monthly investment, <strong>r</strong> = monthly rate (annual rate ÷ 12),
+        <strong>n</strong> = total months (years × 12).</p>
+
+      <h2>Real-Life SIP Calculation Examples</h2>
       <p>
-        ₹5,000/month at 12% p.a. for 10 years →
+        <strong>Example 1:</strong> ₹5,000/month at 12% p.a. for 10 years →
         Total invested: <strong>₹6,00,000</strong>,
         estimated corpus: <strong>₹11,61,695</strong>
         (returns of ~94%).
       </p>
       <p>
-        ₹1,000/month at 12% p.a. for 20 years →
+        <strong>Example 2:</strong> ₹1,000/month at 12% p.a. for 20 years →
         Total invested: <strong>₹2,40,000</strong>,
-        estimated corpus: <strong>₹9,99,148</strong>.
+        estimated corpus: <strong>₹9,99,148</strong> (returns of ~316%).
+      </p>
+      <p>
+        <strong>Example 3:</strong> ₹10,000/month at 14% p.a. for 15 years →
+        Total invested: <strong>₹18,00,000</strong>,
+        estimated corpus: <strong>₹60,00,000+</strong> — demonstrating the explosive power of compounding over time.
+      </p>
+
+      <h2>Benefits of SIP Investment in India</h2>
+      <ul class="seo-list">
+        <li><strong>Start Small:</strong> Begin with as little as ₹500/month — no large capital needed.</li>
+        <li><strong>Rupee Cost Averaging:</strong> Automatically buys more units when markets fall, reducing average cost.</li>
+        <li><strong>Power of Compounding:</strong> Returns earned are reinvested, leading to exponential wealth growth.</li>
+        <li><strong>Disciplined Saving:</strong> Auto-debit ensures you invest consistently without emotional decisions.</li>
+        <li><strong>Flexible:</strong> Pause, stop, or increase your SIP amount anytime without penalty.</li>
+        <li><strong>Tax Efficiency:</strong> ELSS SIP investments qualify for ₹1.5 lakh deduction under Section 80C.</li>
+        <li><strong>Liquidity:</strong> Most open-ended equity fund SIPs can be redeemed anytime (unlike FDs).</li>
+      </ul>
+
+      <h2>SIP vs Lump Sum: Which is Better?</h2>
+      <p>
+        SIP is better for investors who receive a regular monthly income and cannot time the market. Lump sum investing is
+        better when you have a large corpus available and markets are at a multi-year low. For most salaried individuals,
+        SIP through equity mutual funds is the most practical and effective wealth-building strategy.
+      </p>
+
+      <h2>Best SIP Plans in India 2026</h2>
+      <p>
+        Top-performing mutual fund categories for SIP in India include: <strong>Flexi-Cap Funds</strong> (broad diversification),
+        <strong>Large &amp; Mid Cap Funds</strong> (balanced risk-reward), <strong>Mid Cap Funds</strong> (higher growth potential),
+        and <strong>ELSS (Tax-Saving) Funds</strong> (Section 80C benefit with equity exposure). Always check the fund's
+        3-year, 5-year and 10-year CAGR before investing.
       </p>
     </div>
   </div>

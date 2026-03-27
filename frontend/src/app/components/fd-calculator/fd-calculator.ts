@@ -56,8 +56,48 @@ export class FdCalculator implements OnDestroy {
     {
       q: 'What is the difference between quarterly and monthly compounding?',
       a: 'With monthly compounding (12 times/year), interest is calculated and added more frequently, resulting in slightly higher maturity amount than quarterly compounding (4 times/year). Most Indian banks use quarterly compounding for FDs.'
+    },
+    {
+      q: 'What is the maximum DICGC insurance cover for FD in India?',
+      a: 'The Deposit Insurance and Credit Guarantee Corporation (DICGC) insures bank deposits up to ₹5 lakh per depositor per bank. This includes all deposits (savings, FD, RD) across all branches of the same bank. To protect more, spread deposits across multiple banks.'
+    },
+    {
+      q: 'Can I break my FD prematurely?',
+      a: 'Yes, most bank FDs can be broken prematurely, but a penalty of 0.5%–1% is typically deducted from the applicable interest rate. Some banks offer penalty-free premature withdrawal after a lock-in period. Tax-saving FDs (5-year) cannot be broken before maturity.'
+    },
+    {
+      q: 'What is the FD interest rate for senior citizens in India 2026?',
+      a: 'Senior citizens (age 60+) get an additional 0.25%–0.50% interest on FDs at most banks. SBI Wecare scheme offers 0.50% extra for senior citizens on deposits of 5 years and above. HDFC, ICICI and other private banks also offer similar senior citizen benefits.'
+    },
+    {
+      q: 'Is FD better than SIP in India?',
+      a: 'FD offers guaranteed returns (6–9%) with zero market risk — ideal for conservative investors or short-term goals. SIP in equity mutual funds offers potentially higher returns (10–15% historically) but with market volatility. For long-term wealth creation (10+ years), SIP typically outperforms FD. For capital preservation or goals within 1–3 years, FD is safer.'
+    },
+    {
+      q: 'What is a Tax-Saving FD (Section 80C)?',
+      a: 'A Tax-Saving FD has a mandatory 5-year lock-in period and qualifies for deduction up to ₹1.5 lakh/year under Section 80C of the Income Tax Act. Interest earned is fully taxable. Most major banks offer this at the same rates as regular 5-year FDs.'
+    },
+    {
+      q: 'How to calculate FD maturity amount manually?',
+      a: 'Use the formula: A = P × (1 + r/n)^(n×t), where P = principal, r = annual interest rate (decimal), n = compounding frequency (4 for quarterly), t = years. For example: ₹1,00,000 at 7% for 3 years with quarterly compounding = 1,00,000 × (1 + 0.07/4)^(4×3) = ₹1,23,145.'
     }
   ];
+
+  /** Year-by-year FD growth projection */
+  getFdProjectionRows(principal: number | null, annualRate: number | null, totalYears: number | null, compFreq: number | null): Array<{year: number, interest: number, maturity: number}> {
+    const p = principal ?? 0;
+    const ar = annualRate ?? 0;
+    const ty = totalYears ?? 0;
+    const n = compFreq ?? 4;
+    const rows = [];
+    const r = ar / 100;
+    for (let y = 1; y <= Math.ceil(ty); y++) {
+      const t = Math.min(y, ty);
+      const maturity = +(p * Math.pow(1 + r / n, n * t)).toFixed(0);
+      rows.push({ year: y, interest: maturity - p, maturity });
+    }
+    return rows;
+  }
 
   constructor() {
     this.title.setTitle('FD Calculator India 2026 – Fixed Deposit Interest Calculator SBI HDFC ICICI');
