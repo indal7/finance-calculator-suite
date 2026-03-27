@@ -32,6 +32,30 @@ export class EmiCalculator implements OnDestroy {
   apiError = '';
   openFaq: number | null = null;
 
+  copied = false;
+  private copyTimer?: ReturnType<typeof setTimeout>;
+
+  copyResult(): void {
+    if (!this.result) return;
+    const { emi, totalPayment, totalInterest } = this.result;
+    const { principal, annualRate, years } = this.form.getRawValue() as any;
+    const text = [
+      `EMI Calculator Result`,
+      `Loan Amount: ₹${principal?.toLocaleString('en-IN')}`,
+      `Annual Interest: ${annualRate}%`,
+      `Tenure: ${years} years`,
+      `─────────────────`,
+      `Monthly EMI:    ₹${emi?.toLocaleString('en-IN')}`,
+      `Total Payment:  ₹${totalPayment?.toLocaleString('en-IN')}`,
+      `Total Interest: ₹${totalInterest?.toLocaleString('en-IN')}`,
+      `Calculated at www.myinvestmentcalculator.in`
+    ].join('\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+    this.copied = true;
+    clearTimeout(this.copyTimer);
+    this.copyTimer = setTimeout(() => { this.copied = false; }, 2200);
+  }
+
   readonly faqs = [
     {
       q: 'What is the EMI for a ₹10 lakh loan for 5 years at 10%?',

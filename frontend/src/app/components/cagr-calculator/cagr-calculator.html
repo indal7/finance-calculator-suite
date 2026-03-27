@@ -125,6 +125,9 @@
     <div class="result-card" role="region" aria-label="CAGR Calculation Result">
       <h2>
         Investment Performance
+        <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
+          {{ copied ? '✓ Copied' : '⎘ Copy' }}
+        </button>
         @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying…</span> }
         @if (apiStatus === 'success') { <span class="api-badge success">✅ Verified</span> }
         @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ Local</span> }
@@ -168,6 +171,31 @@
             Final: ₹{{ f['endingValue'].value | number:'1.0-0' }}
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ── Year-by-Year CAGR Growth Table ────────────────────── -->
+    <div class="card">
+      <h2>Year-by-Year Investment Growth</h2>
+      <div class="projection-table-wrap">
+        <table class="projection-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Investment Value</th>
+              <th>Total Gain</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of getCagrProjectionRows(f['beginningValue'].value, f['endingValue'].value, f['years'].value); track row.year) {
+            <tr [class.highlight-row]="row.year === f['years'].value">
+              <td>{{ row.year }}</td>
+              <td class="value-col">₹{{ row.value | number:'1.0-0' }}</td>
+              <td class="gains-col">₹{{ row.gain | number:'1.0-0' }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
 

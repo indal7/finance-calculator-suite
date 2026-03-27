@@ -21,6 +21,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.logo')?.textContent).toContain('Finance Calculator Suite');
+    expect(compiled.querySelector('.logo')?.textContent).toContain('Finance Calculator India');
   });
 });
