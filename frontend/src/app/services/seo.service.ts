@@ -63,4 +63,30 @@ export class SeoService {
     const script = head.querySelector<HTMLScriptElement>(`script[type="application/ld+json"][data-schema-id="${id}"]`);
     script?.remove();
   }
+
+  /**
+   * Injects (or replaces) a FAQPage JSON-LD schema into the document head.
+   * Calling this on route change automatically removes the previous FAQ schema
+   * because it reuses the fixed id 'faq-schema', ensuring only ONE FAQPage
+   * schema exists at any time.
+   */
+  updateFAQSchema(faqs: { question: string; answer: string }[]): void {
+    this.injectJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': faqs.map(faq => ({
+        '@type': 'Question',
+        'name': faq.question,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': faq.answer
+        }
+      }))
+    }, 'faq-schema');
+  }
+
+  /** Removes the active FAQPage schema (call on component destroy). */
+  removeFAQSchema(): void {
+    this.removeJsonLd('faq-schema');
+  }
 }

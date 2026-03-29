@@ -143,6 +143,7 @@ export class FdCalculator implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/fd-calculator');
+    this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }
 
   get f() { return this.form.controls; }
@@ -192,5 +193,6 @@ export class FdCalculator implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.seo.removeJsonLd('fd-breadcrumb');
+    this.seo.removeFAQSchema();
   }
 }

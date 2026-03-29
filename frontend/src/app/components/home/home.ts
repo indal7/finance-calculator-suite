@@ -35,49 +35,29 @@ export class HomeComponent implements OnDestroy {
         { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.myinvestmentcalculator.in/' }
       ]
     }, 'home-breadcrumb');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'mainEntity': [
-        {
-          '@type': 'Question',
-          'name': 'What is a SIP calculator?',
-          'acceptedAnswer': {
-            '@type': 'Answer',
-            'text': 'A SIP (Systematic Investment Plan) calculator is an online tool that helps you estimate the returns on your mutual fund SIP investments. Enter your monthly investment amount, expected annual return rate, and investment duration to instantly see the maturity value and total wealth gained through compounding.'
-          }
-        },
-        {
-          '@type': 'Question',
-          'name': 'What is an EMI calculator?',
-          'acceptedAnswer': {
-            '@type': 'Answer',
-            'text': 'An EMI (Equated Monthly Instalment) calculator helps you compute the fixed monthly repayment amount for a loan. Enter the loan amount, annual interest rate, and tenure to instantly calculate your EMI, total interest payable, and total repayment amount.'
-          }
-        },
-        {
-          '@type': 'Question',
-          'name': 'What is an FD calculator?',
-          'acceptedAnswer': {
-            '@type': 'Answer',
-            'text': 'An FD (Fixed Deposit) calculator helps you find out the maturity amount of your fixed deposit investment. Enter the principal amount, annual interest rate, tenure, and compounding frequency to see the interest earned and maturity value at banks like SBI, HDFC, and ICICI.'
-          }
-        },
-        {
-          '@type': 'Question',
-          'name': 'What is CAGR and how is it calculated?',
-          'acceptedAnswer': {
-            '@type': 'Answer',
-            'text': 'CAGR (Compound Annual Growth Rate) is the rate at which an investment grows annually over a specified period, assuming profits are reinvested. It is calculated as: CAGR = (Ending Value / Beginning Value)^(1 / Number of Years) − 1. Our free CAGR calculator makes this instant for any investment.'
-          }
-        }
-      ]
-    }, 'home-faq');
+    this.seo.updateFAQSchema([
+      {
+        question: 'What is a SIP calculator?',
+        answer: 'A SIP (Systematic Investment Plan) calculator is an online tool that helps you estimate the returns on your mutual fund SIP investments. Enter your monthly investment amount, expected annual return rate, and investment duration to instantly see the maturity value and total wealth gained through compounding.'
+      },
+      {
+        question: 'What is an EMI calculator?',
+        answer: 'An EMI (Equated Monthly Instalment) calculator helps you compute the fixed monthly repayment amount for a loan. Enter the loan amount, annual interest rate, and tenure to instantly calculate your EMI, total interest payable, and total repayment amount.'
+      },
+      {
+        question: 'What is an FD calculator?',
+        answer: 'An FD (Fixed Deposit) calculator helps you find out the maturity amount of your fixed deposit investment. Enter the principal amount, annual interest rate, tenure, and compounding frequency to see the interest earned and maturity value at banks like SBI, HDFC, and ICICI.'
+      },
+      {
+        question: 'What is CAGR and how is it calculated?',
+        answer: 'CAGR (Compound Annual Growth Rate) is the rate at which an investment grows annually over a specified period, assuming profits are reinvested. It is calculated as: CAGR = (Ending Value / Beginning Value)^(1 / Number of Years) − 1. Our free CAGR calculator makes this instant for any investment.'
+      }
+    ]);
   }
 
   ngOnDestroy(): void {
     this.seo.removeJsonLd('home-webpage');
     this.seo.removeJsonLd('home-breadcrumb');
-    this.seo.removeJsonLd('home-faq');
+    this.seo.removeFAQSchema();
   }
 }
