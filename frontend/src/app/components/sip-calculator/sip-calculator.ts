@@ -176,6 +176,13 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/sip-calculator');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
+    this.seo.setKeywords([
+      'sip calculator india',
+      'sip returns calculator',
+      '₹5000 sip returns',
+      'step up sip calculator',
+      'monthly sip calculator'
+    ]);
   }
 
   get f() { return this.form.controls; }

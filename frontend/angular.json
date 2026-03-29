@@ -28,7 +28,10 @@
             "ssr": {
               "entry": "server.ts"
             },
-            "prerender": true,
+            "prerender": {
+              "discoverRoutes": true,
+              "routesFile": "routes.txt"
+            },
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",

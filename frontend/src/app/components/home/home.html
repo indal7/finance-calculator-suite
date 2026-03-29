@@ -47,16 +47,6 @@
     </a>
   </div>
 
-  <!-- Ad Unit: Below Calculator Cards (replace data-ad-slot with your AdSense slot ID) -->
-  <div class="ad-unit ad-unit--leaderboard" aria-label="Advertisement">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5738832184770301"
-         data-ad-slot="REPLACE_WITH_SLOT_ID"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-  </div>
-
   <!-- Trust Section -->
   <div class="trust-section">
     <h2>✅ Trusted by Thousands of Indian Investors</h2>
@@ -199,16 +189,6 @@
     </p>
   </div>
 
-  <!-- Ad Unit: Between Content (replace data-ad-slot with your AdSense slot ID) -->
-  <div class="ad-unit ad-unit--rectangle" aria-label="Advertisement">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5738832184770301"
-         data-ad-slot="REPLACE_WITH_SLOT_ID"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-  </div>
-
   <!-- Popular Searches Section -->
   <div class="popular-searches-section">
     <h2>Popular SIP Calculations</h2>
@@ -249,6 +229,79 @@
       <li><a routerLink="/emi-calculator">EMI Calculator India – Calculate Loan EMI &amp; Interest Breakdown</a></li>
       <li><a routerLink="/fd-calculator">FD Calculator India – Calculate Fixed Deposit Maturity Amount</a></li>
       <li><a routerLink="/cagr-calculator">CAGR Calculator – Calculate Annual Growth Rate of Investment</a></li>
+    </ul>
+  </div>
+
+  <!-- Financial Planning Scenarios Section -->
+  <div class="edu-section scenarios-section">
+    <h2>Financial Planning Scenarios</h2>
+    <p class="section-intro">Explore common investment and loan scenarios for Indian investors:</p>
+    <div class="scenarios-grid">
+      <a routerLink="/sip-calculator" [queryParams]="{amount: 10000, years: 20}" class="scenario-card">
+        <div class="scenario-icon">📈</div>
+        <div class="scenario-title">₹10,000 SIP for 20 years</div>
+        <div class="scenario-desc">See how ₹10,000/month grows to ~₹99.9 lakh at 12% p.a.</div>
+      </a>
+      <a routerLink="/sip-calculator" [queryParams]="{amount: 5000, years: 15}" class="scenario-card">
+        <div class="scenario-icon">📈</div>
+        <div class="scenario-title">₹5,000 SIP for 15 years</div>
+        <div class="scenario-desc">Build wealth steadily — estimated corpus of ~₹25.2 lakh.</div>
+      </a>
+      <a routerLink="/emi-calculator" [queryParams]="{principal: 3000000, rate: 8.5, years: 20}" class="scenario-card">
+        <div class="scenario-icon">🏦</div>
+        <div class="scenario-title">₹30L Home Loan EMI @ 8.5%</div>
+        <div class="scenario-desc">Monthly EMI ≈ ₹26,035 for a 20-year home loan.</div>
+      </a>
+      <a routerLink="/fd-calculator" [queryParams]="{amount: 100000, rate: 7, years: 3}" class="scenario-card">
+        <div class="scenario-icon">🏧</div>
+        <div class="scenario-title">₹1L FD for 3 years at 7%</div>
+        <div class="scenario-desc">Your ₹1 lakh FD matures to approximately ₹1.23 lakh.</div>
+      </a>
+      <a routerLink="/sip-calculator" [queryParams]="{amount: 2000, years: 10}" class="scenario-card">
+        <div class="scenario-icon">📈</div>
+        <div class="scenario-title">₹2,000 SIP for 10 years</div>
+        <div class="scenario-desc">A beginner-friendly SIP that builds ≈ ₹4.65 lakh corpus.</div>
+      </a>
+      <a routerLink="/cagr-calculator" class="scenario-card">
+        <div class="scenario-icon">📊</div>
+        <div class="scenario-title">Check Your Portfolio CAGR</div>
+        <div class="scenario-desc">Measure the true annual growth rate of any investment.</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Latest Updates Section -->
+  <div class="edu-section updates-section">
+    <h2>Latest Updates – March 2026</h2>
+    <ul class="updates-list">
+      <li>
+        <span class="update-date">Mar 2026</span>
+        <span class="update-text">
+          Home loan interest rates updated — SBI at 8.50%, HDFC at 8.70%.
+          <a routerLink="/emi-calculator" class="inline-link">Calculate your EMI →</a>
+        </span>
+      </li>
+      <li>
+        <span class="update-date">Mar 2026</span>
+        <span class="update-text">
+          LTCG tax on equity mutual funds revised to 12.5% above ₹1.25 lakh/year (FY 2024–25).
+          <a routerLink="/sip-calculator" class="inline-link">Plan your SIP →</a>
+        </span>
+      </li>
+      <li>
+        <span class="update-date">Feb 2026</span>
+        <span class="update-text">
+          SBI FD rates updated — up to 7.50% p.a. for general citizens, 8.00% for senior citizens.
+          <a routerLink="/fd-calculator" class="inline-link">Calculate FD returns →</a>
+        </span>
+      </li>
+      <li>
+        <span class="update-date">Feb 2026</span>
+        <span class="update-text">
+          AMFI reports monthly SIP inflows crossing ₹26,000 crore — a new all-time high.
+          <a routerLink="/sip-calculator" class="inline-link">Start calculating SIP →</a>
+        </span>
+      </li>
     </ul>
   </div>
 
