@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
+// Cache-Control values for SSR-rendered pages (5 minutes shared cache)
+const SSR_CACHE_CONTROL = 'public, max-age=0, s-maxage=300, stale-while-revalidate=60';
+
 export function app(): express.Express {
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -16,7 +19,16 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Serve static files from /browser
+  // Security headers applied to all responses
+  server.use((_req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    next();
+  });
+
+  // Serve static files from /browser with long-lived cache
   server.get(
     '**',
     express.static(browserDistFolder, {
@@ -37,7 +49,11 @@ export function app(): express.Express {
         publicPath: browserDistFolder,
         providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
       })
-      .then((html) => res.send(html))
+      .then((html) => {
+        res.setHeader('Cache-Control', SSR_CACHE_CONTROL);
+        res.setHeader('Vary', 'Accept-Encoding');
+        res.send(html);
+      })
       .catch((err) => next(err));
   });
 

@@ -1447,3 +1447,32 @@ code {
   .contact-card { padding: 1rem; }
   .btn-contact-submit { align-self: stretch; justify-content: center; }
 }
+
+/* ── AdSense Ad Units ─────────────────────────────────────── */
+/* Reserve space to prevent Cumulative Layout Shift (CLS) */
+.ad-unit {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  margin: 1.5rem 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+.ad-unit--leaderboard {
+  min-height: 90px;
+}
+
+.ad-unit--rectangle {
+  min-height: 250px;
+}
+
+.ad-unit--banner {
+  min-height: 60px;
+}
+
+@media (max-width: 640px) {
+  .ad-unit--leaderboard {
+    min-height: 50px;
+  }
+}
