@@ -37,6 +37,16 @@
               "src/favicon-16x16.png",
               "src/favicon-180x180.png",
               {
+                "glob": "sitemap.xml",
+                "input": "src/assets",
+                "output": "/"
+              },
+              {
+                "glob": "robots.txt",
+                "input": "src/assets",
+                "output": "/"
+              },
+              {
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
