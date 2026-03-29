@@ -133,7 +133,7 @@
 
 .footer-inner {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1.6fr;
+  grid-template-columns: 1.4fr 1fr 1fr;
   gap: 2.5rem;
   padding-bottom: 2.5rem;
 }
@@ -205,6 +205,16 @@
   text-align: center;
   font-size: 0.8rem;
   color: var(--text-muted, #5C6E9A);
+}
+
+.footer-bottom a {
+  color: var(--text-muted, #5C6E9A);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-bottom a:hover {
+  color: var(--gold, #F5A623);
 }
 
 /* ══════════════════════════════════════════════════════════════
