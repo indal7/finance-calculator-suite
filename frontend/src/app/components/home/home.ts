@@ -16,6 +16,11 @@ export class HomeComponent implements OnDestroy {
     this.seo.setTitle('Best SIP Calculator India 2026 – EMI, FD & CAGR');
     this.seo.setDescription('Use the best SIP calculator India to calculate ₹5,000 monthly returns, EMI, FD maturity & CAGR instantly. Free, accurate & India-specific financial tools.');
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/');
+    this.seo.setKeywords([
+      'sip calculator india', 'emi calculator india', 'fd calculator india',
+      'cagr calculator', 'financial calculators india 2026',
+      'free online calculator india'
+    ]);
     this.seo.updateOgTags(
       'Best SIP Calculator India 2026 – EMI, FD & CAGR Calculator Online',
       'Use the best SIP calculator India to calculate ₹5,000 monthly returns, EMI, FD maturity & CAGR instantly. Free, accurate & India-specific financial tools.',

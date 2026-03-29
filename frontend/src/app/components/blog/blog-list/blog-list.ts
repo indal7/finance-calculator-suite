@@ -43,6 +43,11 @@ export class BlogListComponent implements OnInit, OnDestroy {
   constructor() {
     this.seo.setTitle('Finance Blog – SIP, EMI, FD & Investment Tips India 2026');
     this.seo.setDescription('Expert articles on SIP investment, EMI calculation, FD returns, and wealth creation strategies for Indian investors.');
+    this.seo.setKeywords([
+      'sip investment guide india', 'emi calculation tips',
+      'fd returns india', 'mutual fund investment india',
+      'financial planning india 2026'
+    ]);
     this.seo.updateOgTags(
       'Finance Blog – Investment & Calculator Guides India',
       'Expert articles on SIP, EMI, FD, CAGR and wealth creation for Indian investors.',

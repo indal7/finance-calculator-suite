@@ -138,6 +138,11 @@ export class CagrCalculator implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/cagr-calculator');
+    this.seo.setKeywords([
+      'cagr calculator india', 'compound annual growth rate calculator',
+      'stock return calculator india', 'mutual fund cagr calculator',
+      'nifty 50 cagr calculator'
+    ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }
 

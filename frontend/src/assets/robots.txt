@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /assets/
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Specific bot controls
+User-agent: AdsBot-Google
+Allow: /
 
 Sitemap: https://www.myinvestmentcalculator.in/sitemap.xml
