@@ -9,4 +9,11 @@
   <url><loc>https://www.myinvestmentcalculator.in/contact-us</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://www.myinvestmentcalculator.in/privacy-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.myinvestmentcalculator.in/terms-and-conditions</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/ppf-calculator</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/lumpsum-calculator</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/income-tax-calculator</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/blog/sip-vs-fd</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/blog/sip-5000-per-month</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.myinvestmentcalculator.in/blog/emi-calculation-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

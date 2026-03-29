@@ -1,0 +1,149 @@
+<article class="blog-article">
+  <div class="container">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a> &rsaquo;
+      <a routerLink="/blog">Blog</a> &rsaquo;
+      <span>EMI Calculation Guide</span>
+    </nav>
+
+    <header class="article-header">
+      <div class="article-meta">
+        <span class="article-category">EMI &amp; Loans</span>
+        <time datetime="2026-01-25">January 25, 2026</time>
+        <span>7 min read</span>
+      </div>
+      <h1>Complete Guide to EMI Calculation in India: Formula, Examples &amp; Tips</h1>
+      <p class="article-lead">An EMI (Equated Monthly Instalment) is the fixed monthly payment you make to your bank to repay a loan. Understanding how EMI is calculated helps you make smarter borrowing decisions — choose the right tenure, compare lenders, and plan your finances effectively.</p>
+    </header>
+
+    <section class="article-section">
+      <h2>What is EMI?</h2>
+      <p>EMI stands for <strong>Equated Monthly Instalment</strong>. It is a fixed amount paid by a borrower to a lender at a specified date each calendar month. EMIs are used to repay both interest and principal each month, such that over a specified number of years, the loan is fully paid off.</p>
+      <p>In India, EMIs are used for:</p>
+      <ul>
+        <li><strong>Home Loans</strong> — ₹20L to ₹2Cr+, tenure up to 30 years, rates 8.4%–9.5%</li>
+        <li><strong>Car Loans</strong> — ₹2L to ₹50L, tenure 1–7 years, rates 9%–12%</li>
+        <li><strong>Personal Loans</strong> — ₹50K to ₹40L, tenure 1–5 years, rates 11%–18%</li>
+        <li><strong>Education Loans</strong> — ₹1L to ₹75L, tenure 5–15 years, rates 8%–13%</li>
+      </ul>
+      <p>Use our <a routerLink="/emi-calculator">free EMI calculator</a> to instantly compute your monthly payment for any loan scenario.</p>
+    </section>
+
+    <section class="article-section">
+      <h2>EMI Formula: How is EMI Calculated?</h2>
+      <p>The standard EMI formula used by all Indian banks is the <strong>reducing balance method</strong>:</p>
+      <div class="formula-box">
+        <p class="formula-text">EMI = P × r × (1 + r)<sup>n</sup> ÷ ((1 + r)<sup>n</sup> − 1)</p>
+        <div class="formula-legend">
+          <span><strong>P</strong> = Principal loan amount</span>
+          <span><strong>r</strong> = Monthly interest rate = Annual rate ÷ 12 ÷ 100</span>
+          <span><strong>n</strong> = Total months = Years × 12</span>
+        </div>
+      </div>
+      <h3>Example: ₹10 Lakh Home Loan at 9% for 10 Years</h3>
+      <p>P = ₹10,00,000 | Annual rate = 9% | Monthly rate r = 9/12/100 = 0.0075 | n = 10×12 = 120 months</p>
+      <p>EMI = 10,00,000 × 0.0075 × (1.0075)^120 ÷ ((1.0075)^120 − 1)</p>
+      <p>EMI = 10,00,000 × 0.0075 × 2.4514 ÷ (2.4514 − 1) = <strong>₹12,668/month</strong></p>
+      <p>Total payment: ₹12,668 × 120 = <strong>₹15.2 lakh</strong> | Total interest: <strong>₹5.2 lakh</strong></p>
+    </section>
+
+    <section class="article-section">
+      <h2>Understanding Amortization: Principal vs Interest Split</h2>
+      <p>With the reducing balance method, the <strong>interest portion of each EMI decreases</strong> while the <strong>principal portion increases</strong> over time. This is shown in an amortization schedule.</p>
+      <div class="amort-example">
+        <table class="returns-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>EMI (Monthly)</th>
+              <th>Interest Paid (Year)</th>
+              <th>Principal Paid (Year)</th>
+              <th>Balance Remaining</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>₹12,668</td><td>₹88,268</td><td>₹63,748</td><td>₹9,36,252</td></tr>
+            <tr><td>2</td><td>₹12,668</td><td>₹82,488</td><td>₹69,528</td><td>₹8,66,724</td></tr>
+            <tr><td>5</td><td>₹12,668</td><td>₹63,948</td><td>₹88,068</td><td>₹6,13,884</td></tr>
+            <tr><td>8</td><td>₹12,668</td><td>₹38,124</td><td>₹1,13,892</td><td>₹2,98,008</td></tr>
+            <tr><td>10</td><td>₹12,668</td><td>₹12,480</td><td>₹1,39,536</td><td>₹0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Notice how in year 1, more of your EMI goes toward interest. By year 10, almost all of it is principal repayment. This is why prepaying early in the loan tenure saves the most interest.</p>
+    </section>
+
+    <section class="article-section">
+      <h2>EMI Comparison: Tenure vs Total Interest</h2>
+      <p>For a ₹30 lakh home loan at 8.5% annual interest:</p>
+      <div class="returns-table-wrapper">
+        <table class="returns-table">
+          <thead>
+            <tr>
+              <th>Tenure</th>
+              <th>Monthly EMI</th>
+              <th>Total Payment</th>
+              <th>Total Interest</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10 Years</td><td>₹37,148</td><td>₹44.58 lakh</td><td>₹14.58 lakh</td></tr>
+            <tr><td>15 Years</td><td>₹29,543</td><td>₹53.18 lakh</td><td>₹23.18 lakh</td></tr>
+            <tr><td>20 Years</td><td>₹26,035</td><td>₹62.48 lakh</td><td>₹32.48 lakh</td></tr>
+            <tr><td>25 Years</td><td>₹24,128</td><td>₹72.38 lakh</td><td>₹42.38 lakh</td></tr>
+            <tr><td>30 Years</td><td>₹23,075</td><td>₹83.07 lakh</td><td>₹53.07 lakh</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Choosing 10 years vs 30 years saves <strong>₹38.49 lakh in interest</strong> — but requires ₹14,073 higher EMI each month. Balance your monthly budget against long-term interest savings.</p>
+    </section>
+
+    <section class="article-section">
+      <h2>Tips to Reduce Your EMI and Total Interest</h2>
+      <h3>1. Make a Larger Down Payment</h3>
+      <p>Every extra ₹1 lakh you pay upfront reduces the principal, which reduces both the EMI and total interest paid. Most banks require 10–20% down payment; paying 30% significantly reduces your loan burden.</p>
+      <h3>2. Improve Your CIBIL Score Before Applying</h3>
+      <p>A CIBIL score above 750 can get you 0.25–0.50% lower interest rate. On a ₹30 lakh loan for 20 years, 0.5% lower rate saves approximately ₹4–5 lakh over the loan tenure.</p>
+      <h3>3. Make Regular Prepayments</h3>
+      <p>As per RBI guidelines, banks cannot charge prepayment penalties on floating rate home loans. Making annual prepayments of even ₹50,000–₹1 lakh can reduce your effective tenure by 3–5 years and save substantial interest.</p>
+      <h3>4. Consider Balance Transfer</h3>
+      <p>If interest rates have dropped since you took your loan, consider transferring your balance to a new lender offering lower rates. Calculate if the savings exceed the transfer costs (typically 0.5–1% of outstanding balance).</p>
+      <h3>5. Invest EMI Savings via SIP</h3>
+      <p>If you choose a longer tenure to reduce EMI, invest the monthly savings via SIP. If your SIP returns (12%+) exceed your loan rate (8.5%), you come out ahead. Use our <a routerLink="/sip-calculator">SIP calculator</a> to model this strategy.</p>
+    </section>
+
+    <section class="article-faq">
+      <h2>Frequently Asked Questions</h2>
+      <details>
+        <summary>What is the formula for EMI calculation?</summary>
+        <p>EMI = P × r × (1+r)^n / ((1+r)^n − 1), where P = principal, r = monthly interest rate (annual rate ÷ 12 ÷ 100), n = total months.</p>
+      </details>
+      <details>
+        <summary>How is EMI calculated on reducing balance?</summary>
+        <p>Each month's interest is calculated on the outstanding principal balance. As you repay, the principal reduces, so the interest portion decreases and principal repayment increases each month.</p>
+      </details>
+      <details>
+        <summary>What is the EMI for a ₹30 lakh home loan for 20 years at 8.5%?</summary>
+        <p>The monthly EMI is approximately ₹26,035. Total payment over 20 years: ₹62.48 lakh. Total interest paid: ₹32.48 lakh.</p>
+      </details>
+      <details>
+        <summary>How can I reduce my home loan EMI?</summary>
+        <p>1) Make a larger down payment. 2) Improve your CIBIL score for a lower rate. 3) Increase tenure (increases total interest). 4) Make regular prepayments. 5) Consider balance transfer to a lower-rate lender.</p>
+      </details>
+      <details>
+        <summary>Does part prepayment reduce EMI or tenure?</summary>
+        <p>Most banks give you the choice. Reducing tenure is mathematically better as it saves more total interest. As per RBI guidelines, there are no prepayment charges on floating rate home loans.</p>
+      </details>
+    </section>
+
+    <nav class="article-nav">
+      <a routerLink="/blog" class="back-to-blog">← Back to Blog</a>
+      <div class="related-links">
+        <strong>Try our calculators:</strong>
+        <a routerLink="/emi-calculator">EMI Calculator</a>
+        <a routerLink="/sip-calculator">SIP Calculator</a>
+        <a routerLink="/blog/sip-vs-fd">SIP vs FD Guide</a>
+      </div>
+    </nav>
+  </div>
+</article>

@@ -1,0 +1,43 @@
+<section class="blog-hero">
+  <div class="container">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a> &rsaquo; <span>Blog</span>
+    </nav>
+    <h1>Finance Blog</h1>
+    <p class="blog-hero-sub">Expert guides on SIP, EMI, FD &amp; smart investing for Indian investors</p>
+  </div>
+</section>
+
+<section class="blog-grid-section">
+  <div class="container">
+    <div class="blog-grid">
+      @for (post of posts; track post.slug) {
+        <article class="blog-card">
+          <div class="blog-card-meta">
+            <span class="blog-category">{{ post.category }}</span>
+            <span class="blog-read-time">{{ post.readTime }}</span>
+          </div>
+          <h2 class="blog-card-title">
+            <a [routerLink]="['/blog', post.slug]">{{ post.title }}</a>
+          </h2>
+          <p class="blog-card-desc">{{ post.description }}</p>
+          <div class="blog-card-footer">
+            <time [attr.datetime]="post.date">{{ post.date | slice:0:10 }}</time>
+            <a [routerLink]="['/blog', post.slug]" class="read-more-btn">Read More →</a>
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="blog-cta-section">
+      <h2>Use Our Free Calculators</h2>
+      <p>Apply what you've learned with our free financial calculators.</p>
+      <div class="blog-cta-links">
+        <a routerLink="/sip-calculator" class="cta-link">📈 SIP Calculator</a>
+        <a routerLink="/emi-calculator" class="cta-link">🏦 EMI Calculator</a>
+        <a routerLink="/fd-calculator" class="cta-link">🏧 FD Calculator</a>
+        <a routerLink="/cagr-calculator" class="cta-link">📊 CAGR Calculator</a>
+      </div>
+    </div>
+  </div>
+</section>

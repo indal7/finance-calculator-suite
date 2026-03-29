@@ -1,0 +1,132 @@
+.blog-hero {
+  background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 100%);
+  color: #fff;
+  padding: 3rem 0 2.5rem;
+  text-align: center;
+}
+.blog-hero h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+.blog-hero-sub {
+  color: #b0b8d8;
+  font-size: 1.05rem;
+  margin-top: 0.5rem;
+}
+.breadcrumb-nav {
+  font-size: 0.88rem;
+  color: #8a93b5;
+  margin-bottom: 0.75rem;
+}
+.breadcrumb-nav a {
+  color: #7eb3ff;
+  text-decoration: none;
+}
+.blog-grid-section {
+  padding: 3rem 0;
+  background: #f7f9fc;
+}
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem;
+  margin-bottom: 3rem;
+}
+.blog-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.75rem;
+  box-shadow: 0 2px 12px rgba(30,40,80,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.blog-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(30,40,80,0.13);
+}
+.blog-card-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.blog-category {
+  background: #e8f0fe;
+  color: #3b5bdb;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+.blog-read-time {
+  font-size: 0.82rem;
+  color: #888;
+}
+.blog-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+.blog-card-title a {
+  color: #1a1f3a;
+  text-decoration: none;
+}
+.blog-card-title a:hover { color: #3b5bdb; }
+.blog-card-desc {
+  color: #555;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  flex: 1;
+}
+.blog-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.blog-card-footer time {
+  font-size: 0.82rem;
+  color: #999;
+}
+.read-more-btn {
+  color: #3b5bdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.read-more-btn:hover { text-decoration: underline; }
+.blog-cta-section {
+  text-align: center;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, #e8f0fe 0%, #f0e8ff 100%);
+  border-radius: 16px;
+}
+.blog-cta-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #1a1f3a;
+}
+.blog-cta-section p {
+  color: #555;
+  margin-bottom: 1.25rem;
+}
+.blog-cta-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.cta-link {
+  background: #3b5bdb;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.93rem;
+  transition: background 0.2s;
+}
+.cta-link:hover { background: #2945c0; }
