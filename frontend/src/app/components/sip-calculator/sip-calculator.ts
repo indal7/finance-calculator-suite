@@ -175,6 +175,7 @@ private copyTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/sip-calculator');
+    this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }
 
   get f() { return this.form.controls; }
@@ -319,5 +320,6 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.seo.removeJsonLd('sip-breadcrumb');
+    this.seo.removeFAQSchema();
   }
 }
