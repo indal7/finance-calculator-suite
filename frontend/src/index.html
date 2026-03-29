@@ -46,12 +46,6 @@
       href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap">
   </noscript>
 
-  <!-- ✅ ADSENSE (CRITICAL FIXED - DIRECT LOAD) -->
-  <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5738832184770301"
-    crossorigin="anonymous">
-  </script>
-
   <!-- ✅ STRUCTURED DATA -->
   <script type="application/ld+json">
   {
@@ -87,5 +81,10 @@
 
 <body>
   <app-root></app-root>
+  <!-- AdSense moved from <head> to avoid blocking FCP -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5738832184770301"
+    crossorigin="anonymous">
+  </script>
 </body>
 </html>

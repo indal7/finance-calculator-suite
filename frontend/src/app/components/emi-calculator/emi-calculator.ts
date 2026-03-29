@@ -143,6 +143,11 @@ export class EmiCalculator implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/emi-calculator');
+    this.seo.setKeywords([
+      'emi calculator india', 'home loan emi calculator',
+      'car loan emi calculator', 'personal loan emi calculator',
+      'emi calculator with amortization', 'loan emi calculator 2026'
+    ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }
 

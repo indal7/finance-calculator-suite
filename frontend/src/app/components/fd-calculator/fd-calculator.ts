@@ -143,6 +143,11 @@ export class FdCalculator implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/fd-calculator');
+    this.seo.setKeywords([
+      'fd calculator india', 'fixed deposit calculator',
+      'sbi fd calculator 2026', 'fd interest calculator',
+      'fd maturity calculator quarterly compounding'
+    ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }
 

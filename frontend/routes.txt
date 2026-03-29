@@ -3,3 +3,14 @@
 /emi-calculator
 /fd-calculator
 /cagr-calculator
+/ppf-calculator
+/lumpsum-calculator
+/income-tax-calculator
+/blog
+/blog/sip-vs-fd
+/blog/sip-5000-per-month
+/blog/emi-calculation-guide
+/about-us
+/contact-us
+/privacy-policy
+/terms-and-conditions
