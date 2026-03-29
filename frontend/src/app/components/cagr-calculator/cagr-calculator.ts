@@ -128,28 +128,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
     );
     this.seo.injectJsonLd({
       '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      'name': 'CAGR Calculator India',
-      'url': 'https://www.myinvestmentcalculator.in/cagr-calculator',
-      'description': 'Free CAGR Calculator India 2026. Calculate Compound Annual Growth Rate for stocks, mutual funds and portfolios.',
-      'applicationCategory': 'FinanceApplication',
-      'operatingSystem': 'Any',
-      'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'INR' },
-      'inLanguage': 'en-IN'
-    }, 'cagr-webapp');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'mainEntity': [
-        { '@type': 'Question', 'name': 'What is CAGR?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'CAGR (Compound Annual Growth Rate) is the mean annual growth rate of an investment over a specified period. It represents the rate at which an investment would have grown if it grew at a steady rate annually.' } },
-        { '@type': 'Question', 'name': 'What is a good CAGR for mutual funds in India?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'A CAGR of 12–15% is considered good for equity mutual funds in India over a long-term horizon (10+ years). Large-cap funds typically deliver 10–13%, while mid-cap and small-cap funds may deliver 14–18%.' } },
-        { '@type': 'Question', 'name': 'What is the CAGR formula?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'CAGR = (Ending Value / Beginning Value)^(1/n) − 1, where n = number of years. For example, ₹50,000 growing to ₹1,00,000 in 5 years gives a CAGR of 14.87%.' } },
-        { '@type': 'Question', 'name': 'What is the CAGR of Nifty 50?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Nifty 50 has delivered approximately 12–13% CAGR over the last 20 years (2004–2024).' } },
-        { '@type': 'Question', 'name': 'Can CAGR be negative?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes. If your ending value is less than your beginning value, CAGR will be negative, indicating capital erosion.' } }
-      ]
-    }, 'cagr-faq');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       'itemListElement': [
         { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.myinvestmentcalculator.in/' },
@@ -213,8 +191,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.seo.removeJsonLd('cagr-webapp');
-    this.seo.removeJsonLd('cagr-faq');
     this.seo.removeJsonLd('cagr-breadcrumb');
   }
 }

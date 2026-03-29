@@ -28,10 +28,14 @@ export class SeoService {
     link.setAttribute('href', url);
   }
 
-  updateOgTags(title: string, desc: string, url: string): void {
+  updateOgTags(title: string, desc: string, url: string, image?: string): void {
     this.meta.updateTag({ property: 'og:title', content: title });
     this.meta.updateTag({ property: 'og:description', content: desc });
     this.meta.updateTag({ property: 'og:url', content: url });
+    if (image) {
+      this.meta.updateTag({ property: 'og:image', content: image });
+      this.meta.updateTag({ name: 'twitter:image', content: image });
+    }
   }
 
   /**

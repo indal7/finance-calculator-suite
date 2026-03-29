@@ -124,35 +124,13 @@ export class EmiCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.seo.setTitle('EMI Calculator India – Home Loan, Car Loan EMI Calculator Online Free 2026');
+    this.seo.setTitle('EMI Calculator India 2026 – Home & Car Loan EMI');
     this.seo.setDescription('Free EMI Calculator India. Calculate monthly EMI for home loan, car loan, personal loan. Get complete interest breakdown and amortization schedule.');
     this.seo.updateOgTags(
       'EMI Calculator India – Free Loan EMI Calculator Online',
       'Calculate your loan EMI instantly. Full amortization schedule. Free, accurate, no login required.',
       'https://www.myinvestmentcalculator.in/emi-calculator'
     );
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      'name': 'EMI Calculator India',
-      'url': 'https://www.myinvestmentcalculator.in/emi-calculator',
-      'description': 'Free EMI Calculator India 2026. Calculate home loan, car loan and personal loan EMI instantly.',
-      'applicationCategory': 'FinanceApplication',
-      'operatingSystem': 'Any',
-      'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'INR' },
-      'inLanguage': 'en-IN'
-    }, 'emi-webapp');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'mainEntity': [
-        { '@type': 'Question', 'name': 'What is an EMI calculator?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'An EMI calculator is a free online tool that calculates your Equated Monthly Instalment (EMI) for any loan. Enter the loan amount, interest rate, and tenure to instantly see monthly EMI, total interest payable, and total payment.' } },
-        { '@type': 'Question', 'name': 'What is the EMI for a ₹10 lakh loan for 5 years at 10%?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'For a ₹10,00,000 loan at 10% annual interest for 5 years, your monthly EMI would be approximately ₹21,247. Total interest paid would be around ₹2,74,826.' } },
-        { '@type': 'Question', 'name': 'What is the current home loan interest rate in India 2026?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Home loan interest rates in India in 2026 range from 8.40% to 9.50% p.a. SBI home loans start at 8.50%, HDFC at 8.70%, and ICICI Bank at 8.75%.' } },
-        { '@type': 'Question', 'name': 'Does prepayment reduce EMI or tenure?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Most Indian banks allow you to choose. Reducing tenure saves more interest overall. Reducing EMI gives you more monthly cash flow.' } },
-        { '@type': 'Question', 'name': 'Can I get a tax benefit on EMI payments?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'For home loans: principal repayment qualifies for deduction up to ₹1.5 lakh/year under Section 80C, and interest paid is deductible up to ₹2 lakh/year under Section 24(b).' } }
-      ]
-    }, 'emi-faq');
     this.seo.injectJsonLd({
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -221,8 +199,6 @@ export class EmiCalculator implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.seo.removeJsonLd('emi-webapp');
-    this.seo.removeJsonLd('emi-faq');
     this.seo.removeJsonLd('emi-breadcrumb');
   }
 }

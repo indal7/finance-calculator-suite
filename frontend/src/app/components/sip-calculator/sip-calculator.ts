@@ -165,29 +165,6 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     );
     this.seo.injectJsonLd({
       '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      'name': 'SIP Calculator India',
-      'url': 'https://www.myinvestmentcalculator.in/sip-calculator',
-      'description': 'Free SIP Calculator India 2026. Calculate monthly SIP returns with compounding for any mutual fund.',
-      'applicationCategory': 'FinanceApplication',
-      'operatingSystem': 'Any',
-      'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'INR' },
-      'inLanguage': 'en-IN'
-    }, 'sip-webapp');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'mainEntity': [
-        { '@type': 'Question', 'name': 'What is a SIP calculator?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'A SIP calculator is a free online tool that estimates how much your Systematic Investment Plan (SIP) will grow over time. Enter monthly amount, expected return rate, and duration to see total invested amount, estimated gains, and final corpus.' } },
-        { '@type': 'Question', 'name': 'What is a good SIP amount to start with in India?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'You can start SIP with as low as ₹500/month. A common starting point is ₹1,000–₹5,000/month. The key is consistency — even ₹1,000/month at 12% for 20 years grows to nearly ₹10 lakh.' } },
-        { '@type': 'Question', 'name': 'Is ₹5,000 SIP for 10 years a good investment?', 'acceptedAnswer': { '@type': 'Answer', 'text': '₹5,000/month for 10 years at 12% annual return grows to approximately ₹11.6 lakh — nearly double your total investment of ₹6 lakh.' } },
-        { '@type': 'Question', 'name': 'What is Step-Up SIP?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'A Step-Up SIP increases your monthly contribution by a fixed percentage each year, significantly boosting your final corpus through the power of compounding.' } },
-        { '@type': 'Question', 'name': 'How is SIP taxed in India?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'For equity mutual funds, STCG (held under 12 months) is taxed at 20%. LTCG above ₹1.25 lakh per year is taxed at 12.5% from FY 2024–25.' } },
-        { '@type': 'Question', 'name': 'Is SIP better than a lump sum investment?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'SIP is generally better for regular salaried investors as it removes the need to time the market and averages out costs through rupee cost averaging.' } }
-      ]
-    }, 'sip-faq');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       'itemListElement': [
         { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.myinvestmentcalculator.in/' },
@@ -341,8 +318,6 @@ private copyTimer?: ReturnType<typeof setTimeout>;
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.seo.removeJsonLd('sip-webapp');
-    this.seo.removeJsonLd('sip-faq');
     this.seo.removeJsonLd('sip-breadcrumb');
   }
 }
