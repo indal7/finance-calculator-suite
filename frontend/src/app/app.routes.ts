@@ -32,6 +32,48 @@ export const routes: Routes = [
       import('./components/cagr-calculator/cagr-calculator').then(m => m.CagrCalculator)
   },
   {
+    path: 'ppf-calculator',
+    title: 'PPF Calculator India 2026 – Public Provident Fund Returns Calculator',
+    loadComponent: () =>
+      import('./components/ppf-calculator/ppf-calculator').then(m => m.PpfCalculatorComponent)
+  },
+  {
+    path: 'lumpsum-calculator',
+    title: 'Lumpsum Calculator India 2026 – One-Time Investment Return Calculator',
+    loadComponent: () =>
+      import('./components/lumpsum-calculator/lumpsum-calculator').then(m => m.LumpsumCalculatorComponent)
+  },
+  {
+    path: 'income-tax-calculator',
+    title: 'Income Tax Calculator India FY 2026-27 – New vs Old Tax Regime',
+    loadComponent: () =>
+      import('./components/income-tax-calculator/income-tax-calculator').then(m => m.IncomeTaxCalculatorComponent)
+  },
+  {
+    path: 'blog',
+    title: 'Finance Blog – SIP, EMI, FD & Investment Tips India 2026',
+    loadComponent: () =>
+      import('./components/blog/blog-list/blog-list').then(m => m.BlogListComponent)
+  },
+  {
+    path: 'blog/sip-vs-fd',
+    title: 'SIP vs FD: Which is Better for Long-Term Wealth Creation in India?',
+    loadComponent: () =>
+      import('./components/blog/sip-vs-fd/sip-vs-fd').then(m => m.SipVsFdBlogComponent)
+  },
+  {
+    path: 'blog/sip-5000-per-month',
+    title: 'What Happens If You Invest ₹5,000 Per Month via SIP for 10, 20, 30 Years?',
+    loadComponent: () =>
+      import('./components/blog/sip-5000-per-month/sip-5000-per-month').then(m => m.Sip5000BlogComponent)
+  },
+  {
+    path: 'blog/emi-calculation-guide',
+    title: 'Complete Guide to EMI Calculation in India: Formula, Examples & Tips',
+    loadComponent: () =>
+      import('./components/blog/emi-calculation-guide/emi-calculation-guide').then(m => m.EmiGuideBlogComponent)
+  },
+  {
     path: 'privacy-policy',
     title: 'Privacy Policy – Finance Calculator India',
     loadComponent: () =>

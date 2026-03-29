@@ -89,4 +89,32 @@ export class SeoService {
   removeFAQSchema(): void {
     this.removeJsonLd('faq-schema');
   }
+
+  setKeywords(keywords: string[]): void {
+    this.meta.updateTag({ name: 'keywords', content: keywords.join(', ') });
+  }
+
+  updateMetaData(data: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    canonical?: string;
+    ogTitle?: string;
+    ogDescription?: string;
+    ogUrl?: string;
+    ogImage?: string;
+  }): void {
+    if (data.title) this.setTitle(data.title);
+    if (data.description) this.setDescription(data.description);
+    if (data.keywords?.length) this.setKeywords(data.keywords);
+    if (data.canonical) this.updateCanonical(data.canonical);
+    if (data.ogTitle || data.ogDescription || data.ogUrl) {
+      this.updateOgTags(
+        data.ogTitle ?? data.title ?? '',
+        data.ogDescription ?? data.description ?? '',
+        data.ogUrl ?? data.canonical ?? '',
+        data.ogImage
+      );
+    }
+  }
 }

@@ -1,0 +1,82 @@
+.coming-soon-page {
+  min-height: 70vh;
+  padding: 3rem 0;
+  background: #f7f9fc;
+}
+.breadcrumb-nav {
+  font-size: 0.88rem;
+  color: #888;
+  margin-bottom: 1.5rem;
+}
+.breadcrumb-nav a {
+  color: #3b5bdb;
+  text-decoration: none;
+}
+.coming-soon-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.coming-soon-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1f3a;
+  margin-bottom: 1rem;
+}
+.coming-soon-desc {
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+.coming-soon-features {
+  text-align: left;
+  background: #f0f4ff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.coming-soon-features h2 {
+  font-size: 1.1rem;
+  color: #1a1f3a;
+  margin-bottom: 0.75rem;
+}
+.coming-soon-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.coming-soon-features ul li {
+  padding: 0.35rem 0;
+  color: #444;
+  font-size: 0.95rem;
+}
+.coming-soon-cta p {
+  color: #555;
+  margin-bottom: 1rem;
+}
+.cta-links {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.cta-links a {
+  background: #3b5bdb;
+  color: #fff;
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.cta-links a:hover { background: #2945c0; }
