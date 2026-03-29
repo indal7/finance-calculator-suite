@@ -33,4 +33,30 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:description', content: desc });
     this.meta.updateTag({ property: 'og:url', content: url });
   }
+
+  /**
+   * Injects a JSON-LD structured data script into the document head.
+   * Uses a unique id so calling this multiple times with the same id replaces
+   * the previous script (useful for SPA navigation).
+   */
+  injectJsonLd(schema: object, id: string): void {
+    const head = this.document?.head;
+    if (!head) return;
+    let script = head.querySelector<HTMLScriptElement>(`script[type="application/ld+json"][data-schema-id="${id}"]`);
+    if (!script) {
+      script = this.document.createElement('script');
+      script.setAttribute('type', 'application/ld+json');
+      script.setAttribute('data-schema-id', id);
+      head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(schema);
+  }
+
+  /** Removes a previously injected JSON-LD script by its id. */
+  removeJsonLd(id: string): void {
+    const head = this.document?.head;
+    if (!head) return;
+    const script = head.querySelector<HTMLScriptElement>(`script[type="application/ld+json"][data-schema-id="${id}"]`);
+    script?.remove();
+  }
 }
