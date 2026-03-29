@@ -186,7 +186,7 @@
 
     <!-- Wealth split visual -->
     <div class="result-visual">
-      <svg class="donut-chart" viewBox="0 0 90 90" aria-hidden="true">
+      <svg class="donut-chart" viewBox="0 0 90 90" width="90" height="90" aria-hidden="true">
         <circle class="donut-bg" cx="45" cy="45" r="35" />
         <circle class="donut-fill" cx="45" cy="45" r="35"
           [style.stroke-dashoffset]="getDonutOffset(result.totalInvested, result.totalValue)" />
@@ -705,5 +705,22 @@
       <a routerLink="/cagr-calculator" class="related-link related-link--gold">CAGR Calculator – Calculate Annual Growth Rate →</a>
     </div>
   </div>
+  <section class="related-calculators">
+    <h2>Try Our Other Free Calculators</h2>
+    <div class="calc-cards">
+      <a routerLink="/emi-calculator" class="calc-card">
+        <h3>🏦 EMI Calculator</h3>
+        <p>Calculate home loan &amp; car loan EMI instantly</p>
+      </a>
+      <a routerLink="/fd-calculator" class="calc-card">
+        <h3>🏧 FD Calculator</h3>
+        <p>Compare FD returns across all major Indian banks</p>
+      </a>
+      <a routerLink="/cagr-calculator" class="calc-card">
+        <h3>📊 CAGR Calculator</h3>
+        <p>Measure your investment's real annual growth rate</p>
+      </a>
+    </div>
+  </section>
 
 </section>

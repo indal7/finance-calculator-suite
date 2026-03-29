@@ -217,6 +217,15 @@
   color: var(--gold, #F5A623);
 }
 
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted, #5C6E9A);
+  line-height: 1.6;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.07));
+  margin-top: 1rem;
+}
+
 /* ══════════════════════════════════════════════════════════════
    FIX #2: RESPONSIVE HEADER — MOBILE
    ══════════════════════════════════════════════════════════════ */

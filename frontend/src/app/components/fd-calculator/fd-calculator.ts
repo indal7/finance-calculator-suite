@@ -133,28 +133,6 @@ export class FdCalculator implements OnInit, OnDestroy {
     );
     this.seo.injectJsonLd({
       '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      'name': 'FD Calculator India',
-      'url': 'https://www.myinvestmentcalculator.in/fd-calculator',
-      'description': 'Free FD Calculator India 2026. Calculate Fixed Deposit maturity amount for SBI, HDFC, ICICI with quarterly and monthly compounding.',
-      'applicationCategory': 'FinanceApplication',
-      'operatingSystem': 'Any',
-      'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'INR' },
-      'inLanguage': 'en-IN'
-    }, 'fd-webapp');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'mainEntity': [
-        { '@type': 'Question', 'name': 'What is an FD calculator?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'An FD calculator is a free tool that calculates Fixed Deposit maturity amount based on principal, interest rate, duration, and compounding frequency. It shows you total interest earned and final maturity value.' } },
-        { '@type': 'Question', 'name': 'What is the FD interest rate in SBI in 2026?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'SBI FD rates in 2026 are approximately 6.8% for 1 year, 7.0% for 2–3 years, and 7.1% for 5 years. Senior citizens get an additional 0.5% interest.' } },
-        { '@type': 'Question', 'name': 'Is FD interest taxable in India?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes. FD interest is taxed as per your income tax slab. Banks deduct TDS at 10% if annual FD interest exceeds ₹40,000. Submit Form 15G/15H to avoid TDS if eligible.' } },
-        { '@type': 'Question', 'name': 'Which FD gives the highest interest rate in India?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Small Finance Banks like Unity, Suryoday, and Utkarsh SFB offer the highest FD rates (8.5–9.5%). For safety, consider HDFC, ICICI or SBI FDs.' } },
-        { '@type': 'Question', 'name': 'Is FD better than SIP in India?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'FD offers guaranteed returns (6–9%) with zero market risk — ideal for conservative investors or short-term goals. SIP in equity mutual funds offers potentially higher returns (10–15%) for long-term wealth creation.' } }
-      ]
-    }, 'fd-faq');
-    this.seo.injectJsonLd({
-      '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       'itemListElement': [
         { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.myinvestmentcalculator.in/' },
@@ -213,8 +191,6 @@ export class FdCalculator implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-    this.seo.removeJsonLd('fd-webapp');
-    this.seo.removeJsonLd('fd-faq');
     this.seo.removeJsonLd('fd-breadcrumb');
   }
 }

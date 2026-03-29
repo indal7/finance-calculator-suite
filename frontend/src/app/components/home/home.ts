@@ -13,7 +13,7 @@ export class HomeComponent implements OnDestroy {
   private readonly seo = inject(SeoService);
 
   constructor() {
-    this.seo.setTitle('Best SIP Calculator India 2026 – EMI, FD & CAGR Calculator Online');
+    this.seo.setTitle('Best SIP Calculator India 2026 – EMI, FD & CAGR');
     this.seo.setDescription('Use the best SIP calculator India to calculate ₹5,000 monthly returns, EMI, FD maturity & CAGR instantly. Free, accurate & India-specific financial tools.');
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/');
     this.seo.updateOgTags(
