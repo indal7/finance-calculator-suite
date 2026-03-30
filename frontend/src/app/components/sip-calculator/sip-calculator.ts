@@ -1,8 +1,8 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { CommonModule, DecimalPipe } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CalculatorService, SipResult } from '../../services/calculator';
@@ -34,9 +34,10 @@ export interface CompareResult {
 @Component({
   selector: 'app-sip-calculator',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterLink, RouterLinkActive, DecimalPipe],
+  imports: [ReactiveFormsModule, FormsModule, DecimalPipe, RouterLink],
   templateUrl: './sip-calculator.html',
-  styleUrls: ['./sip-calculator.css']
+  styleUrls: ['./sip-calculator.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SipCalculator implements OnInit, OnDestroy {
   public router = inject(Router);
@@ -70,6 +71,12 @@ export class SipCalculator implements OnInit, OnDestroy {
   compareResults: CompareResult[] | null = null;
 
   openFaq: number | null = null;
+
+  /** Cached computed values — avoid recalculation on every change detection */
+  projectionRows: Array<{year: number; invested: number; value: number; gains: number}> = [];
+  cachedSipReturns5k: Array<{years: number; invested: number; returns: number; value: number}> = [];
+  cachedSipReturns10k: Array<{years: number; invested: number; returns: number; value: number}> = [];
+  cachedReferenceTable: SipTableRow[] = [];
 
 copied = false;
 private copyTimer?: ReturnType<typeof setTimeout>;
@@ -183,6 +190,11 @@ private copyTimer?: ReturnType<typeof setTimeout>;
       'step up sip calculator',
       'monthly sip calculator'
     ]);
+
+    // Pre-compute static tables once (these never change)
+    this.cachedSipReturns5k = this.getSipReturnsBreakdown(5000);
+    this.cachedSipReturns10k = this.getSipReturnsBreakdown(10000);
+    this.cachedReferenceTable = this.getSipReferenceTable();
   }
 
   get f() { return this.form.controls; }
@@ -229,6 +241,9 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     const estimatedReturns = +(totalValue - totalInvested).toFixed(2);
 
     this.result = { totalInvested, estimatedReturns, totalValue, localCalc: true };
+
+    // Cache projection rows for the template
+    this.projectionRows = this.getProjectionRows(monthlyInvestment, annualRate, years);
 
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();

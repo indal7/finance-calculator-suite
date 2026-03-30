@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CalculatorService, EmiResult } from '../../services/calculator';
@@ -10,7 +10,7 @@ import { SeoService } from '../../services/seo.service';
 @Component({
   selector: 'app-emi-calculator',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, RouterLinkActive, DecimalPipe],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, DecimalPipe],
   templateUrl: './emi-calculator.html',
   styleUrls: ['./emi-calculator.css']
 })

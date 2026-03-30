@@ -5,8 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
-// Cache-Control values for SSR-rendered pages (5 minutes shared cache)
-const SSR_CACHE_CONTROL = 'public, max-age=0, s-maxage=300, stale-while-revalidate=60';
+// Cache-Control values
+const SSR_CACHE_CONTROL = 'public, max-age=300, s-maxage=600, stale-while-revalidate=120';
+const STATIC_IMMUTABLE  = 'public, max-age=31536000, immutable';
 
 export function app(): express.Express {
   const server = express();
@@ -19,21 +20,31 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Security headers applied to all responses
+  // Security + performance headers applied to all responses
   server.use((_req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader('X-DNS-Prefetch-Control', 'on');
     next();
   });
 
-  // Serve static files from /browser with long-lived cache
+  // Serve static files from /browser with immutable cache (hashed filenames)
   server.get(
     '**',
     express.static(browserDistFolder, {
       maxAge: '1y',
+      immutable: true,
       index: 'index.html',
+      setHeaders: (res, filePath) => {
+        // Hashed assets get immutable cache; HTML files get short cache
+        if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'public, max-age=600');
+        } else {
+          res.setHeader('Cache-Control', STATIC_IMMUTABLE);
+        }
+      },
     })
   );
 

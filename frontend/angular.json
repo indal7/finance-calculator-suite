@@ -76,10 +76,16 @@
                 }
               ],
               "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                },
                 "fonts": {
-                  "inline": false
+                  "inline": true
                 }
               },
+              "extractLicenses": true,
               "outputHashing": "all",
               "fileReplacements": [
                 {

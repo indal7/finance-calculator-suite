@@ -183,12 +183,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
-  animation: pageIn 0.5s ease both;
+  animation: pageIn 0.35s ease both;
 }
 
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ── Hero ───────────────────────────────────────────────────── */
@@ -200,6 +200,8 @@ body {
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
   overflow: hidden;
+  min-height: 180px;
+  contain: layout style;
 }
 
 .page-hero::before {
@@ -265,13 +267,25 @@ body {
 /* ── Card ───────────────────────────────────────────────────── */
 .card {
   background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 2rem 2.5rem;
   box-shadow: var(--shadow-card);
   transition: border-color var(--transition);
+  contain: layout style;
+}
+
+/* content-visibility for below-fold cards — skip rendering until near viewport */
+.example-section,
+.sip-returns-section,
+.seo-snippet-card,
+.seo-compare-card,
+.seo-stepup-card,
+.seo-inflation-card,
+.seo-trust-block,
+.seo-paa-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
 
 .card:hover {
@@ -305,6 +319,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+  min-height: 320px;
 }
 
 .form-group {
@@ -512,9 +527,11 @@ input[type="range"]:hover::-webkit-slider-thumb {
   background: linear-gradient(135deg, rgba(17,29,74,0.95) 0%, rgba(11,20,55,0.95) 100%);
   box-shadow: var(--shadow-card), var(--shadow-glow);
   padding: 2rem 2.5rem;
-  animation: resultIn 0.4s cubic-bezier(0.34,1.4,0.64,1) both;
+  animation: resultIn 0.3s ease both;
   position: relative;
   overflow: hidden;
+  min-height: 200px;
+  contain: layout style;
 }
 
 .result-card::before {
@@ -526,8 +543,8 @@ input[type="range"]:hover::-webkit-slider-thumb {
 }
 
 @keyframes resultIn {
-  from { opacity: 0; transform: scale(0.97) translateY(12px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* FIX #1: Result card h2 — flex layout fixed so copy button

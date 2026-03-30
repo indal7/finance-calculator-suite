@@ -107,9 +107,6 @@
         }
       </div>
 
-      <!-- Empty spacer for grid alignment on desktop -->
-      <div class="form-group" aria-hidden="true"></div>
-
       <button type="submit" class="btn-calculate accent-btn" [disabled]="form.invalid">
         Calculate SIP Returns →
       </button>
@@ -207,7 +204,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of getProjectionRows(f['monthlyInvestment'].value, f['annualRate'].value, f['years'].value); track row.year) {
+          @for (row of projectionRows; track row.year) {
           <tr [class.highlight-row]="row.year === f['years'].value">
             <td>{{ row.year }}</td>
             <td>₹{{ row.invested | number:'1.0-0' }}</td>
@@ -306,7 +303,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of getSipReturnsBreakdown(5000); track row.years) {
+          @for (row of cachedSipReturns5k; track row.years) {
           <tr>
             <td><strong>{{ row.years }} {{ row.years === 1 ? 'Year' : 'Years' }}</strong></td>
             <td>₹{{ row.invested | number:'1.0-0' }}</td>
@@ -334,7 +331,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of getSipReturnsBreakdown(10000); track row.years) {
+          @for (row of cachedSipReturns10k; track row.years) {
           <tr>
             <td><strong>{{ row.years }} {{ row.years === 1 ? 'Year' : 'Years' }}</strong></td>
             <td>₹{{ row.invested | number:'1.0-0' }}</td>
@@ -362,7 +359,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of getSipReferenceTable(); track (row.monthlySip + '-' + row.years)) {
+          @for (row of cachedReferenceTable; track (row.monthlySip + '-' + row.years)) {
           <tr>
             <td>₹{{ row.monthlySip | number:'1.0-0' }}</td>
             <td>{{ row.years }} {{ row.years === 1 ? 'Year' : 'Years' }}</td>
@@ -375,7 +372,8 @@
     </div>
   </div>
 
-  <!-- ── Compare SIP ────────────────────────────────────────── -->
+  <!-- ── Compare SIP (deferred — interactive, below fold) ──── -->
+  @defer (on viewport) {
   <div class="card compare-sip-card">
     <h2>⚖️ Compare SIP — Side by Side</h2>
     <p class="section-intro">Compare two SIP options to see which builds more wealth.</p>
@@ -486,6 +484,12 @@
     </div>
     }
   </div>
+  } @placeholder {
+    <div class="card compare-sip-card" style="min-height:200px">
+      <h2>⚖️ Compare SIP — Side by Side</h2>
+      <p class="section-intro">Compare two SIP options to see which builds more wealth.</p>
+    </div>
+  }
 
   <!-- ── Featured Snippet: How to Calculate SIP Returns ───────── -->
   <div class="card seo-snippet-card">
@@ -705,7 +709,8 @@
     </div>
   </div>
 
-  <!-- ── FAQs ───────────────────────────────────────────────── -->
+  <!-- ── FAQs (deferred — interactive accordion, below fold) ── -->
+  @defer (on viewport) {
   <div class="card">
     <h2>FAQs — SIP Calculator India</h2>
     <div class="faq-list">
@@ -720,6 +725,11 @@
       }
     </div>
   </div>
+  } @placeholder {
+    <div class="card" style="min-height:120px">
+      <h2>FAQs — SIP Calculator India</h2>
+    </div>
+  }
 
   <!-- ── Related Calculators ────────────────────────────────── -->
   <div class="card card--compact">
