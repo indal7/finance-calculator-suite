@@ -133,7 +133,7 @@
 
 .footer-inner {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
   gap: 2.5rem;
   padding-bottom: 2.5rem;
 }
@@ -332,6 +332,17 @@
   }
 }
 
+/* ── Footer responsive (small mobile) ─────────────────────────── */
+@media (max-width: 480px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-about {
+    grid-column: auto;
+  }
+}
+
 /* Very small screens */
 @media (max-width: 380px) {
   .main-nav li {
@@ -346,15 +357,5 @@
 
   .logo, .logo h1 {
     font-size: 0.92rem;
-  }
-}
-/* ── Footer responsive (small mobile) ─────────────────────────── */
-@media (max-width: 480px) {
-  .footer-inner {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-about {
-    grid-column: auto;
   }
 }

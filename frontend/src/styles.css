@@ -1,3 +1,69 @@
+/* ═══════════════════════════════════════════════════════════════
+   CALCULATOR SUITE — GLOBAL DESIGN SYSTEM
+   Theme: Premium Indian Finance — Deep Navy + Gold Accent
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --navy:          #0B1437;
+  --navy-mid:      #111D4A;
+  --navy-light:    #1A2A6C;
+  --gold:          #F5A623;
+  --gold-light:    #FFD280;
+  --gold-dim:      rgba(245,166,35,0.15);
+  --emerald:       #00C896;
+  --emerald-dim:   rgba(0,200,150,0.12);
+  --rose:          #FF5C7A;
+  --rose-dim:      rgba(255,92,122,0.12);
+  --sky:           #38BDF8;
+  --text-primary:  #F0F4FF;
+  --text-secondary:#A8B4D4;
+  --text-muted:    #5C6E9A;
+  --border:        rgba(255,255,255,0.07);
+  --border-focus:  rgba(245,166,35,0.5);
+  --card-bg:       rgba(17,29,74,0.7);
+  --card-bg-solid: #111D4A;
+  --input-bg:      rgba(11,20,55,0.8);
+  --radius-sm:     8px;
+  --radius-md:     14px;
+  --radius-lg:     20px;
+  --radius-xl:     28px;
+  --shadow-card:   0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04) inset;
+  --shadow-glow:   0 0 40px rgba(245,166,35,0.15);
+  --transition:    0.22s cubic-bezier(0.4,0,0.2,1);
+  --font-display:  'Syne', sans-serif;
+  --font-body:     'DM Sans', sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+}
+
+/* ── Reset & Base ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,42,108,0.8) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,200,150,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 10% 60%, rgba(245,166,35,0.05) 0%, transparent 60%);
+}
+
+@media (hover: hover) {
+  body {
+    background-attachment: fixed;
+  }
+}
+
 @media (max-width: 700px) {
   .form-grid {
     grid-template-columns: 1fr !important;
@@ -101,61 +167,6 @@
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   CALCULATOR SUITE — GLOBAL DESIGN SYSTEM
-   Theme: Premium Indian Finance — Deep Navy + Gold Accent
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ── CSS Variables ─────────────────────────────────────────── */
-:root {
-  --navy:          #0B1437;
-  --navy-mid:      #111D4A;
-  --navy-light:    #1A2A6C;
-  --gold:          #F5A623;
-  --gold-light:    #FFD280;
-  --gold-dim:      rgba(245,166,35,0.15);
-  --emerald:       #00C896;
-  --emerald-dim:   rgba(0,200,150,0.12);
-  --rose:          #FF5C7A;
-  --rose-dim:      rgba(255,92,122,0.12);
-  --sky:           #38BDF8;
-  --text-primary:  #F0F4FF;
-  --text-secondary:#A8B4D4;
-  --text-muted:    #5C6E9A;
-  --border:        rgba(255,255,255,0.07);
-  --border-focus:  rgba(245,166,35,0.5);
-  --card-bg:       rgba(17,29,74,0.7);
-  --card-bg-solid: #111D4A;
-  --input-bg:      rgba(11,20,55,0.8);
-  --radius-sm:     8px;
-  --radius-md:     14px;
-  --radius-lg:     20px;
-  --radius-xl:     28px;
-  --shadow-card:   0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04) inset;
-  --shadow-glow:   0 0 40px rgba(245,166,35,0.15);
-  --transition:    0.22s cubic-bezier(0.4,0,0.2,1);
-  --font-display:  'Syne', sans-serif;
-  --font-body:     'DM Sans', sans-serif;
-  --font-mono:     'JetBrains Mono', monospace;
-}
-
-/* ── Reset & Base ──────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font-body);
-  background: var(--navy);
-  color: var(--text-primary);
-  min-height: 100vh;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,42,108,0.8) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,200,150,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 50% at 10% 60%, rgba(245,166,35,0.05) 0%, transparent 60%);
-  background-attachment: fixed;
 }
 
 /* ── Page Layout ────────────────────────────────────────────── */
@@ -303,7 +314,7 @@ body {
 }
 
 /* ── Labels ─────────────────────────────────────────────────── */
-label {
+.form-group label {
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.03em;
@@ -341,8 +352,8 @@ select.form-select:focus {
 }
 
 input.invalid {
-  border-color: var(--rose) !important;
-  box-shadow: 0 0 0 3px var(--rose-dim) !important;
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px var(--rose-dim);
 }
 
 select.form-select {

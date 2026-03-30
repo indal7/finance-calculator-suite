@@ -54,11 +54,11 @@
 }
 
 .inflation-val {
-  color: var(--gold, #F5A623) !important;
+  color: var(--gold, #F5A623);
 }
 
 .erosion-val {
-  color: #f87171 !important;
+  color: #f87171;
 }
 
 /* ── SIP Returns Sections ──────────────────────────────────── */
@@ -382,7 +382,7 @@
   font-size: 0.875rem;
   color: var(--text-secondary, #A8B4D4);
   line-height: 1.7;
-  margin: 0 !important;
+  margin: 0;
 }
 
 .stepup-tip strong {
@@ -423,8 +423,8 @@
 }
 
 .inflation-item p {
-  font-size: 0.85rem !important;
-  margin-bottom: 0.5rem !important;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 .inflation-example {
@@ -447,7 +447,7 @@
   font-size: 0.875rem;
   color: var(--text-secondary, #A8B4D4);
   line-height: 1.8;
-  margin-bottom: 1rem !important;
+  margin-bottom: 1rem;
 }
 
 .inflation-formula strong {

@@ -5,7 +5,7 @@
 }
 
 /* Container acts as flex column wrapper */
-.container {
+.coming-soon-page .container {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
@@ -62,7 +62,7 @@
   line-height: 1;
 }
 
-h1 {
+.coming-soon-card h1 {
   font-family: var(--font-display, 'Syne', sans-serif);
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 800;
@@ -165,7 +165,7 @@ h1 {
     padding: 2rem 1.25rem;
   }
 
-  h1 { font-size: 1.5rem; }
+  .coming-soon-card h1 { font-size: 1.5rem; }
 
   .cta-links { gap: 0.5rem; }
   .cta-links a { font-size: 0.82rem; }
