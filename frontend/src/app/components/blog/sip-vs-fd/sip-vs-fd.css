@@ -5,7 +5,7 @@
 }
 
 /* Container acts as the flex column wrapper inside the article */
-.container {
+.blog-article .container {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
@@ -70,7 +70,7 @@
   letter-spacing: 0.08em;
 }
 
-h1 {
+.article-header h1 {
   font-family: var(--font-display, 'Syne', sans-serif);
   font-size: clamp(1.5rem, 3.5vw, 2rem);
   font-weight: 800;
@@ -417,7 +417,7 @@ h1 {
     padding: 1rem 0 3rem;
   }
 
-  h1 { font-size: 1.4rem; }
+  .article-header h1 { font-size: 1.4rem; }
 
   .article-header {
     padding: 1.5rem 1.25rem;

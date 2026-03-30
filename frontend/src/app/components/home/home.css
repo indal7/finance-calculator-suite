@@ -9,11 +9,6 @@
   animation: pageIn 0.5s ease both;
 }
 
-@keyframes pageIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
 /* ── Hero Section ─────────────────────────────────────────────── */
 .home-hero {
   position: relative;
@@ -474,10 +469,10 @@
   color: var(--text-primary, #F0F4FF);
 }
 
-.freshness-signal {
-  font-size: 0.8rem !important;
-  color: var(--text-muted, #5C6E9A) !important;
-  margin-top: 0.5rem !important;
+.authority-section .freshness-signal {
+  font-size: 0.8rem;
+  color: var(--text-muted, #5C6E9A);
+  margin-top: 0.5rem;
 }
 
 /* ── Comparison Section ───────────────────────────────────────── */
