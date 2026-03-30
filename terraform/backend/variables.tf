@@ -39,3 +39,15 @@ variable "cors_allowed_origins" {
   type        = list(string)
   default     = ["*"]
 }
+
+variable "contact_notify_email" {
+  description = "Email address to receive contact form notifications (must be SES-verified)"
+  type        = string
+  default     = ""
+}
+
+variable "contact_ses_from_email" {
+  description = "Verified SES sender email for notifications"
+  type        = string
+  default     = ""
+}

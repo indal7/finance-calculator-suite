@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header';
 import { FooterComponent } from './components/footer/footer';
+import { TrackingService } from './services/tracking.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,8 @@ import { FooterComponent } from './components/footer/footer';
 })
 export class App {
   readonly title = 'Finance Calculator Suite';
+
+  constructor() {
+    inject(TrackingService).init();
+  }
 }

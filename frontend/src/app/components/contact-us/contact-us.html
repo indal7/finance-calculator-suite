@@ -61,17 +61,38 @@
       in your message so we can help you better.
     </p>
 
-    <form class="contact-form" action="mailto:indalsaroj404@gmail.com" method="get" enctype="text/plain">
+    <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+      <!-- Honeypot field – hidden from real users, traps bots -->
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <input type="text" formControlName="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      @if (submitted()) {
+        <div class="form-success">
+          <span class="success-icon">✅</span>
+          <strong>Thank you!</strong> Your message has been sent successfully. We'll get back to you within 24–48 hours.
+        </div>
+      }
+
+      @if (errorMessage(); as errMsg) {
+        <div class="form-error">{{ errMsg }}</div>
+      }
+
       <div class="form-group">
         <label for="contact-name">Your Name <span class="required">*</span></label>
         <input
           type="text"
           id="contact-name"
-          name="name"
+          formControlName="name"
           placeholder="e.g. Rahul Sharma"
-          required
           autocomplete="name"
         />
+        @if (contactForm.get('name')?.touched && contactForm.get('name')?.hasError('required')) {
+          <span class="field-error">Name is required.</span>
+        }
+        @if (contactForm.get('name')?.touched && contactForm.get('name')?.hasError('minlength')) {
+          <span class="field-error">Name must be at least 2 characters.</span>
+        }
       </div>
 
       <div class="form-group">
@@ -79,19 +100,32 @@
         <input
           type="email"
           id="contact-email"
-          name="email"
+          formControlName="email"
           placeholder="e.g. rahul@example.com"
-          required
           autocomplete="email"
+        />
+        @if (contactForm.get('email')?.touched && contactForm.get('email')?.invalid) {
+          <span class="field-error">Please enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="contact-phone">Phone Number <span class="optional">(optional)</span></label>
+        <input
+          type="tel"
+          id="contact-phone"
+          formControlName="phone"
+          placeholder="e.g. +91 9876543210"
+          autocomplete="tel"
         />
       </div>
 
       <div class="form-group">
-        <label for="contact-subject">Subject</label>
+        <label for="contact-subject">Subject <span class="optional">(optional)</span></label>
         <input
           type="text"
           id="contact-subject"
-          name="subject"
+          formControlName="subject"
           placeholder="e.g. Question about SIP Calculator"
           autocomplete="off"
         />
@@ -101,14 +135,29 @@
         <label for="contact-message">Message <span class="required">*</span></label>
         <textarea
           id="contact-message"
-          name="body"
+          formControlName="message"
           rows="6"
           placeholder="Describe your question or feedback in detail..."
-          required
         ></textarea>
+        @if (contactForm.get('message')?.touched && contactForm.get('message')?.hasError('required')) {
+          <span class="field-error">Message is required.</span>
+        }
+        @if (contactForm.get('message')?.touched && contactForm.get('message')?.hasError('minlength')) {
+          <span class="field-error">Message must be at least 10 characters.</span>
+        }
       </div>
 
-      <button type="submit" class="btn-submit">Send Message 📨</button>
+      <button
+        type="submit"
+        class="btn-submit"
+        [disabled]="contactForm.invalid || submitting()"
+      >
+        @if (submitting()) {
+          Sending…
+        } @else {
+          Send Message 📨
+        }
+      </button>
     </form>
 
     <h2>What to Expect After Contacting Us</h2>
@@ -124,37 +173,51 @@
 
     <h2>Frequently Asked Questions</h2>
 
-    <div class="faq-item">
-      <h3>Is Finance Calculator India free to use?</h3>
-      <p>
-        Yes, absolutely. All calculators on this website — SIP, EMI, FD, and CAGR — are completely free to use
-        with no hidden charges, subscriptions, or registration requirements.
-      </p>
-    </div>
+    <div class="faq-list">
+      <div class="faq-item" [class.open]="openFaq === 0">
+        <button class="faq-question" (click)="toggleFaq(0)" [attr.aria-expanded]="openFaq === 0">
+          Is Finance Calculator India free to use?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          Yes, absolutely. All calculators on this website — SIP, EMI, FD, and CAGR — are completely free to use
+          with no hidden charges, subscriptions, or registration requirements.
+        </div>
+      </div>
 
-    <div class="faq-item">
-      <h3>Can I suggest a new calculator or feature?</h3>
-      <p>
-        We welcome suggestions! If you'd like us to add a new calculator (such as PPF, NPS, or Income Tax) or
-        improve an existing one, please drop us an email with your idea.
-      </p>
-    </div>
+      <div class="faq-item" [class.open]="openFaq === 1">
+        <button class="faq-question" (click)="toggleFaq(1)" [attr.aria-expanded]="openFaq === 1">
+          Can I suggest a new calculator or feature?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          We welcome suggestions! If you'd like us to add a new calculator (such as PPF, NPS, or Income Tax) or
+          improve an existing one, please drop us an email with your idea.
+        </div>
+      </div>
 
-    <div class="faq-item">
-      <h3>I found an error in a calculation — what should I do?</h3>
-      <p>
-        Please email us with the specific calculator name, the values you entered, and the result you received.
-        We take accuracy very seriously and will investigate and fix any errors promptly.
-      </p>
-    </div>
+      <div class="faq-item" [class.open]="openFaq === 2">
+        <button class="faq-question" (click)="toggleFaq(2)" [attr.aria-expanded]="openFaq === 2">
+          I found an error in a calculation — what should I do?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          Please email us with the specific calculator name, the values you entered, and the result you received.
+          We take accuracy very seriously and will investigate and fix any errors promptly.
+        </div>
+      </div>
 
-    <div class="faq-item">
-      <h3>Do you offer financial advisory services?</h3>
-      <p>
-        No. Finance Calculator India provides educational tools only. We are not a SEBI-registered investment
-        adviser and do not provide personalised financial advice. Please consult a qualified financial advisor
-        before making any investment or loan decisions.
-      </p>
+      <div class="faq-item" [class.open]="openFaq === 3">
+        <button class="faq-question" (click)="toggleFaq(3)" [attr.aria-expanded]="openFaq === 3">
+          Do you offer financial advisory services?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          No. Finance Calculator India provides educational tools only. We are not a SEBI-registered investment
+          adviser and do not provide personalised financial advice. Please consult a qualified financial advisor
+          before making any investment or loan decisions.
+        </div>
+      </div>
     </div>
 
     <div class="legal-nav">

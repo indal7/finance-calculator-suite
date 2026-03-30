@@ -25,3 +25,33 @@ output "calculator_endpoints" {
     calc => "${aws_apigatewayv2_stage.default.invoke_url}/${calc}"
   }
 }
+
+output "contact_endpoint" {
+  description = "Full URL for the contact form endpoint"
+  value       = "${aws_apigatewayv2_stage.default.invoke_url}/contact"
+}
+
+output "contact_table_name" {
+  description = "DynamoDB table name for contact submissions"
+  value       = aws_dynamodb_table.contact_submissions.name
+}
+
+output "contact_lambda_name" {
+  description = "Contact Lambda function name"
+  value       = aws_lambda_function.contact.function_name
+}
+
+output "track_visit_endpoint" {
+  description = "Full URL for the visit tracking endpoint"
+  value       = "${aws_apigatewayv2_stage.default.invoke_url}/track-visit"
+}
+
+output "visits_table_name" {
+  description = "DynamoDB table name for user visits"
+  value       = aws_dynamodb_table.user_visits.name
+}
+
+output "track_visit_lambda_name" {
+  description = "Track visit Lambda function name"
+  value       = aws_lambda_function.track_visit.function_name
+}
