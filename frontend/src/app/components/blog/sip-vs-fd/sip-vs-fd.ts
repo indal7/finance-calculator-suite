@@ -12,13 +12,19 @@ import { SeoService } from '../../../services/seo.service';
 export class SipVsFdBlogComponent implements OnInit, OnDestroy {
   private readonly seo = inject(SeoService);
 
-  readonly title = 'SIP vs FD: Which is Better for Long-Term Wealth Creation in India?';
-  readonly description = 'Compare SIP mutual funds vs Fixed Deposits for long-term wealth creation. Understand returns, risk, liquidity, and tax implications to make the right choice.';
+  readonly title = 'SIP vs FD Difference in India: Which Option Fits Your Monthly Savings Plan?';
+  readonly description = 'Understand SIP vs FD difference with a practical India-focused example. Compare monthly investing outcomes, flexibility, tax impact, and decide what suits your goal.';
 
   constructor() {
     this.seo.setTitle(this.title);
     this.seo.setDescription(this.description);
-    this.seo.setKeywords(['SIP vs FD', 'SIP or FD which is better', 'mutual fund vs fixed deposit India', 'long term investment India', 'SIP returns vs FD returns']);
+    this.seo.setKeywords([
+      'SIP calculator India',
+      'SIP vs FD difference',
+      'monthly investment calculator India',
+      'SIP or FD for beginners',
+      '1000 SIP vs FD example'
+    ]);
     this.seo.updateOgTags(this.title, this.description, 'https://www.myinvestmentcalculator.in/blog/sip-vs-fd');
     this.seo.injectJsonLd({
       '@context': 'https://schema.org',
@@ -34,8 +40,8 @@ export class SipVsFdBlogComponent implements OnInit, OnDestroy {
       '@type': 'Article',
       'headline': this.title,
       'description': this.description,
-      'datePublished': '2026-01-15',
-      'dateModified': '2026-01-15',
+      'datePublished': '2026-03-30',
+      'dateModified': '2026-03-30',
       'author': { '@type': 'Organization', 'name': 'Finance Calculator India' },
       'publisher': { '@type': 'Organization', 'name': 'Finance Calculator India', 'url': 'https://www.myinvestmentcalculator.in' }
     }, 'sip-vs-fd-article');
@@ -44,11 +50,26 @@ export class SipVsFdBlogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/blog/sip-vs-fd');
     this.seo.updateFAQSchema([
-      { question: 'Is SIP better than FD for long-term investment?', answer: 'For long-term wealth creation (10+ years), SIP in equity mutual funds typically outperforms FD with potential returns of 12–15% vs FD\'s 6–7.5%. However, SIP carries market risk while FD is guaranteed.' },
-      { question: 'What is the main difference between SIP and FD?', answer: 'SIP is a method of investing in mutual funds through regular monthly contributions, linked to market performance. FD is a bank deposit with a guaranteed fixed interest rate. SIP is market-linked and riskier, but offers higher long-term returns.' },
-      { question: 'Can I do both SIP and FD together?', answer: 'Yes, and it\'s actually a good strategy. Use FD for your emergency fund and short-term goals (1–3 years) where capital protection is key. Use SIP for long-term goals (5+ years) where wealth creation matters more.' },
-      { question: 'Is FD interest taxable in India?', answer: 'Yes, FD interest is fully taxable as per your income tax slab. TDS is deducted at 10% if interest exceeds ₹40,000/year (₹50,000 for senior citizens). SIP (equity) LTCG is taxed at 12.5% only on gains above ₹1.25 lakh/year after 1 year.' },
-      { question: 'What is a tax-saving FD?', answer: 'A 5-year tax-saving FD allows deduction up to ₹1.5 lakh under Section 80C, but has a lock-in period of 5 years and interest is still taxable. ELSS mutual funds also qualify for 80C with a shorter 3-year lock-in and potentially higher returns.' }
+      {
+        question: 'What is the biggest SIP vs FD difference for monthly savers?',
+        answer: 'SIP amount gets invested in market-linked funds, so value moves up and down. FD gives fixed interest decided at the start. SIP can create a larger final amount over many years, while FD gives predictable maturity.'
+      },
+      {
+        question: 'If I save ₹1000 per month for 10 years, should I choose SIP or FD?',
+        answer: 'If your goal is growth and you can stay invested through market swings, SIP is usually better for this timeframe. If you need certainty and cannot accept fluctuations, choose FD or split savings between both.'
+      },
+      {
+        question: 'Can I use SIP and FD together in one plan?',
+        answer: 'Yes. Many Indian families keep emergency or near-term money in FD and put goal-based monthly savings in SIP. This gives both stability and growth potential.'
+      },
+      {
+        question: 'How does tax treatment differ between SIP and FD?',
+        answer: 'FD interest is added to income and taxed by slab. Equity SIP gains are taxed only when you redeem and rules differ by holding period and gain amount. Always review latest tax rules before investing.'
+      },
+      {
+        question: 'Which calculator should I use before deciding?',
+        answer: 'Use a SIP calculator for monthly mutual fund projection, FD calculator for fixed maturity estimate, and EMI calculator if you are balancing investments with loan payments.'
+      }
     ]);
   }
 

@@ -48,7 +48,7 @@
           <div class="slider-row">
             <input type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value"
               (input)="syncFromSlider('monthlyInvestment', $event)"
-              [style.--pct]="getSliderPct('monthlyInvestment', 500, 100000) + '%'"
+              [style.--progress-value]="getSliderPct('monthlyInvestment', 500, 100000) + '%'"
               aria-label="Monthly investment amount slider">
             <span class="slider-value-display">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span>
           </div>
@@ -68,7 +68,7 @@
             (input)="syncSlider('annualRate')">
           <div class="slider-row">
             <input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value"
-              (input)="syncFromSlider('annualRate', $event)" [style.--pct]="getSliderPct('annualRate', 1, 30) + '%'"
+              (input)="syncFromSlider('annualRate', $event)" [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'"
               aria-label="Expected annual return rate slider">
             <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
           </div>
@@ -88,7 +88,7 @@
             [class.invalid]="f['years'].invalid && f['years'].touched" (input)="syncSlider('years')">
           <div class="slider-row">
             <input type="range" min="1" max="40" step="1" [value]="f['years'].value"
-              (input)="syncFromSlider('years', $event)" [style.--pct]="getSliderPct('years', 1, 40) + '%'"
+              (input)="syncFromSlider('years', $event)" [style.--progress-value]="getSliderPct('years', 1, 40) + '%'"
               aria-label="Investment period slider">
             <span class="slider-value-display">{{ f['years'].value }} yr</span>
           </div>

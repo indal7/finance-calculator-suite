@@ -447,7 +447,7 @@ input[type="range"] {
   appearance: none;
   height: 4px;
   border-radius: 2px;
-  background: linear-gradient(to right, var(--gold) var(--pct, 50%), rgba(255,255,255,0.1) var(--pct, 50%));
+  background: linear-gradient(to right, var(--gold) var(--progress-value, 50%), rgba(255,255,255,0.1) var(--progress-value, 50%));
   outline: none;
   cursor: pointer;
   transition: background var(--transition);
@@ -839,7 +839,6 @@ code {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  backdrop-filter: blur(12px);
 }
 
 .calc-nav-label {

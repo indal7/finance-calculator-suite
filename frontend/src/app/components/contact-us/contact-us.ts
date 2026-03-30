@@ -63,12 +63,18 @@ export class ContactUsComponent implements OnDestroy {
   }
 
   constructor() {
-    this.seo.setTitle('Contact Us – Finance Calculator India');
-    this.seo.setDescription('Get in touch with Finance Calculator India. Have a question, suggestion, or feedback? Reach us by email or use our contact form. We respond within 24–48 hours.');
+    this.seo.setTitle('Contact Finance Calculator India | Support, Feedback, Collaboration');
+    this.seo.setDescription('Contact Finance Calculator India for calculator support, content feedback, or collaboration requests. Typical response time is within 24 to 48 business hours.');
+    this.seo.setKeywords([
+      'contact finance calculator india',
+      'SIP calculator India support',
+      'monthly investment calculator India feedback',
+      'FD EMI calculator query'
+    ]);
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/contact-us');
     this.seo.updateOgTags(
-      'Contact Us – Finance Calculator India',
-      'Get in touch with Finance Calculator India. Have a question, suggestion, or feedback? Reach us by email or use our contact form.',
+      'Contact Finance Calculator India | Support, Feedback, Collaboration',
+      'Contact Finance Calculator India for calculator support, content feedback, or collaboration requests.',
       'https://www.myinvestmentcalculator.in/contact-us'
     );
     this.seo.injectJsonLd({

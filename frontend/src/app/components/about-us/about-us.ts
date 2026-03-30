@@ -13,12 +13,18 @@ export class AboutUsComponent implements OnDestroy {
   private readonly seo = inject(SeoService);
 
   constructor() {
-    this.seo.setTitle('About Us – Finance Calculator India | Free Financial Tools');
-    this.seo.setDescription('Learn about Finance Calculator India – our mission to empower Indian investors with free, accurate SIP, EMI, FD and CAGR calculators for smarter financial decisions.');
+    this.seo.setTitle('About Finance Calculator India | Built for Indian Investors');
+    this.seo.setDescription('Learn why Finance Calculator India was created, who it helps, and how our simple tools support SIP, FD, and EMI planning for Indian users.');
+    this.seo.setKeywords([
+      'SIP calculator India',
+      'monthly investment calculator India',
+      'FD and EMI planning tools',
+      'about finance calculator india'
+    ]);
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/about-us');
     this.seo.updateOgTags(
-      'About Us – Finance Calculator India | Free Financial Tools',
-      'Learn about Finance Calculator India – our mission to empower Indian investors with free, accurate SIP, EMI, FD and CAGR calculators for smarter financial decisions.',
+      'About Finance Calculator India | Built for Indian Investors',
+      'Learn why Finance Calculator India was created, who it helps, and how our simple tools support SIP, FD, and EMI planning for Indian users.',
       'https://www.myinvestmentcalculator.in/about-us'
     );
     this.seo.injectJsonLd({

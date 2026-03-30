@@ -46,7 +46,7 @@
             <input type="range" min="1000" max="5000000" step="1000"
                    [value]="f['principal'].value"
                    (input)="syncFromSlider('principal', $event)"
-                   [style.--pct]="getSliderPct('principal', 1000, 5000000) + '%'">
+                   [style.--progress-value]="getSliderPct('principal', 1000, 5000000) + '%'">
             <span class="slider-value-display">₹{{ f['principal'].value | number:'1.0-0' }}</span>
           </div>
         </div>
@@ -67,7 +67,7 @@
             <input type="range" min="2" max="10" step="0.1"
                    [value]="f['annualRate'].value"
                    (input)="syncFromSlider('annualRate', $event)"
-                   [style.--pct]="getSliderPct('annualRate', 2, 10) + '%'">
+                   [style.--progress-value]="getSliderPct('annualRate', 2, 10) + '%'">
             <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
           </div>
         </div>
@@ -89,7 +89,7 @@
             <input type="range" min="0.25" max="10" step="0.25"
                    [value]="f['years'].value"
                    (input)="syncFromSlider('years', $event)"
-                   [style.--pct]="getSliderPct('years', 0.25, 10) + '%'">
+                   [style.--progress-value]="getSliderPct('years', 0.25, 10) + '%'">
             <span class="slider-value-display">{{ f['years'].value }} yr</span>
           </div>
         </div>
