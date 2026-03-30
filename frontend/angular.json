@@ -33,6 +33,7 @@
               "routesFile": "routes.txt"
             },
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": ["compression"],
             "assets": [
               "src/favicon.ico",
               "src/favicon-48x48.png",

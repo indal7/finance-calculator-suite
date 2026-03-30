@@ -59,7 +59,10 @@ img, svg, video {
 
 html {
   overflow-x: hidden;
-  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -69,6 +72,8 @@ body {
   min-height: 100vh;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
   overflow-x: hidden;
   background-image:
     radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,42,108,0.8) 0%, transparent 70%),
@@ -95,6 +100,8 @@ body {
   margin-top: 1rem;
   border-radius: var(--radius-md, 14px);
   border: 1px solid var(--border, rgba(255,255,255,0.07));
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 .projection-table {
   width: 100%;
@@ -766,6 +773,8 @@ code {
   flex-direction: column;
   gap: 8px;
   margin-top: 0.5rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }
 
 .faq-item {
@@ -1538,6 +1547,7 @@ code {
   margin: 1.5rem 0;
   text-align: center;
   overflow: hidden;
+  contain: layout size style;
 }
 
 .ad-unit--leaderboard {
@@ -1556,4 +1566,29 @@ code {
   .ad-unit--leaderboard {
     min-height: 50px;
   }
+}
+
+/* ── Font fallback (reduce CLS from web font swap) ─────────── */
+@font-face {
+  font-family: 'Syne';
+  font-style: normal;
+  font-weight: 700 800;
+  font-display: swap;
+  src: local('Syne Bold');
+  size-adjust: 105%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: local('DM Sans'), local('Arial');
+  size-adjust: 100%;
+  ascent-override: 92%;
+  descent-override: 25%;
+  line-gap-override: 0%;
 }

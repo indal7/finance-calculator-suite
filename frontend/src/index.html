@@ -35,15 +35,23 @@
   <link rel="icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/favicon-180x180.png">
 
-  <!-- FONTS OPTIMIZATION -->
+  <!-- FONTS OPTIMIZATION — load only critical weights inline, defer the rest -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+  <!-- Critical: DM Sans 400,700 + Syne 700 for above-fold text -->
   <link rel="preload" as="style" fetchpriority="high"
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Syne:wght@700&display=swap"
     onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
     <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Syne:wght@700&display=swap">
+  </noscript>
+  <!-- Non-critical weights loaded after page is interactive -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=Syne:wght@800&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=Syne:wght@800&display=swap">
   </noscript>
 
   <!-- ✅ STRUCTURED DATA -->
@@ -81,10 +89,9 @@
 
 <body>
   <app-root></app-root>
-  <!-- AdSense moved from <head> to avoid blocking FCP -->
-  <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5738832184770301"
-    crossorigin="anonymous">
+  <!-- AdSense deferred until after page is interactive -->
+  <script>
+    if(typeof window!=='undefined'){window.addEventListener('load',function(){setTimeout(function(){var s=document.createElement('script');s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5738832184770301';s.async=true;s.crossOrigin='anonymous';document.body.appendChild(s)},3500)},{'once':true})}
   </script>
 </body>
 </html>
