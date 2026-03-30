@@ -1,0 +1,170 @@
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+
+:host {
+  display: block;
+}
+
+.footer {
+  background: var(--navy-mid, #111D4A);
+  color: var(--text-secondary, #A8B4D4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ─── Grid Layout ─── */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  padding: 3rem 0 2.5rem;
+}
+
+/* ─── Brand Column ─── */
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.footer-logo svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.footer-logo span {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold, #F5A623);
+}
+
+.footer-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted, #5C6E9A);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── Section Headings ─── */
+.footer-section h3 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary, #A8B4D4);
+  margin: 0 0 1rem;
+}
+
+.mt-contact {
+  margin-top: 1.5rem !important;
+}
+
+/* ─── Links ─── */
+.footer-section nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-section nav a,
+.footer-contact a {
+  color: var(--text-muted, #5C6E9A);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  transition: color 0.2s;
+}
+
+.footer-section nav a:hover,
+.footer-contact a:hover {
+  color: var(--gold, #F5A623);
+}
+
+/* ─── Contact Info ─── */
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─── Bottom Bar ─── */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.5rem 0;
+}
+
+.copyright {
+  font-size: 0.82rem;
+  color: var(--text-muted, #5C6E9A);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted, #5C6E9A);
+  line-height: 1.7;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 800px;
+}
+
+.disclaimer strong {
+  color: var(--text-secondary, #A8B4D4);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Tablet (≤ 900px): 2 columns */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobile (≤ 600px): 1 column */
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2rem 0;
+  }
+
+  .footer-brand {
+    grid-column: auto;
+  }
+
+  .footer-container {
+    padding: 0 1rem;
+  }
+
+  .disclaimer {
+    text-align: left;
+  }
+}
+
+/* ─── Focus ─── */
+.footer-section nav a:focus-visible,
+.footer-logo:focus-visible,
+.footer-contact a:focus-visible {
+  outline: 2px solid var(--gold, #F5A623);
+  outline-offset: 2px;
+}

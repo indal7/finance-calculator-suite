@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../services/seo.service';
 
@@ -7,7 +7,8 @@ import { SeoService } from '../../services/seo.service';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  styleUrls: ['./home.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnDestroy {
   private readonly seo = inject(SeoService);

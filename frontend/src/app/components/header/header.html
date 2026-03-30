@@ -1,0 +1,65 @@
+<header class="header" role="banner">
+  <div class="header-inner">
+    <!-- Logo -->
+    <a routerLink="/" class="logo" (click)="closeMenu()" aria-label="Finance Calculator India – Home">
+      <svg class="logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="4" y="18" width="5" height="7" rx="1" fill="#F5A623" opacity="0.4"/>
+        <rect x="12" y="12" width="5" height="13" rx="1" fill="#F5A623" opacity="0.7"/>
+        <rect x="20" y="5" width="5" height="20" rx="1" fill="#F5A623"/>
+      </svg>
+      <span class="logo-name">Finance Calculator <span class="logo-accent">India</span></span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="nav-desktop" aria-label="Main navigation">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/sip-calculator" routerLinkActive="active">SIP</a>
+      <a routerLink="/emi-calculator" routerLinkActive="active">EMI</a>
+      <a routerLink="/fd-calculator" routerLinkActive="active">FD</a>
+      <a routerLink="/cagr-calculator" routerLinkActive="active">CAGR</a>
+      <a routerLink="/blog" routerLinkActive="active">Blog</a>
+      <a routerLink="/about-us" routerLinkActive="active">About</a>
+      <a routerLink="/contact-us" routerLinkActive="active">Contact</a>
+    </nav>
+
+    <!-- CTA (Desktop) -->
+    <a routerLink="/sip-calculator" class="header-cta">Start SIP Calculation</a>
+
+    <!-- Hamburger (Mobile) -->
+    <button
+      class="hamburger"
+      [class.open]="menuOpen()"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-label="Toggle navigation menu"
+      aria-controls="mobile-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" [class.open]="menuOpen()" (click)="closeMenu()"></div>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu" [class.open]="menuOpen()" [attr.aria-hidden]="!menuOpen()">
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+    <div class="mobile-separator"></div>
+    <a routerLink="/sip-calculator" routerLinkActive="active" (click)="closeMenu()">SIP Calculator</a>
+    <a routerLink="/emi-calculator" routerLinkActive="active" (click)="closeMenu()">EMI Calculator</a>
+    <a routerLink="/fd-calculator" routerLinkActive="active" (click)="closeMenu()">FD Calculator</a>
+    <a routerLink="/cagr-calculator" routerLinkActive="active" (click)="closeMenu()">CAGR Calculator</a>
+    <div class="mobile-separator"></div>
+    <a routerLink="/ppf-calculator" routerLinkActive="active" (click)="closeMenu()">PPF Calculator</a>
+    <a routerLink="/lumpsum-calculator" routerLinkActive="active" (click)="closeMenu()">Lumpsum Calculator</a>
+    <a routerLink="/income-tax-calculator" routerLinkActive="active" (click)="closeMenu()">Income Tax Calculator</a>
+    <div class="mobile-separator"></div>
+    <a routerLink="/blog" routerLinkActive="active" (click)="closeMenu()">Blog</a>
+    <a routerLink="/about-us" routerLinkActive="active" (click)="closeMenu()">About Us</a>
+    <a routerLink="/contact-us" routerLinkActive="active" (click)="closeMenu()">Contact Us</a>
+  </nav>
+  <a routerLink="/sip-calculator" class="mobile-cta" (click)="closeMenu()">Start SIP Calculation →</a>
+</div>

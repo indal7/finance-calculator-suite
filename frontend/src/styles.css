@@ -3,6 +3,19 @@
    Theme: Premium Indian Finance — Deep Navy + Gold Accent
    ═══════════════════════════════════════════════════════════════ */
 
+/* ── Global Container ──────────────────────────────────────── */
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.875rem;
+  }
+}
+
 /* ── CSS Variables ─────────────────────────────────────────── */
 :root {
   --navy:          #0B1437;
@@ -1189,6 +1202,19 @@ code {
 
 .legal-page {
   color: var(--text-primary, #F0F4FF);
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .legal-page {
+    padding: 1.5rem 1rem 3rem;
+    gap: 1.25rem;
+  }
 }
 
 /* Breadcrumb */
@@ -1198,9 +1224,6 @@ code {
   gap: 0.5rem;
   font-size: 0.82rem;
   color: var(--text-muted, #5C6E9A);
-  padding: 0.75rem 1.5rem;
-  max-width: 1160px;
-  margin: 0 auto;
 }
 
 .legal-page .breadcrumb a {
@@ -1215,33 +1238,55 @@ code {
 
 .legal-page .breadcrumb-current { color: var(--text-secondary, #A8B4D4); }
 
-/* Hero */
+/* Hero — matches calculator .page-hero gradient + spacing */
 .legal-hero {
-  background: linear-gradient(135deg, var(--navy, #0B1437) 0%, var(--navy-mid, #111D4A) 100%);
-  border-bottom: 1px solid rgba(245, 166, 35, 0.12);
-  padding: 2.5rem 1.5rem 2rem;
+  background: linear-gradient(135deg, var(--navy-light, #1A2A6C) 0%, var(--navy-mid, #111D4A) 100%);
+  border: 1px solid var(--border, rgba(255,255,255,0.07));
+  border-radius: var(--radius-xl, 28px);
+  box-shadow: var(--shadow-card);
+  padding: 2.5rem 2.5rem 2rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.legal-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,166,35,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.legal-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent);
 }
 
 .legal-hero h1 {
   font-family: var(--font-display, 'Syne', sans-serif);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--gold, #F5A623);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--text-primary, #F0F4FF);
   margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .legal-meta {
-  font-size: 0.85rem;
-  color: var(--text-muted, #5C6E9A);
+  font-size: 0.9rem;
+  color: var(--text-secondary, #A8B4D4);
   margin: 0;
 }
 
 /* Content */
 .legal-content {
-  padding: 2.5rem 1.5rem 3rem;
-  max-width: 860px;
-  margin: 0 auto;
+  padding: 0;
 }
 
 .legal-content .lead {
@@ -1256,8 +1301,8 @@ code {
 .legal-content h2 {
   font-family: var(--font-display, 'Syne', sans-serif);
   font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--gold, #F5A623);
+  font-weight: 700;
+  color: var(--text-primary, #F0F4FF);
   margin: 2rem 0 0.75rem;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid rgba(245, 166, 35, 0.15);
@@ -1370,23 +1415,23 @@ code {
   margin: 0.5rem 0 2rem;
 }
 
-.form-group-contact {
+.contact-form .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.form-group-contact label {
+.contact-form .form-group label {
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-secondary, #A8B4D4);
 }
 
-.form-required { color: #e05; }
+.contact-form .required { color: #e05; }
 
-.form-group-contact input,
-.form-group-contact textarea {
-  background: rgba(255, 255, 255, 0.05);
+.contact-form .form-group input,
+.contact-form .form-group textarea {
+  background: rgba(11, 20, 55, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   color: var(--text-primary, #F0F4FF);
@@ -1398,18 +1443,18 @@ code {
   outline: none;
 }
 
-.form-group-contact input::placeholder,
-.form-group-contact textarea::placeholder {
+.contact-form .form-group input::placeholder,
+.contact-form .form-group textarea::placeholder {
   color: var(--text-muted, #5C6E9A);
 }
 
-.form-group-contact input:focus,
-.form-group-contact textarea:focus {
+.contact-form .form-group input:focus,
+.contact-form .form-group textarea:focus {
   border-color: var(--gold, #F5A623);
   background: rgba(245, 166, 35, 0.04);
 }
 
-.btn-contact-submit {
+.btn-submit {
   align-self: flex-start;
   background: var(--gold, #F5A623);
   color: var(--navy, #0B1437);
@@ -1427,7 +1472,7 @@ code {
   gap: 0.4rem;
 }
 
-.btn-contact-submit:hover {
+.btn-submit:hover {
   opacity: 0.9;
   transform: translateY(-1px);
 }
@@ -1474,11 +1519,14 @@ code {
 
 /* Responsive */
 @media (max-width: 640px) {
+  .legal-hero {
+    padding: 2rem 1.5rem 1.5rem;
+    border-radius: var(--radius-lg, 20px);
+  }
   .legal-hero h1 { font-size: 1.5rem; }
-  .legal-content { padding: 1.5rem 0 2rem; }
   .legal-content h2 { font-size: 1.05rem; }
   .contact-card { padding: 1rem; }
-  .btn-contact-submit { align-self: stretch; justify-content: center; }
+  .btn-submit { align-self: stretch; justify-content: center; }
 }
 
 /* ── AdSense Ad Units ─────────────────────────────────────── */

@@ -1,15 +1,15 @@
-<section class="blog-hero">
-  <div class="container">
-    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-      <a routerLink="/">Home</a> &rsaquo; <span>Blog</span>
-    </nav>
+<section class="blog-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span class="breadcrumb-current">Blog</span>
+  </nav>
+
+  <div class="blog-hero">
+    <div class="hero-eyebrow">✍️ Finance Blog · India</div>
     <h1>Finance Blog</h1>
     <p class="blog-hero-sub">Expert guides on SIP, EMI, FD &amp; smart investing for Indian investors</p>
   </div>
-</section>
-
-<section class="blog-grid-section">
-  <div class="container">
     <div class="blog-grid">
       @for (post of posts; track post.slug) {
         <article class="blog-card">
@@ -39,5 +39,4 @@
         <a routerLink="/cagr-calculator" class="cta-link">📊 CAGR Calculator</a>
       </div>
     </div>
-  </div>
 </section>
