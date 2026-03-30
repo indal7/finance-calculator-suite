@@ -227,10 +227,10 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   FIX #2: RESPONSIVE HEADER — MOBILE
+   RESPONSIVE HEADER & FOOTER
    ══════════════════════════════════════════════════════════════ */
 
-/* Tablet — shrink nav text slightly */
+/* Large tablet and below (≤ 860px) — shrink nav text slightly for side-by-side layout */
 @media (max-width: 860px) {
   .main-nav a {
     padding: 0.4rem 0.65rem;
@@ -250,13 +250,13 @@
   }
 }
 
-/* Mobile — hamburger-free compact layout */
-@media (max-width: 640px) {
+/* Tablet & Mobile (≤ 768px) — stack header, scrollable nav row */
+@media (max-width: 768px) {
   .container {
     padding: 0 0.875rem;
   }
 
-  /* Stack header: logo row on top, nav pills below */
+  /* Stack: logo on top row, nav row below */
   .header-flex {
     flex-direction: column;
     align-items: stretch;
@@ -273,15 +273,18 @@
     font-size: 1rem;
   }
 
+  /* Hide long tagline to save vertical space */
   .tagline {
-    /* Hide long tagline on mobile to save space */
     display: none;
   }
 
-  /* ✅ FIX: Nav fits in one row — no scrolling, no overflow */
+  /* Scrollable nav — items keep natural width, scroll if they overflow */
   .main-nav {
     width: 100%;
-    overflow-x: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     padding-bottom: 2px;
   }
 
@@ -291,33 +294,36 @@
 
   .main-nav ul {
     flex-wrap: nowrap;
-    gap: 3px;
+    gap: 4px;
     padding: 0.25rem 0 0.3rem;
-    width: 100%;
-    min-width: 0;
+    /* No explicit width — flex items control sizing via min-width: fit-content */
   }
 
-  /* ⭐ Key fix — li elements are the actual flex children of ul */
+  /* Items keep their natural text width; if they overflow, main-nav will scroll */
   .main-nav li {
-    flex: 1 1 0;
-    min-width: 0;
+    flex: 1 1 auto;
+    min-width: fit-content;
   }
 
   .main-nav a {
-    padding: 0.4rem 0.55rem;
-    font-size: 0.78rem;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.82rem;
     border-radius: 8px;
     display: flex;
     justify-content: center;
     text-align: center;
     min-height: 36px;
+    white-space: nowrap;
     width: 100%;
   }
 
   .main-content {
     padding: 1rem 0;
   }
+}
 
+/* ── Footer — small mobile (≤ 640px) ──────────────────────────── */
+@media (max-width: 640px) {
   .site-footer {
     padding-top: 1.75rem;
   }
@@ -332,7 +338,7 @@
   }
 }
 
-/* ── Footer responsive (small mobile) ─────────────────────────── */
+/* ── Footer — single column (≤ 480px) ─────────────────────────── */
 @media (max-width: 480px) {
   .footer-inner {
     grid-template-columns: 1fr;
@@ -343,16 +349,11 @@
   }
 }
 
-/* Very small screens */
+/* ── Very small screens (≤ 380px) — tighter nav for 320–380px phones ─────── */
 @media (max-width: 380px) {
-  .main-nav li {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
   .main-nav a {
-    padding: 0.35rem 0.4rem;
-    font-size: 0.72rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.74rem;
   }
 
   .logo, .logo h1 {
