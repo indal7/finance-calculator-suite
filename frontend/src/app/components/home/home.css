@@ -845,3 +845,39 @@
     transform: translateX(50%) translateY(-2px);
   }
 }
+
+  /* ── Homepage FAQ & Educational Content ────────────────────── */
+  .home-faq-section {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .faq-item-static {
+    padding: 1rem 1.1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+  }
+
+  .faq-item-static h3 {
+    margin: 0 0 0.45rem;
+    color: #f5f7ff;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .faq-item-static p {
+    margin: 0;
+    color: var(--text-muted, #7B8DB5);
+    line-height: 1.65;
+  }
+
+  .faq-item-static a {
+    color: var(--link, #8ad0ff);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .faq-item-static a:hover {
+    text-decoration: underline;
+  }

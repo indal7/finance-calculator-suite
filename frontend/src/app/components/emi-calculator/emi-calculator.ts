@@ -124,10 +124,10 @@ export class EmiCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.seo.setTitle('EMI Calculator India 2026 – Home & Car Loan EMI');
-    this.seo.setDescription('Free EMI Calculator India. Calculate monthly EMI for home loan, car loan, personal loan. Get complete interest breakdown and amortization schedule.');
+    this.seo.setTitle('EMI Calculator India 2026 – Free Home Loan, Car Loan & Personal Loan EMI Calculator');
+    this.seo.setDescription('Free EMI Calculator India for home loan, car loan & personal loan. Calculate monthly EMI, total interest & amortization schedule for SBI, HDFC, ICICI loans. No login.');
     this.seo.updateOgTags(
-      'EMI Calculator India – Free Loan EMI Calculator Online',
+      'EMI Calculator India 2026 – Free Loan EMI Calculator Online',
       'Calculate your loan EMI instantly. Full amortization schedule. Free, accurate, no login required.',
       'https://www.myinvestmentcalculator.in/emi-calculator'
     );
@@ -144,8 +144,9 @@ export class EmiCalculator implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/emi-calculator');
     this.seo.setKeywords([
-      'emi calculator india', 'home loan emi calculator',
+      'emi calculator india', 'home loan emi calculator', 'emi calculator online',
       'car loan emi calculator', 'personal loan emi calculator',
+      'emi calculator sbi', '50 lakh home loan emi', '30 lakh home loan emi',
       'emi calculator with amortization', 'loan emi calculator 2026'
     ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));

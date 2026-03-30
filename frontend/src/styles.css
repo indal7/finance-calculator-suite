@@ -31,7 +31,7 @@
   --sky:           #38BDF8;
   --text-primary:  #F0F4FF;
   --text-secondary:#A8B4D4;
-  --text-muted:    #5C6E9A;
+  --text-muted:    #7B8DB5;
   --border:        rgba(255,255,255,0.07);
   --border-focus:  rgba(245,166,35,0.5);
   --card-bg:       rgba(17,29,74,0.7);
@@ -406,7 +406,7 @@ select.form-select option {
 
 /* ── Hint & Error ────────────────────────────────────────────── */
 .hint {
-  font-size: 0.73rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   line-height: 1.4;
   margin-top: 2px;

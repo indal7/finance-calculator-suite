@@ -3,31 +3,31 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'Best SIP Calculator India 2026 – EMI, FD & CAGR',
+    title: 'SIP Calculator India 2026 – Free EMI, FD, CAGR & Mutual Fund Calculator Online',
     loadComponent: () =>
       import('./components/home/home').then(m => m.HomeComponent)
   },
   {
     path: 'sip-calculator',
-    title: 'SIP Calculator India – Calculate Monthly SIP Returns Online Free 2026',
+    title: 'SIP Calculator India 2026 – Free Online SIP Return Calculator for Mutual Funds',
     loadComponent: () =>
       import('./components/sip-calculator/sip-calculator').then(m => m.SipCalculator)
   },
   {
     path: 'emi-calculator',
-    title: 'EMI Calculator India 2026 – Home & Car Loan EMI',
+    title: 'EMI Calculator India 2026 – Free Home Loan, Car Loan & Personal Loan EMI Calculator',
     loadComponent: () =>
       import('./components/emi-calculator/emi-calculator').then(m => m.EmiCalculator)
   },
   {
     path: 'fd-calculator',
-    title: 'FD Calculator India 2026 – Fixed Deposit Interest Calculator SBI HDFC ICICI',
+    title: 'FD Calculator India 2026 – SBI, HDFC, ICICI Fixed Deposit Interest & Maturity Calculator',
     loadComponent: () =>
       import('./components/fd-calculator/fd-calculator').then(m => m.FdCalculator)
   },
   {
     path: 'cagr-calculator',
-    title: 'CAGR Calculator India – Stock Return & Annual Growth Rate Calculator 2026',
+    title: 'CAGR Calculator India 2026 – Free Compound Annual Growth Rate Calculator Online',
     loadComponent: () =>
       import('./components/cagr-calculator/cagr-calculator').then(m => m.CagrCalculator)
   },
@@ -68,10 +68,28 @@ export const routes: Routes = [
       import('./components/blog/sip-5000-per-month/sip-5000-per-month').then(m => m.Sip5000BlogComponent)
   },
   {
+    path: 'blog/sip-1000-per-month',
+    title: '₹1,000 SIP Per Month for 5, 10, 15, 20 Years: Returns, Strategy & Planning',
+    loadComponent: () =>
+      import('./components/blog/sip-1000-per-month/sip-1000-per-month').then(m => m.Sip1000BlogComponent)
+  },
+  {
     path: 'blog/emi-calculation-guide',
     title: 'Complete Guide to EMI Calculation in India: Formula, Examples & Tips',
     loadComponent: () =>
       import('./components/blog/emi-calculation-guide/emi-calculation-guide').then(m => m.EmiGuideBlogComponent)
+  },
+  {
+    path: 'blog/50-lakh-home-loan-emi',
+    title: '₹50 Lakh Home Loan EMI in 2026: SBI, HDFC, ICICI Comparison + Savings Tips',
+    loadComponent: () =>
+      import('./components/blog/50-lakh-home-loan-emi/50-lakh-home-loan-emi').then(m => m.HomeLoan50LakhEmiBlogComponent)
+  },
+  {
+    path: 'blog/10-lakh-fd-interest',
+    title: '₹10 Lakh FD Interest Per Month in 2026: SBI, HDFC, ICICI & Post Office Comparison',
+    loadComponent: () =>
+      import('./components/blog/10-lakh-fd-interest/10-lakh-fd-interest').then(m => m.Fd10LakhInterestBlogComponent)
   },
   {
     path: 'privacy-policy',

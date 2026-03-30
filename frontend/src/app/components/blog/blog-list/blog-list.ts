@@ -15,6 +15,30 @@ export class BlogListComponent implements OnInit, OnDestroy {
 
   readonly posts = [
     {
+      slug: 'sip-1000-per-month',
+      title: '₹1,000 SIP Per Month for 5, 10, 15, 20 Years: Returns, Strategy & Planning',
+      description: 'See how much ₹1,000/month SIP can grow over 5, 10, 15, and 20 years at different return assumptions. Ideal guide for beginners and students.',
+      date: '2026-03-30',
+      readTime: '6 min read',
+      category: 'SIP Calculator'
+    },
+    {
+      slug: '50-lakh-home-loan-emi',
+      title: '₹50 Lakh Home Loan EMI in 2026: SBI, HDFC, ICICI Comparison + Savings Tips',
+      description: 'Compare EMI for ₹50 lakh home loan across major banks and tenures. Learn practical ways to reduce EMI and total interest cost.',
+      date: '2026-03-30',
+      readTime: '7 min read',
+      category: 'EMI & Loans'
+    },
+    {
+      slug: '10-lakh-fd-interest',
+      title: '₹10 Lakh FD Interest Per Month in 2026: SBI, HDFC, ICICI & Post Office Comparison',
+      description: 'Bank-wise comparison of ₹10 lakh FD returns, monthly interest estimates, senior citizen rates, and tax considerations.',
+      date: '2026-03-30',
+      readTime: '6 min read',
+      category: 'FD & Savings'
+    },
+    {
       slug: 'sip-vs-fd',
       title: 'SIP vs FD: Which is Better for Long-Term Wealth Creation in India?',
       description: 'Compare SIP mutual funds vs Fixed Deposits for long-term wealth creation. Understand returns, risk, liquidity, and tax implications.',

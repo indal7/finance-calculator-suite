@@ -14,17 +14,17 @@ export class HomeComponent implements OnDestroy {
   private readonly seo = inject(SeoService);
 
   constructor() {
-    this.seo.setTitle('Best SIP Calculator India 2026 – EMI, FD & CAGR');
-    this.seo.setDescription('Use the best SIP calculator India to calculate ₹5,000 monthly returns, EMI, FD maturity & CAGR instantly. Free, accurate & India-specific financial tools.');
+    this.seo.setTitle('SIP Calculator India 2026 – Free EMI, FD, CAGR & Mutual Fund Calculator Online');
+    this.seo.setDescription('Free online SIP calculator, EMI calculator, FD calculator & CAGR calculator for Indian investors. Calculate mutual fund SIP returns, loan EMI, fixed deposit interest & growth rate instantly — no login needed.');
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/');
     this.seo.setKeywords([
       'sip calculator india', 'emi calculator india', 'fd calculator india',
-      'cagr calculator', 'financial calculators india 2026',
-      'free online calculator india'
+      'cagr calculator', 'mutual fund calculator india', 'financial calculator india 2026',
+      'investment calculator online free', 'sip return calculator'
     ]);
     this.seo.updateOgTags(
-      'Best SIP Calculator India 2026 – EMI, FD & CAGR Calculator Online',
-      'Use the best SIP calculator India to calculate ₹5,000 monthly returns, EMI, FD maturity & CAGR instantly. Free, accurate & India-specific financial tools.',
+      'SIP Calculator India 2026 – Free EMI, FD & CAGR Calculator Online',
+      'Free online SIP calculator, EMI calculator, FD calculator & CAGR calculator for Indian investors. Calculate returns instantly — no login needed.',
       'https://www.myinvestmentcalculator.in/'
     );
     this.seo.injectJsonLd({
@@ -43,20 +43,24 @@ export class HomeComponent implements OnDestroy {
     }, 'home-breadcrumb');
     this.seo.updateFAQSchema([
       {
-        question: 'What is a SIP calculator?',
-        answer: 'A SIP (Systematic Investment Plan) calculator is an online tool that helps you estimate the returns on your mutual fund SIP investments. Enter your monthly investment amount, expected annual return rate, and investment duration to instantly see the maturity value and total wealth gained through compounding.'
+        question: 'What is the best free SIP calculator in India?',
+        answer: 'A good SIP calculator should show monthly investment growth, total invested amount, estimated returns, and final corpus. Our SIP calculator includes step-up SIP, inflation adjustment, and reference tables for ₹1000, ₹5000, and ₹10000 monthly SIP amounts.'
       },
       {
-        question: 'What is an EMI calculator?',
-        answer: 'An EMI (Equated Monthly Instalment) calculator helps you compute the fixed monthly repayment amount for a loan. Enter the loan amount, annual interest rate, and tenure to instantly calculate your EMI, total interest payable, and total repayment amount.'
+        question: 'How do I calculate EMI for a home loan?',
+        answer: 'Enter loan amount, annual interest rate, and tenure in years. The EMI calculator uses reducing-balance formula to compute monthly EMI, total interest, and total repayment. It can also provide amortization schedule for better planning.'
       },
       {
-        question: 'What is an FD calculator?',
-        answer: 'An FD (Fixed Deposit) calculator helps you find out the maturity amount of your fixed deposit investment. Enter the principal amount, annual interest rate, tenure, and compounding frequency to see the interest earned and maturity value at banks like SBI, HDFC, and ICICI.'
+        question: 'How much interest does ₹10 lakh FD earn per month?',
+        answer: 'At 7% annual interest, ₹10 lakh FD earns roughly ₹5,833 per month in simple-interest terms. Actual payout depends on payout option and compounding frequency. Senior citizens may earn slightly more due to higher FD rates.'
       },
       {
-        question: 'What is CAGR and how is it calculated?',
-        answer: 'CAGR (Compound Annual Growth Rate) is the rate at which an investment grows annually over a specified period, assuming profits are reinvested. It is calculated as: CAGR = (Ending Value / Beginning Value)^(1 / Number of Years) − 1. Our free CAGR calculator makes this instant for any investment.'
+        question: 'What is CAGR and why is it important for investors?',
+        answer: 'CAGR is the annualized return of an investment over a period, assuming compounding. It helps compare investments fairly across different time horizons and is widely used to benchmark portfolio performance against Nifty 50, Sensex, and other assets.'
+      },
+      {
+        question: 'Are these calculators suitable for Indian investors?',
+        answer: 'Yes. These calculators are built for Indian users with rupee-based inputs, bank-specific FD rates, common loan assumptions, and current tax context such as LTCG and Section 80C references.'
       }
     ]);
   }

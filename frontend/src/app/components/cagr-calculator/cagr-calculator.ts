@@ -119,11 +119,11 @@ export class CagrCalculator implements OnInit, OnDestroy {
   ];
 
   constructor() {
-    this.seo.setTitle('CAGR Calculator India – Stock Return & Annual Growth Rate Calculator 2026');
-    this.seo.setDescription('Free CAGR Calculator India. Calculate the compound annual growth rate for stocks, mutual funds, real estate and more. Compare your returns with Nifty 50 benchmarks.');
+    this.seo.setTitle('CAGR Calculator India 2026 – Free Compound Annual Growth Rate Calculator Online');
+    this.seo.setDescription('Free CAGR calculator India to calculate compound annual growth rate of stocks, mutual funds & investments. Compare Nifty 50, Sensex & mutual fund CAGR. No login.');
     this.seo.updateOgTags(
-      'CAGR Calculator India – Free Annual Growth Rate Calculator',
-      'Calculate your investment CAGR instantly. Free, accurate, no login required.',
+      'CAGR Calculator India 2026 – Free Annual Growth Rate Calculator',
+      'Calculate your investment CAGR instantly. Compare with Nifty 50 & Sensex. Free, accurate, no login required.',
       'https://www.myinvestmentcalculator.in/cagr-calculator'
     );
     this.seo.injectJsonLd({
@@ -139,9 +139,10 @@ export class CagrCalculator implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/cagr-calculator');
     this.seo.setKeywords([
-      'cagr calculator india', 'compound annual growth rate calculator',
-      'stock return calculator india', 'mutual fund cagr calculator',
-      'nifty 50 cagr calculator'
+      'cagr calculator india', 'cagr calculator online',
+      'compound annual growth rate calculator', 'mutual fund cagr calculator',
+      'stock return calculator india', 'nifty 50 cagr calculator',
+      'nifty 50 cagr 10 years', 'sensex cagr calculator'
     ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }

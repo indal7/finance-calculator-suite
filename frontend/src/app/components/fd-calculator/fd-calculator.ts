@@ -124,11 +124,11 @@ export class FdCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.seo.setTitle('FD Calculator India 2026 – Fixed Deposit Interest Calculator SBI HDFC ICICI');
-    this.seo.setDescription('Free FD Calculator India 2026. Calculate Fixed Deposit maturity amount with monthly, quarterly, or yearly compounding. Compare SBI, HDFC, ICICI FD rates.');
+    this.seo.setTitle('FD Calculator India 2026 – SBI, HDFC, ICICI Fixed Deposit Interest & Maturity Calculator');
+    this.seo.setDescription('Free FD calculator India to calculate fixed deposit maturity amount & interest for SBI, HDFC, ICICI, PNB & post office. Compare FD rates for regular & senior citizens 2026. No login.');
     this.seo.updateOgTags(
-      'FD Calculator India – Free Fixed Deposit Calculator Online',
-      'Calculate your FD maturity amount instantly. Free, accurate, no login required.',
+      'FD Calculator India 2026 – Free Fixed Deposit Calculator Online',
+      'Calculate your FD maturity amount instantly. Compare SBI, HDFC, ICICI rates. Free, accurate, no login required.',
       'https://www.myinvestmentcalculator.in/fd-calculator'
     );
     this.seo.injectJsonLd({
@@ -144,9 +144,10 @@ export class FdCalculator implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/fd-calculator');
     this.seo.setKeywords([
-      'fd calculator india', 'fixed deposit calculator',
-      'sbi fd calculator 2026', 'fd interest calculator',
-      'fd maturity calculator quarterly compounding'
+      'fd calculator india', 'fixed deposit calculator', 'fd calculator online',
+      'sbi fd calculator 2026', 'hdfc fd calculator', 'fd interest calculator',
+      'fd maturity calculator', '10 lakh fd interest per month',
+      'senior citizen fd rates 2026', 'post office fd calculator'
     ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
   }

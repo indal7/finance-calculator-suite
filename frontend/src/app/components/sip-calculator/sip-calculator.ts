@@ -76,6 +76,7 @@ export class SipCalculator implements OnInit, OnDestroy {
   projectionRows: Array<{year: number; invested: number; value: number; gains: number}> = [];
   cachedSipReturns5k: Array<{years: number; invested: number; returns: number; value: number}> = [];
   cachedSipReturns10k: Array<{years: number; invested: number; returns: number; value: number}> = [];
+  cachedSipReturns1k: Array<{years: number; invested: number; returns: number; value: number}> = [];
   cachedReferenceTable: SipTableRow[] = [];
 
 copied = false;
@@ -142,6 +143,26 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     {
       q: 'How is SIP taxed in India?',
       a: 'Each SIP instalment is treated as a separate investment for tax purposes. For equity mutual funds, gains held less than 12 months are taxed at 20% (Short Term Capital Gains). Gains held for more than 12 months above ₹1.25 lakh per year are taxed at 12.5% (Long Term Capital Gains) from FY 2024–25.'
+    },
+    {
+      q: 'How much will ₹1,000 SIP grow in 10 years?',
+      a: '₹1,000/month SIP for 10 years at 12% annual return grows to approximately ₹2.32 lakh. Total investment is ₹1.2 lakh and estimated gains are ₹1.12 lakh. At 15% return (mid-cap fund average), the same SIP grows to ₹2.79 lakh.'
+    },
+    {
+      q: 'How to build ₹1 crore with SIP?',
+      a: 'To reach ₹1 crore via SIP at 12% annual return, you can invest ₹5,000/month for ~24 years, ₹10,000/month for ~18 years, or ₹15,000/month for ~15 years. A step-up SIP of ₹5,000 with 10% annual increase reaches ₹1 crore in about 16 years.'
+    },
+    {
+      q: 'What is the best SIP for beginners in India 2026?',
+      a: 'For beginners, a Nifty 50 Index Fund SIP (e.g., UTI Nifty 50, HDFC Nifty 50) or a large-cap flexi-cap fund is ideal. Start with ₹500–₹2,000/month, commit for at least 5 years, and gradually increase via step-up SIP.'
+    },
+    {
+      q: 'Can I do SIP in stocks directly?',
+      a: 'Yes, many brokers like Zerodha, Groww, and Angel One offer stock SIP (also called equity SIP). However, stock SIP lacks the diversification benefit of mutual fund SIP and carries higher risk. For most investors, mutual fund SIP is safer and more convenient.'
+    },
+    {
+      q: 'What happens to SIP if the market crashes?',
+      a: 'A market crash is actually beneficial for SIP investors — your fixed monthly amount buys more units at lower prices, reducing your average cost. Historically, investors who continued SIP during the 2008 and 2020 crashes saw excellent returns within 2–3 years of recovery.'
     }
   ];
 
@@ -163,10 +184,10 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   }
 
   constructor() {
-    this.seo.setTitle('SIP Calculator India – Calculate Monthly SIP Returns Online Free 2026');
-    this.seo.setDescription('Free SIP Calculator India 2026. Calculate returns on ₹1000, ₹5000 or any monthly SIP investment. See how compounding grows your wealth over 5, 10, 20 years.');
+    this.seo.setTitle('SIP Calculator India 2026 – Free Online SIP Return Calculator for Mutual Funds');
+    this.seo.setDescription('Free SIP calculator India 2026. Calculate returns on ₹1000, ₹5000 or any monthly SIP. See how compounding grows your wealth over 5, 10, 20 years. Step-up SIP, inflation adjustment & ₹1 crore planning.');
     this.seo.updateOgTags(
-      'SIP Calculator India – Free Online SIP Return Calculator',
+      'SIP Calculator India 2026 – Free Online SIP Return Calculator',
       'Calculate your SIP returns instantly. Free, accurate, no login required.',
       'https://www.myinvestmentcalculator.in/sip-calculator'
     );
@@ -184,14 +205,14 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/sip-calculator');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
     this.seo.setKeywords([
-      'sip calculator india',
-      'sip returns calculator',
-      '₹5000 sip returns',
-      'step up sip calculator',
-      'monthly sip calculator'
+      'sip calculator india', 'sip return calculator', 'mutual fund sip calculator',
+      'sip calculator online', 'sip investment calculator',
+      '₹5000 sip returns', '₹1000 sip returns', 'step up sip calculator',
+      'sip for 1 crore', 'monthly sip calculator', 'sbi sip calculator'
     ]);
 
     // Pre-compute static tables once (these never change)
+    this.cachedSipReturns1k = this.getSipReturnsBreakdown(1000);
     this.cachedSipReturns5k = this.getSipReturnsBreakdown(5000);
     this.cachedSipReturns10k = this.getSipReturnsBreakdown(10000);
     this.cachedReferenceTable = this.getSipReferenceTable();
@@ -298,7 +319,7 @@ private copyTimer?: ReturnType<typeof setTimeout>;
 
   /** Get returns breakdown for a specific SIP amount (1, 3, 5, 10 years at 12%) */
   getSipReturnsBreakdown(monthlySip: number): Array<{ years: number; invested: number; returns: number; value: number }> {
-    return [1, 3, 5, 10].map(years => {
+    return [1, 3, 5, 10, 20].map(years => {
       const invested = monthlySip * years * 12;
       const value    = +this.calcSipFV(monthlySip, 12, years).toFixed(0);
       return { years, invested, returns: value - invested, value };

@@ -539,3 +539,14 @@
     justify-content: flex-start;
   }
 }
+
+/* ── Below-fold paint deferral ─────────────────────────────── */
+.sip-returns-section,
+.seo-snippet-card,
+.seo-compare-card,
+.seo-stepup-card,
+.seo-inflation-card,
+.seo-paa-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
+}
