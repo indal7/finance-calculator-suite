@@ -76,16 +76,9 @@ body {
   text-rendering: optimizeSpeed;
   overflow-x: hidden;
   background-image:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,42,108,0.8) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0,200,150,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 50% at 10% 60%, rgba(245,166,35,0.05) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,42,108,0.8) 0%, transparent 70%);
 }
 
-@media (hover: hover) {
-  body {
-    background-attachment: fixed;
-  }
-}
 
 @media (max-width: 700px) {
   .form-grid {
@@ -1573,7 +1566,7 @@ code {
   font-family: 'Syne';
   font-style: normal;
   font-weight: 700 800;
-  font-display: swap;
+  font-display: optional;
   src: local('Syne Bold');
   size-adjust: 105%;
   ascent-override: 90%;
@@ -1585,7 +1578,7 @@ code {
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 400 700;
-  font-display: swap;
+  font-display: optional;
   src: local('DM Sans'), local('Arial');
   size-adjust: 100%;
   ascent-override: 92%;

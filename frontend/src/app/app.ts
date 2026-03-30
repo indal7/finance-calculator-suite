@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, afterNextRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header';
 import { FooterComponent } from './components/footer/footer';
@@ -14,6 +14,7 @@ export class App {
   readonly title = 'Finance Calculator Suite';
 
   constructor() {
-    inject(TrackingService).init();
+    const tracking = inject(TrackingService);
+    afterNextRender(() => tracking.init());
   }
 }
