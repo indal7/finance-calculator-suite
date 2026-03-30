@@ -39,6 +39,11 @@
 /* ── Reset & Base ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+img, svg, video {
+  max-width: 100%;
+  height: auto;
+}
+
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
