@@ -133,6 +133,13 @@ resource "aws_apigatewayv2_stage" "default" {
     throttling_rate_limit  = 30
   }
 
+  # Stage must wait for all routes to exist before applying route_settings
+  depends_on = [
+    aws_apigatewayv2_route.calculator,
+    aws_apigatewayv2_route.contact,
+    aws_apigatewayv2_route.track_visit,
+  ]
+
   tags = local.common_tags
 }
 
