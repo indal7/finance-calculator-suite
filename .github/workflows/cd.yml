@@ -10,11 +10,6 @@ on:
       - '.github/workflows/cd.yml'
   workflow_dispatch:
 
-# Keep branch protection enabled with required checks:
-# 1) Backend CI
-# 2) Frontend CI
-# So CD only runs on code that has already passed CI before merge to main.
-
 permissions:
   id-token: write
   contents: read
@@ -23,13 +18,68 @@ concurrency:
   group: cd-${{ github.ref }}
   cancel-in-progress: true
 
+# ap-south-1
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: ${{ vars.AWS_DEPLOY_REGION || 'us-east-1' }}
   TF_IN_AUTOMATION: true
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Gate: Tests MUST pass before any Terraform or deploy job runs.
+# If either test job fails, the entire pipeline stops.
+# ──────────────────────────────────────────────────────────────────────────────
 jobs:
+  backend-test:
+    name: Backend Tests (Gate)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Run backend tests
+        working-directory: backend
+        run: python -m pytest tests/ -v --tb=short
+
+  frontend-test:
+    name: Frontend Tests (Gate)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm run test -- --watch=false
+
   terraform-backend:
     name: Provision Backend AWS Resources
+    needs: [backend-test, frontend-test]
     runs-on: ubuntu-latest
 
     steps:
@@ -45,16 +95,21 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # - name: Terraform Init (backend)
-      #   working-directory: terraform/backend
-      #   run: terraform init
       - name: Terraform Init (backend)
         working-directory: terraform/backend
         run: terraform init -reconfigure
 
+      - name: Terraform Validate (backend)
+        working-directory: terraform/backend
+        run: terraform validate
+
+      - name: Terraform Plan (backend)
+        working-directory: terraform/backend
+        run: terraform plan -var="aws_region=${{ env.AWS_REGION }}" -out=tfplan
+
       - name: Terraform Apply (backend)
         working-directory: terraform/backend
-        run: terraform apply -auto-approve
+        run: terraform apply tfplan
 
       - name: Export backend outputs
         id: backend_outputs
@@ -67,7 +122,7 @@ jobs:
 
   terraform-frontend:
     name: Provision Frontend AWS Resources
-    needs: terraform-backend
+    needs: [backend-test, frontend-test, terraform-backend]
     runs-on: ubuntu-latest
 
     steps:
@@ -83,16 +138,21 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # - name: Terraform Init (frontend)
-      #   working-directory: terraform/frontend
-      #   run: terraform init
-      - name: Terraform Init (backend)
+      - name: Terraform Init (frontend)
         working-directory: terraform/frontend
         run: terraform init -reconfigure
 
+      - name: Terraform Validate (frontend)
+        working-directory: terraform/frontend
+        run: terraform validate
+
+      - name: Terraform Plan (frontend)
+        working-directory: terraform/frontend
+        run: terraform plan -var="aws_region=${{ env.AWS_REGION }}" -out=tfplan
+
       - name: Terraform Apply (frontend)
         working-directory: terraform/frontend
-        run: terraform apply -auto-approve
+        run: terraform apply tfplan
 
       - name: Export frontend outputs
         id: frontend_outputs
@@ -129,7 +189,8 @@ jobs:
 
       - name: Inject API URL into production environment
         run: |
-          sed -i "s|https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/prod|${{ needs.terraform-backend.outputs.api_gateway_url }}|g" frontend/src/environments/environment.prod.ts
+          API_URL="${{ needs.terraform-backend.outputs.api_gateway_url }}"
+          sed -i "s|apiBase:.*|apiBase: '${API_URL}'|g" frontend/src/environments/environment.prod.ts
 
       - name: Install dependencies
         working-directory: frontend

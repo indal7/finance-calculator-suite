@@ -1,13 +1,52 @@
 # Finance Calculator Suite
 
-A production-ready **Finance Calculator Web App** featuring four financial calculators:
+A production-grade **Finance Calculator Web App** for Indian investors — live at [**www.myinvestmentcalculator.in**](https://www.myinvestmentcalculator.in).
+
+Built with **Angular 19 (SSR + Prerendering)** frontend, **Python AWS Lambda** backend, fully automated **CI/CD via GitHub Actions**, and infrastructure-as-code with **Terraform**.
+
+---
+
+## Live Calculators
 
 | Calculator | Route | Description |
 |------------|-------|-------------|
-| SIP Calculator  | `/sip-calculator`  | Systematic Investment Plan returns |
-| EMI Calculator  | `/emi-calculator`  | Loan Equated Monthly Instalment |
-| FD Calculator   | `/fd-calculator`   | Fixed Deposit maturity amount |
+| SIP Calculator | `/sip-calculator` | Systematic Investment Plan returns |
+| EMI Calculator | `/emi-calculator` | Loan Equated Monthly Instalment |
+| FD Calculator | `/fd-calculator` | Fixed Deposit maturity amount |
 | CAGR Calculator | `/cagr-calculator` | Compound Annual Growth Rate |
+| PPF Calculator | `/ppf-calculator` | Public Provident Fund returns |
+| Lumpsum Calculator | `/lumpsum-calculator` | One-time investment returns |
+| Income Tax Calculator | `/income-tax-calculator` | New vs Old tax regime (FY 2026-27) |
+
+## Blog & SEO Content
+
+| Article | Route |
+|---------|-------|
+| SIP vs FD Comparison | `/blog/sip-vs-fd` |
+| ₹5,000 SIP Per Month | `/blog/sip-5000-per-month` |
+| ₹1,000 SIP Per Month | `/blog/sip-1000-per-month` |
+| EMI Calculation Guide | `/blog/emi-calculation-guide` |
+| ₹50 Lakh Home Loan EMI | `/blog/50-lakh-home-loan-emi` |
+| ₹10 Lakh FD Interest | `/blog/10-lakh-fd-interest` |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Angular 19 (standalone components, SSR, prerendering) |
+| Charts | Chart.js 4 (doughnut + growth area charts) |
+| Testing (FE) | Vitest + jsdom |
+| Backend | Python 3.11 on AWS Lambda |
+| Testing (BE) | pytest + pytest-cov |
+| API | AWS API Gateway (HTTP API v2) |
+| Database | DynamoDB (contact submissions + visit analytics) |
+| CDN | CloudFront + S3 (OAC) |
+| DNS | Route 53 |
+| IaC | Terraform (~5.0) |
+| CI/CD | GitHub Actions (3 workflows) |
+| Auth | OIDC (GitHub → AWS) |
 
 ---
 
@@ -15,394 +54,312 @@ A production-ready **Finance Calculator Web App** featuring four financial calcu
 
 ```
 finance-calculator-suite/
-├── frontend/                         # Angular 19 web application
+├── .github/workflows/
+│   ├── frontend-ci.yml           # Frontend CI — build + Vitest
+│   ├── backend-ci.yml            # Backend CI — pytest + coverage
+│   └── cd.yml                    # CD — test gate → Terraform → deploy
+│
+├── frontend/                     # Angular 19 application
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── components/
-│   │   │   │   ├── sip-calculator/   # SIP calculator component
-│   │   │   │   ├── emi-calculator/   # EMI calculator component
-│   │   │   │   ├── fd-calculator/    # FD calculator component
-│   │   │   │   └── cagr-calculator/  # CAGR calculator component
+│   │   │   │   ├── home/                   # Landing page
+│   │   │   │   ├── sip-calculator/         # SIP calculator
+│   │   │   │   ├── emi-calculator/         # EMI calculator
+│   │   │   │   ├── fd-calculator/          # FD calculator
+│   │   │   │   ├── cagr-calculator/        # CAGR calculator
+│   │   │   │   ├── ppf-calculator/         # PPF calculator
+│   │   │   │   ├── lumpsum-calculator/     # Lumpsum calculator
+│   │   │   │   ├── income-tax-calculator/  # Income Tax calculator
+│   │   │   │   ├── blog/                   # 6 blog articles + list page
+│   │   │   │   ├── header/                 # Global header/navbar
+│   │   │   │   ├── footer/                 # Global footer
+│   │   │   │   ├── about-us/
+│   │   │   │   ├── contact-us/
+│   │   │   │   ├── privacy-policy/
+│   │   │   │   └── terms-conditions/
 │   │   │   ├── services/
-│   │   │   │   └── calculator.ts     # Shared HTTP service for API calls
-│   │   │   ├── app.ts                # Root component (navbar + layout)
-│   │   │   ├── app.routes.ts         # Angular lazy-loaded routes
-│   │   │   └── app.config.ts         # Application providers
-│   │   ├── environments/             # environment.ts / environment.prod.ts
-│   │   ├── index.html                # SEO meta tags
-│   │   └── styles.css                # Shared component styles
+│   │   │   │   ├── calculator.ts           # Shared HTTP + local calc service
+│   │   │   │   └── seo.service.ts          # SEO, JSON-LD, meta tags
+│   │   │   ├── app.routes.ts               # 19 lazy-loaded routes
+│   │   │   ├── app.routes.server.ts        # 19 prerendered server routes
+│   │   │   └── app.config.ts               # Application providers
+│   │   ├── environments/
+│   │   │   ├── environment.ts              # Dev API URL
+│   │   │   └── environment.prod.ts         # Prod API URL (injected by CD)
+│   │   ├── assets/
+│   │   │   ├── sitemap.xml                 # SEO sitemap
+│   │   │   └── robots.txt
+│   │   ├── index.html                      # SEO meta, favicon, structured data
+│   │   └── styles.css                      # Global shared styles (~1900 lines)
 │   ├── angular.json
+│   ├── vitest.config.ts
 │   └── package.json
 │
-└── backend/                          # AWS Lambda functions (Python 3.10+)
-    ├── utils.py                      # Shared validation + financial formulas
-    ├── sip/handler.py                # POST /sip
-    ├── emi/handler.py                # POST /emi
-    ├── fd/handler.py                 # POST /fd
-    ├── cagr/handler.py               # POST /cagr
-    └── tests/test_utils.py           # pytest unit tests
+├── backend/                      # AWS Lambda functions (Python 3.11)
+│   ├── utils.py                  # Shared validation, formulas, response helpers
+│   ├── sip/handler.py            # POST /sip
+│   ├── emi/handler.py            # POST /emi
+│   ├── fd/handler.py             # POST /fd
+│   ├── cagr/handler.py           # POST /cagr
+│   ├── contact/handler.py        # POST /contact — DynamoDB + SES notification
+│   ├── track_visit/handler.py    # POST /track-visit — anonymous analytics
+│   └── tests/
+│       ├── test_utils.py         # Core formula tests
+│       └── test_new_features.py  # Response format, logging, request ID tests
+│
+└── terraform/
+    ├── backend/                  # Lambda, API Gateway, DynamoDB, IAM, CloudWatch
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   ├── outputs.tf
+    │   └── providers.tf
+    └── frontend/                 # S3, CloudFront, Route 53, OAC, www-redirect
+        ├── main.tf
+        ├── variables.tf
+        ├── outputs.tf
+        └── providers.tf
 ```
 
 ---
 
-## CI/CD Pipelines (GitHub Actions)
+## CI/CD Pipeline
 
-This repo uses three separate pipelines:
+Three GitHub Actions workflows:
 
-1. **Frontend CI** (`.github/workflows/frontend-ci.yml`)
-  - Triggers on frontend changes
-  - Runs Angular install, build, and tests
+### 1. Frontend CI (`frontend-ci.yml`)
 
-2. **Backend CI** (`.github/workflows/backend-ci.yml`)
-  - Triggers on backend changes
-  - Runs Python tests with coverage
+- **Triggers:** Push/PR to `main` or `develop` affecting `frontend/`
+- **Steps:** Checkout → Node.js 20 → `npm ci` → `npm run build` → `vitest`
+- **Artifact:** Uploads `dist/` on `main` branch pushes
 
-3. **CD Pipeline** (`.github/workflows/cd.yml`)
-  - Triggers on `main` (or manual dispatch)
-  - Applies Terraform for backend first, then frontend
-  - Builds and uploads frontend assets to S3
-  - Invalidates CloudFront cache
+### 2. Backend CI (`backend-ci.yml`)
 
-### When are AWS resources created?
+- **Triggers:** Push/PR to `main` or `develop` affecting `backend/`
+- **Steps:** Checkout → Python 3.11 → `pip install` → `pytest` with coverage
 
-AWS resources are created/updated **during the CD pipeline**, specifically in these steps:
+### 3. CD Pipeline (`cd.yml`)
 
-1. `terraform apply` in `terraform/backend` creates/updates IAM roles, Lambda functions, CloudWatch log groups, API Gateway, and permissions.
-2. `terraform apply` in `terraform/frontend` creates/updates S3 bucket, CloudFront OAC, bucket policy, and CloudFront distribution.
+- **Triggers:** Push to `main` affecting `backend/`, `frontend/`, `terraform/`, or manual dispatch
 
-So the order is: **CI pass -> merge to main -> CD runs -> Terraform provisions resources -> app deploys**.
+**Pipeline flow:**
 
-### Required GitHub secret for CD
+```
+push to main
+    │
+    ├─── backend-test (pytest)
+    │         │
+    ├─── frontend-test (vitest)
+    │         │
+    │    (BOTH must pass)
+    │         │
+    ▼         ▼
+terraform-backend ──→ terraform-frontend ──→ deploy-frontend
+  (Lambda, API GW,       (S3, CloudFront,       (npm build,
+   DynamoDB, IAM)         Route 53, OAC)        S3 sync, CF invalidation)
+```
 
-Add this repository secret:
+Each Terraform job runs: `init → validate → plan → apply`
 
-- `AWS_GITHUB_ACTIONS_ROLE_ARN`: IAM role ARN assumed by GitHub Actions via OIDC.
+### Required GitHub Configuration
+
+| Type | Name | Description |
+|------|------|-------------|
+| Secret | `AWS_GITHUB_ACTIONS_ROLE_ARN` | IAM role ARN for OIDC assumption |
+| Variable | `AWS_DEPLOY_REGION` | AWS region (defaults to `us-east-1`, set `ap-south-1` for Mumbai) |
 
 ---
 
-## Frontend (Angular)
+## AWS Architecture
 
-### Features
-- **Standalone components** (Angular 19+)
-- **Reactive Forms** with validation
-- **Lazy-loaded routes** for each calculator
-- **Dual calculation** – instant frontend result + async API verification
-- **SEO optimised** – per-page `<title>`, `<meta description>`, `<meta keywords>`, structured H1/H2
-- **Mobile-responsive** CSS (no external UI libraries)
-- **CORS-safe** API integration
+```
+┌─────────────┐     ┌──────────────┐     ┌──────────────┐
+│   Route 53  │────▶│  CloudFront  │────▶│  S3 Bucket   │
+│  (DNS)      │     │  (CDN + SSL) │     │  (Static)    │
+└─────────────┘     └──────────────┘     └──────────────┘
+                          │
+       www-redirect function (root → www)
 
-### Development
+┌──────────────────┐     ┌──────────────────────────────────────┐
+│  API Gateway     │────▶│  Lambda Functions                     │
+│  (HTTP API v2)   │     │  sip / emi / fd / cagr               │
+│                  │     │  contact (→ DynamoDB + SES)           │
+│  POST /{calc}    │     │  track-visit (→ DynamoDB)             │
+│  POST /contact   │     └──────────────────────────────────────┘
+│  POST /track-visit│                    │
+└──────────────────┘           ┌─────────┴──────────┐
+                               │    DynamoDB         │
+                               │  contact-submissions│
+                               │  user-visits        │
+                               └────────────────────┘
+```
+
+### Terraform State
+
+- **S3 bucket:** `finance-calculator-terraform-state`
+- **DynamoDB lock table:** `terraform-locks`
+- **State keys:** `backend/terraform.tfstate`, `frontend/terraform.tfstate`
+
+---
+
+## Frontend
+
+### Key Features
+
+- **Angular 19** standalone components with `OnPush` change detection
+- **SSR + Prerendering** — 19 routes statically prerendered for SEO
+- **Chart.js 4** — interactive doughnut charts (investment vs returns) + growth area charts
+- **Reactive Forms** with real-time validation and slider inputs
+- **Dual calculation** — instant frontend calculation + optional backend API verification
+- **SEO optimised** — per-page titles, meta descriptions, JSON-LD structured data, Open Graph tags
+- **Mobile-first responsive CSS** — no external UI libraries
+- **Smart Insights** — contextual financial tips per calculator
+- **Collapsible year-by-year tables** with Indian number formatting (L/Cr)
+- **Dark theme** with premium Groww/Zerodha-inspired design
+
+### Financial Formulas
+
+| Calculator | Formula |
+|------------|---------|
+| SIP | $FV = P \times \frac{(1+r)^n - 1}{r} \times (1+r)$ |
+| EMI | $EMI = P \times \frac{r \times (1+r)^n}{(1+r)^n - 1}$ |
+| FD | $A = P \times (1 + \frac{r}{n})^{n \times t}$ |
+| CAGR | $CAGR = (\frac{EV}{BV})^{\frac{1}{n}} - 1$ |
+| Lumpsum | $FV = P \times (1 + r)^t$ |
+
+### Local Development
 
 ```bash
 cd frontend
 npm install
-ng serve          # http://localhost:4200
-```
-
-### Production Build
-
-```bash
-ng build --configuration production
-# Output: dist/frontend/
-```
-
-### Update API Base URL
-
-Edit `src/environments/environment.ts` (dev) and `environment.prod.ts` (prod):
-
-```ts
-export const environment = {
-  production: false,
-  apiBase: 'https://<api-id>.execute-api.us-east-1.amazonaws.com/prod'
-};
+npm start             # http://localhost:4200
+npm run test          # Vitest
+npm run build         # Production build (19 prerendered routes)
 ```
 
 ---
 
-## Backend (AWS Lambda – Python)
+## Backend
 
-### Formulas
+### Lambda Functions
 
-| Calculator | Formula |
-|------------|---------|
-| SIP  | `FV = P × ((1+r)ⁿ − 1) / r × (1+r)` |
-| EMI  | `EMI = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)` |
-| FD   | `A = P × (1 + r/n)^(n×t)` |
-| CAGR | `CAGR = (EV/BV)^(1/n) − 1` |
+| Function | Route | Description |
+|----------|-------|-------------|
+| SIP | `POST /sip` | SIP return calculation |
+| EMI | `POST /emi` | Loan EMI breakdown |
+| FD | `POST /fd` | FD maturity with compounding |
+| CAGR | `POST /cagr` | Growth rate calculation |
+| Contact | `POST /contact` | Saves to DynamoDB + optional SES email |
+| Track Visit | `POST /track-visit` | Anonymous page visit analytics |
 
-### Running Tests Locally
+### API Response Format
+
+All responses follow a standardised structure:
+
+```json
+// Success (200)
+{
+  "status": "success",
+  "data": { ... },
+  "requestId": "abc-123"
+}
+
+// Error (400)
+{
+  "status": "error",
+  "error": "'annualRate' is required.",
+  "requestId": "abc-123"
+}
+```
+
+### Example — POST /sip
+
+```json
+// Request
+{ "monthlyInvestment": 5000, "annualRate": 12, "years": 10 }
+
+// Response
+{
+  "status": "success",
+  "data": {
+    "totalInvested": 600000,
+    "estimatedReturns": 561695.36,
+    "totalValue": 1161695.36
+  }
+}
+```
+
+### Local Testing
 
 ```bash
 cd backend
-pip install pytest
-python -m pytest tests/ -v
-```
-
-### API Request / Response Examples
-
-#### POST /sip
-
-```json
-// Request
-{
-  "monthlyInvestment": 5000,
-  "annualRate": 12,
-  "years": 10
-}
-
-// Response 200
-{
-  "totalInvested": 600000,
-  "estimatedReturns": 561695.36,
-  "totalValue": 1161695.36
-}
-```
-
-#### POST /emi
-
-```json
-// Request
-{
-  "principal": 500000,
-  "annualRate": 8.5,
-  "years": 5
-}
-
-// Response 200
-{
-  "emi": 10253.38,
-  "totalPayment": 615202.97,
-  "totalInterest": 115202.97
-}
-```
-
-#### POST /fd
-
-```json
-// Request
-{
-  "principal": 100000,
-  "annualRate": 7,
-  "years": 3,
-  "compoundingFrequency": 4
-}
-
-// Response 200
-{
-  "principal": 100000,
-  "maturityAmount": 123143.97,
-  "totalInterest": 23143.97
-}
-```
-
-#### POST /cagr
-
-```json
-// Request
-{
-  "beginningValue": 50000,
-  "endingValue": 100000,
-  "years": 5
-}
-
-// Response 200
-{
-  "cagr": 14.8698,
-  "absoluteReturn": 100.0,
-  "totalGain": 50000
-}
-```
-
-#### Error Response (400)
-
-```json
-{
-  "error": "'annualRate' is required."
-}
+pip install -r requirements.txt
+python -m pytest tests/ -v --tb=short --cov=. --cov-report=term-missing
 ```
 
 ---
 
-## AWS Deployment
+## Deployment
 
-### 1. Deploy Lambda Functions
+### First-Time Setup
 
-Each Lambda function is independent. Deploy each `handler.py` along with `utils.py`.
+1. **Create Terraform state resources** (one-time, manual):
+   ```bash
+   aws s3 mb s3://finance-calculator-terraform-state --region us-east-1
+   aws dynamodb create-table \
+     --table-name terraform-locks \
+     --attribute-definitions AttributeName=LockID,AttributeType=S \
+     --key-schema AttributeName=LockID,KeyType=HASH \
+     --billing-mode PAY_PER_REQUEST
+   ```
 
-```bash
-# Example for SIP function
-cd backend
+2. **Create OIDC IAM role** for GitHub Actions and add as repo secret:
+   - Secret name: `AWS_GITHUB_ACTIONS_ROLE_ARN`
 
-# Package SIP function
-mkdir -p /tmp/sip-package
-cp utils.py /tmp/sip-package/
-cp sip/handler.py /tmp/sip-package/
-cd /tmp/sip-package && zip -r sip-function.zip .
+3. **ACM certificate** — must be in `us-east-1` (CloudFront requirement). Update `TF_VAR_acm_certificate_arn` if using a new account.
 
-# Create Lambda function
-aws lambda create-function \
-  --function-name sip-calculator \
-  --runtime python3.12 \
-  --role arn:aws:iam::<ACCOUNT_ID>:role/lambda-execution-role \
-  --handler handler.handler \
-  --zip-file fileb://sip-function.zip \
-  --timeout 10 \
-  --memory-size 128
+4. **Push to `main`** — the CD pipeline handles everything else automatically.
 
-# Or update existing
-aws lambda update-function-code \
-  --function-name sip-calculator \
-  --zip-file fileb://sip-function.zip
-```
+### Region Migration (us-east-1 → ap-south-1)
 
-Repeat for `emi-calculator`, `fd-calculator`, and `cagr-calculator`.
+To move Lambda, API Gateway, and DynamoDB to Mumbai:
 
-### 2. Create API Gateway
+1. Set GitHub repo Variable: `AWS_DEPLOY_REGION` = `ap-south-1`
+2. Create Terraform state bucket in Mumbai (or keep in us-east-1)
+3. Create new ACM certificate in `us-east-1` and set `TF_VAR_acm_certificate_arn`
+4. Create OIDC role in new account, update `AWS_GITHUB_ACTIONS_ROLE_ARN`
+5. Push — Terraform creates all resources fresh in `ap-south-1`
 
-```bash
-# Create REST API
-aws apigateway create-rest-api --name "finance-calculator-api"
-
-# For each calculator, create a resource and POST method,
-# then integrate with the corresponding Lambda function.
-# Use Lambda Proxy Integration for automatic request/response mapping.
-```
-
-### 3. Enable CORS
-
-Each Lambda handler already returns CORS headers:
-
-```python
-CORS_HEADERS = {
-    "Access-Control-Allow-Origin":  "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-}
-```
-
-In API Gateway:
-1. Enable CORS on each resource (Actions → Enable CORS)
-2. Deploy to a stage (e.g., `prod`)
-3. Update `environment.ts` with the generated invoke URL
-
-### 4. Lambda IAM Role (minimum permissions)
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
-    "Resource": "arn:aws:logs:*:*:*"
-  }]
-}
-```
+> **Note:** CloudFront, Route 53, and ACM certificates always remain in `us-east-1` — this is an AWS requirement.
 
 ---
 
-## DNS & Domain Configuration
+## All Routes (19 prerendered)
 
-The site is reachable at **https://www.myinvestmentcalculator.in** and the root
-domain **myinvestmentcalculator.in** automatically redirects there.
-
-### How it works
-
-| Layer | Resource | Purpose |
-|-------|----------|---------|
-| DNS | Route 53 hosted zone | Authoritative DNS for `myinvestmentcalculator.in` |
-| DNS | Route 53 A (ALIAS) – `@` | Points root domain to CloudFront |
-| DNS | Route 53 A (ALIAS) – `www` | Points www to CloudFront |
-| Edge | CloudFront Function `www_redirect` | 301-redirects bare root requests to `https://www.…` |
-| TLS | ACM certificate | Covers both `myinvestmentcalculator.in` and `www.myinvestmentcalculator.in` |
-
-### Step 1 – Apply Terraform
-
-```bash
-cd terraform/frontend
-terraform init
-terraform apply
-```
-
-After a successful apply, grab the four Route 53 name servers from the output:
-
-```bash
-terraform output route53_name_servers
-# Example output:
-# [
-#   "ns-123.awsdns-45.com",
-#   "ns-678.awsdns-90.net",
-#   "ns-111.awsdns-22.co.uk",
-#   "ns-333.awsdns-44.org",
-# ]
-```
-
-### Step 2 – Update GoDaddy name servers
-
-1. Log in to **GoDaddy → My Products → DNS → Manage** for `myinvestmentcalculator.in`.
-2. Click **Change** next to "Nameservers".
-3. Select **"Enter my own nameservers (advanced)"**.
-4. Replace the existing name servers with the four values from `terraform output route53_name_servers`.
-5. Save – propagation typically takes 0–48 hours.
-
-> **Note:** Once you point GoDaddy to Route 53, all DNS for the domain is managed
-> by Terraform. Do **not** add conflicting A / CNAME records in GoDaddy.
-
-### ACM certificate – verify both SANs are present
-
-The Terraform configuration references a pre-issued ACM certificate:
-
-```
-arn:aws:acm:us-east-1:492661377251:certificate/679e1c55-24cd-4cf7-a646-e0420d6a6491
-```
-
-Confirm it covers **both** SANs in the AWS Console
-(*ACM → Certificates → select cert → Domains*):
-
-| Domain | Status |
-|--------|--------|
-| `myinvestmentcalculator.in` | Issued |
-| `www.myinvestmentcalculator.in` | Issued |
-
-If either SAN is missing, re-issue (or add a SAN to) the certificate before
-applying Terraform, then update the `acm_certificate_arn` value in
-`terraform/frontend/main.tf`.
-
-### Verifying the redirect
-
-Once DNS has propagated:
-
-```bash
-# Root domain should return HTTP 301 → www
-curl -I http://myinvestmentcalculator.in
-# HTTP/1.1 301 Moved Permanently
-# Location: https://www.myinvestmentcalculator.in/
-
-# www should return HTTP 200
-curl -I https://www.myinvestmentcalculator.in
-# HTTP/2 200
-```
-
-### Google AdSense verification
-
-AdSense requires the domain it verifies to resolve correctly. After completing
-the steps above:
-
-1. Both `myinvestmentcalculator.in` and `www.myinvestmentcalculator.in` will
-   return valid HTTPS responses (root redirects to www).
-2. Submit `https://www.myinvestmentcalculator.in` as the site URL in AdSense.
-3. Add the AdSense meta-tag or `ads.txt` file to the Angular app's `src/` folder
-   so it is included in the S3/CloudFront deployment.
-
----
-
-Each calculator page includes:
-- Unique `<title>` set via Angular `Title` service
-- `<meta name="description">` and `<meta name="keywords">` via Angular `Meta` service
-- Semantic HTML: `<h1>` page title, `<h2>` section headings
-- Example calculations for rich content
+| # | Route | Page |
+|---|-------|------|
+| 1 | `/` | Home |
+| 2 | `/sip-calculator` | SIP Calculator |
+| 3 | `/emi-calculator` | EMI Calculator |
+| 4 | `/fd-calculator` | FD Calculator |
+| 5 | `/cagr-calculator` | CAGR Calculator |
+| 6 | `/ppf-calculator` | PPF Calculator |
+| 7 | `/lumpsum-calculator` | Lumpsum Calculator |
+| 8 | `/income-tax-calculator` | Income Tax Calculator |
+| 9 | `/blog` | Blog List |
+| 10 | `/blog/sip-vs-fd` | SIP vs FD |
+| 11 | `/blog/sip-5000-per-month` | ₹5,000 SIP Returns |
+| 12 | `/blog/sip-1000-per-month` | ₹1,000 SIP Returns |
+| 13 | `/blog/emi-calculation-guide` | EMI Guide |
+| 14 | `/blog/50-lakh-home-loan-emi` | ₹50L Home Loan EMI |
+| 15 | `/blog/10-lakh-fd-interest` | ₹10L FD Interest |
+| 16 | `/about-us` | About Us |
+| 17 | `/contact-us` | Contact Us |
+| 18 | `/privacy-policy` | Privacy Policy |
+| 19 | `/terms-and-conditions` | Terms & Conditions |
 
 ---
 
 ## License
 
-MIT
+Private — All rights reserved.

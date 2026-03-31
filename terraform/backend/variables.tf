@@ -37,7 +37,7 @@ variable "lambda_memory_size" {
 variable "cors_allowed_origins" {
   description = "List of allowed origins for CORS on the API Gateway (use specific frontend domain(s) in production)"
   type        = list(string)
-  default     = ["*"]
+  default     = ["https://www.myinvestmentcalculator.in", "https://myinvestmentcalculator.in"]
 }
 
 variable "contact_notify_email" {
