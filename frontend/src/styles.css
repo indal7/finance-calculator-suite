@@ -180,6 +180,7 @@ body {
   margin: 0.75rem 0;
   line-height: 1.8;
   color: var(--text-secondary, #A8B4D4);
+  font-size: 0.875rem;
 }
 .seo-list li {
   margin-bottom: 0.35rem;
@@ -353,6 +354,12 @@ body {
   padding: 4px 10px;
   border-radius: 100px;
   margin-bottom: 0.85rem;
+}
+
+/* Home hero needs slightly more breathing room */
+.home-hero .hero-eyebrow {
+  padding: 4px 12px;
+  margin-bottom: 1.25rem;
 }
 
 .page-hero h1 {
