@@ -1,8 +1,8 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, CommonModule, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, EmiResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
@@ -18,7 +18,13 @@ export class EmiCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
+  private readonly cdr      = inject(ChangeDetectorRef);
   private sub?: Subscription;
+  private calcSub?: Subscription;
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  @ViewChild('emiPieChart') emiPieChartRef!: ElementRef<HTMLCanvasElement>;
+  private chartInstance: any = null;
 
   form = this.fb.group({
     principal:  [500000, [Validators.required, Validators.min(1)]],
@@ -30,6 +36,7 @@ export class EmiCalculator implements OnInit, OnDestroy {
   apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
   apiError = '';
   openFaq: number | null = null;
+  showFullTable = false;
 
   copied = false;
   private copyTimer?: ReturnType<typeof setTimeout>;
@@ -98,6 +105,74 @@ export class EmiCalculator implements OnInit, OnDestroy {
     }
   ];
 
+  /** Rows visible in table — 5 by default, all when expanded */
+  get displayedRows(): Array<{year: number, emi: number, principalPaid: number, interestPaid: number, balance: number}> {
+    const rows = this.getAmortizationRows(
+      this.form.getRawValue().principal,
+      this.form.getRawValue().annualRate,
+      this.form.getRawValue().years
+    );
+    return this.showFullTable ? rows : rows.slice(0, 5);
+  }
+
+  /** Format value in Indian notation (L / Cr) */
+  formatIndian(val: number): string {
+    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
+    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
+    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
+    return val.toFixed(0);
+  }
+
+  /** Format summary strip values (compact) */
+  formatCompact(val: number): string {
+    if (val >= 10000000) return '₹' + (val / 10000000).toFixed(1) + 'Cr';
+    if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';
+    if (val >= 1000) return '₹' + (val / 1000).toFixed(0) + 'K';
+    return '₹' + val.toFixed(0);
+  }
+
+  scrollToTop(): void {
+    if (this.isBrowser) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  /** Smart insights dynamically computed from current result */
+  get smartInsights(): Array<{icon: string; text: string}> {
+    if (!this.result) return [];
+    const { principal, annualRate, years } = this.form.getRawValue() as any;
+    const insights: Array<{icon: string; text: string}> = [];
+
+    // Insight 1: Interest as % of principal
+    const interestPct = ((this.result.totalInterest / principal) * 100).toFixed(0);
+    insights.push({
+      icon: '💰',
+      text: `You pay <strong>${interestPct}%</strong> of the loan amount as interest over ${years} years`
+    });
+
+    // Insight 2: Reducing tenure by 1 year
+    if (years > 2) {
+      const r = annualRate / 100 / 12;
+      const n2 = (years - 1) * 12;
+      const emi2 = r === 0 ? principal / n2 : (principal * r * Math.pow(1 + r, n2)) / (Math.pow(1 + r, n2) - 1);
+      const totalInt2 = (emi2 * n2) - principal;
+      const saved = Math.round(this.result.totalInterest - totalInt2);
+      insights.push({
+        icon: '⏳',
+        text: `Reduce tenure by <strong>1 year</strong> \u2192 Save <strong>\u20b9${this.formatIndian(saved)}</strong> in interest`
+      });
+    }
+
+    // Insight 3: EMI as % of total payment
+    const emiPct = ((this.result.emi * 12 / this.result.totalPayment) * 100 * years).toFixed(0);
+    insights.push({
+      icon: '📈',
+      text: `EMI of <strong>\u20b9${Math.round(this.result.emi).toLocaleString('en-IN')}</strong>/month for <strong>${years} years</strong> clears your entire loan`
+    });
+
+    return insights;
+  }
+
   /** Amortization schedule: year-end principal remaining and interest paid per year */
   getAmortizationRows(principal: number | null, annualRate: number | null, years: number | null): Array<{year: number, emi: number, principalPaid: number, interestPaid: number, balance: number}> {
     const p = principal ?? 0;
@@ -150,6 +225,17 @@ export class EmiCalculator implements OnInit, OnDestroy {
       'emi calculator with amortization', 'loan emi calculator 2026'
     ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
+
+    // ── REACTIVE CALCULATION: Auto-calculate on form value changes ──
+    // Debounce to 300ms to avoid excessive calculations while dragging sliders
+    this.calcSub = this.form.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(() => this.calculate());
+
+    // Calculate once with initial values so user sees result immediately
+    if (this.form.valid) {
+      this.calculate();
+    }
   }
 
   get f() { return this.form.controls; }
@@ -196,17 +282,80 @@ export class EmiCalculator implements OnInit, OnDestroy {
 
     this.result = { emi: +emi.toFixed(2), totalPayment, totalInterest, localCalc: true };
 
+    // Trigger change detection for OnPush strategy
+    this.cdr.markForCheck();
+
+    // Render EMI breakdown chart after DOM tick
+    setTimeout(() => this.renderEmiChart(principal, totalInterest), 50);
+
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();
     this.sub = this.svc.calculateEmi({ principal, annualRate, years }).subscribe({
-      next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; },
-      error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   }
+      next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
+      error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.calcSub?.unsubscribe();
     this.seo.removeJsonLd('emi-breadcrumb');
     this.seo.removeFAQSchema();
+    this.chartInstance?.destroy();
+  }
+
+  /** Render or update the EMI principal vs interest doughnut chart */
+  renderEmiChart(principal: number, totalInterest: number): void {
+    if (!this.isBrowser || !this.emiPieChartRef?.nativeElement) return;
+
+    import('chart.js').then(({ Chart, registerables }) => {
+      Chart.register(...registerables);
+
+      if (this.chartInstance) {
+        this.chartInstance.data.datasets[0].data = [principal, totalInterest];
+        this.chartInstance.update('none');
+        return;
+      }
+
+      const ctx = this.emiPieChartRef.nativeElement.getContext('2d');
+      if (!ctx) return;
+
+      this.chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal', 'Interest'],
+          datasets: [{
+            data: [principal, totalInterest],
+            backgroundColor: ['#4B5EAA', '#00C896'],
+            borderColor: ['rgba(75,94,170,0.4)', 'rgba(0,200,150,0.4)'],
+            borderWidth: 2,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#111D4A',
+              titleColor: '#F0F4FF',
+              bodyColor: '#A8B4D4',
+              borderColor: 'rgba(245,166,35,0.3)',
+              borderWidth: 1,
+              callbacks: {
+                label: (ctx: any) => {
+                  const val = ctx.parsed;
+                  const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                  const pct = ((val / total) * 100).toFixed(1);
+                  return `${ctx.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
   }
 }

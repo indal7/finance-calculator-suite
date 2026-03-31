@@ -1,34 +1,16 @@
-import { Component, ChangeDetectionStrategy, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, SipResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
 
 function positiveNumber(min = 0.01) {
   return Validators.compose([Validators.required, Validators.min(min)])!;
-}
-
-export interface SipTableRow {
-  monthlySip: number;
-  years: number;
-  expectedReturn: number;
-  finalValue: number;
-  totalInvested: number;
-}
-
-export interface CompareResult {
-  label: string;
-  monthlySip: number;
-  years: number;
-  annualRate: number;
-  totalInvested: number;
-  estimatedReturns: number;
-  totalValue: number;
-  realValue?: number;
 }
 
 @Component({
@@ -44,7 +26,15 @@ export class SipCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
+  private readonly cdr      = inject(ChangeDetectorRef);
   private sub?: Subscription;
+  private calcSub?: Subscription;
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  @ViewChild('growthChart') growthChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('doughnutChart') doughnutChartRef!: ElementRef<HTMLCanvasElement>;
+  private chartInstance: any = null;
+  private doughnutChartInstance: any = null;
 
   form = this.fb.group({
     monthlyInvestment: [5000,  positiveNumber(500)],
@@ -60,24 +50,12 @@ export class SipCalculator implements OnInit, OnDestroy {
   adjustForInflation = false;
   readonly inflationRate = 6;
 
-  /** Compare SIP form */
-  compareForm = this.fb.group({
-    sip1Amount:  [5000,  positiveNumber(500)],
-    sip1Years:   [10,    positiveNumber(1)],
-    sip2Amount:  [10000, positiveNumber(500)],
-    sip2Years:   [20,    positiveNumber(1)],
-    compareRate: [12,    positiveNumber(1)]
-  });
-  compareResults: CompareResult[] | null = null;
-
   openFaq: number | null = null;
+  showFullTable = false;
+  graphMode: 'both' | 'value' = 'both';
 
-  /** Cached computed values — avoid recalculation on every change detection */
+  /** Cached computed values */
   projectionRows: Array<{year: number; invested: number; value: number; gains: number}> = [];
-  cachedSipReturns5k: Array<{years: number; invested: number; returns: number; value: number}> = [];
-  cachedSipReturns10k: Array<{years: number; invested: number; returns: number; value: number}> = [];
-  cachedSipReturns1k: Array<{years: number; invested: number; returns: number; value: number}> = [];
-  cachedReferenceTable: SipTableRow[] = [];
 
 copied = false;
 private copyTimer?: ReturnType<typeof setTimeout>;
@@ -211,11 +189,16 @@ private copyTimer?: ReturnType<typeof setTimeout>;
       'sip for 1 crore', 'monthly sip calculator', 'sbi sip calculator'
     ]);
 
-    // Pre-compute static tables once (these never change)
-    this.cachedSipReturns1k = this.getSipReturnsBreakdown(1000);
-    this.cachedSipReturns5k = this.getSipReturnsBreakdown(5000);
-    this.cachedSipReturns10k = this.getSipReturnsBreakdown(10000);
-    this.cachedReferenceTable = this.getSipReferenceTable();
+    // ── REACTIVE CALCULATION: Auto-calculate on form value changes ──
+    // Debounce to 300ms to avoid excessive calculations while dragging sliders
+    this.calcSub = this.form.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(() => this.calculate());
+
+    // Calculate once with initial values so user sees result immediately
+    if (this.form.valid) {
+      this.calculate();
+    }
   }
 
   get f() { return this.form.controls; }
@@ -266,11 +249,20 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     // Cache projection rows for the template
     this.projectionRows = this.getProjectionRows(monthlyInvestment, annualRate, years);
 
+    // Trigger change detection for OnPush strategy
+    this.cdr.markForCheck();
+
+    // Render growth chart after a tick (DOM needs to render the canvas first)
+    setTimeout(() => {
+      this.renderGrowthChart();
+      this.renderDoughnutChart();
+    }, 50);
+
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();
     this.sub = this.svc.calculateSip({ monthlyInvestment, annualRate, years }).subscribe({
-      next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; },
-      error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   }
+      next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
+      error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
   }
 
@@ -292,77 +284,258 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     return this.getRealValue(nominalValue, years) - totalInvested;
   }
 
-  /** Generate the SIP reference table rows for SEO section */
-  getSipReferenceTable(): SipTableRow[] {
-    const scenarios = [
-      { sip: 5000, years: 1 },
-      { sip: 5000, years: 3 },
-      { sip: 5000, years: 5 },
-      { sip: 5000, years: 10 },
-      { sip: 10000, years: 1 },
-      { sip: 10000, years: 3 },
-      { sip: 10000, years: 5 },
-      { sip: 10000, years: 10 },
-    ];
-    return scenarios.map(s => {
-      const finalValue   = +this.calcSipFV(s.sip, 12, s.years).toFixed(0);
-      const totalInvested = s.sip * s.years * 12;
-      return {
-        monthlySip: s.sip,
-        years: s.years,
-        expectedReturn: +(finalValue - totalInvested).toFixed(0),
-        finalValue,
-        totalInvested
-      };
+  /** Rows visible in table — 5 by default, all when expanded */
+  get displayedRows(): Array<{year: number; invested: number; value: number; gains: number}> {
+    return this.showFullTable ? this.projectionRows : this.projectionRows.slice(0, 5);
+  }
+
+  /** Smart insights dynamically computed from current result */
+  get smartInsights(): Array<{icon: string; text: string}> {
+    if (!this.result) return [];
+    const { monthlyInvestment, annualRate, years } = this.form.getRawValue() as any;
+    const insights: Array<{icon: string; text: string}> = [];
+
+    // Insight 1: Increase SIP by ₹500
+    const extraFV = this.calcSipFV(monthlyInvestment + 500, annualRate, years);
+    const extraGain = Math.round(extraFV - this.result.totalValue);
+    insights.push({
+      icon: '📈',
+      text: `Increase SIP by <strong>₹500</strong> → Gain <strong>₹${this.formatIndian(extraGain)}</strong> extra`
     });
+
+    // Insight 2: Invest 5 more years
+    if (years <= 35) {
+      const moreFV = this.calcSipFV(monthlyInvestment, annualRate, years + 5);
+      const moreGain = Math.round(moreFV - this.result.totalValue);
+      insights.push({
+        icon: '⏳',
+        text: `Investing <strong>5 more years</strong> → +<strong>₹${this.formatIndian(moreGain)}</strong> extra wealth`
+      });
+    }
+
+    // Insight 3: Power of compounding — last half creates most wealth
+    const midPoint = Math.floor(years / 2);
+    if (midPoint >= 1) {
+      const midFV = this.calcSipFV(monthlyInvestment, annualRate, midPoint);
+      const secondHalfPct = Math.round(((this.result.totalValue - midFV) / this.result.totalValue) * 100);
+      if (secondHalfPct > 50) {
+        insights.push({
+          icon: '🚀',
+          text: `<strong>${secondHalfPct}%</strong> of your wealth is created in the last half — compounding accelerates over time`
+        });
+      }
+    }
+
+    return insights;
   }
 
-  /** Get returns breakdown for a specific SIP amount (1, 3, 5, 10 years at 12%) */
-  getSipReturnsBreakdown(monthlySip: number): Array<{ years: number; invested: number; returns: number; value: number }> {
-    return [1, 3, 5, 10, 20].map(years => {
-      const invested = monthlySip * years * 12;
-      const value    = +this.calcSipFV(monthlySip, 12, years).toFixed(0);
-      return { years, invested, returns: value - invested, value };
-    });
+  /** Format value in Indian notation (L / Cr) */
+  formatIndian(val: number): string {
+    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
+    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
+    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
+    return val.toFixed(0);
   }
 
-  /** Compare two SIP configurations side by side */
-  compareSip(): void {
-    if (this.compareForm.invalid) { this.compareForm.markAllAsTouched(); return; }
-
-    const { sip1Amount, sip1Years, sip2Amount, sip2Years, compareRate } =
-      this.compareForm.getRawValue() as {
-        sip1Amount: number; sip1Years: number;
-        sip2Amount: number; sip2Years: number;
-        compareRate: number;
-      };
-
-    const buildResult = (label: string, monthly: number, years: number, rate: number): CompareResult => {
-      const totalInvested    = +(monthly * years * 12).toFixed(0);
-      const totalValue       = +this.calcSipFV(monthly, rate, years).toFixed(0);
-      const estimatedReturns = totalValue - totalInvested;
-      const realValue        = +this.getRealValue(totalValue, years).toFixed(0);
-      return { label, monthlySip: monthly, years, annualRate: rate, totalInvested, estimatedReturns, totalValue, realValue };
-    };
-
-    this.compareResults = [
-      buildResult('Option A', sip1Amount, sip1Years, compareRate),
-      buildResult('Option B', sip2Amount, sip2Years, compareRate),
-    ];
+  /** Format summary strip values (compact) */
+  formatCompact(val: number): string {
+    if (val >= 10000000) return '₹' + (val / 10000000).toFixed(1) + 'Cr';
+    if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';
+    if (val >= 1000) return '₹' + (val / 1000).toFixed(0) + 'K';
+    return '₹' + val.toFixed(0);
   }
 
-  get cf() { return this.compareForm.controls; }
-
-  /** Returns true if this compare result has the highest total corpus */
-  isWinner(r: CompareResult): boolean {
-    if (!this.compareResults || this.compareResults.length < 2) return false;
-    const max = Math.max(...this.compareResults.map(c => c.totalValue));
-    return r.totalValue === max && this.compareResults[0].totalValue !== this.compareResults[1].totalValue;
+  scrollToTop(): void {
+    if (this.isBrowser) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.calcSub?.unsubscribe();
     this.seo.removeJsonLd('sip-breadcrumb');
     this.seo.removeFAQSchema();
+    this.chartInstance?.destroy();
+    this.doughnutChartInstance?.destroy();
+  }
+
+  /** Render or update the large Doughnut chart (Groww-style) */
+  renderDoughnutChart(): void {
+    if (!this.isBrowser || !this.doughnutChartRef?.nativeElement || !this.result) return;
+
+    import('chart.js').then(({ Chart, registerables }) => {
+      Chart.register(...registerables);
+
+      const invested = this.result!.totalInvested;
+      const returns = this.result!.estimatedReturns;
+
+      if (this.doughnutChartInstance) {
+        this.doughnutChartInstance.data.datasets[0].data = [invested, returns];
+        this.doughnutChartInstance.update('none');
+        return;
+      }
+
+      const ctx = this.doughnutChartRef.nativeElement.getContext('2d');
+      if (!ctx) return;
+
+      this.doughnutChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Invested Amount', 'Est. Returns'],
+          datasets: [{
+            data: [invested, returns],
+            backgroundColor: ['#4B5EAA', '#00C896'],
+            borderColor: ['rgba(75,94,170,0.4)', 'rgba(0,200,150,0.4)'],
+            borderWidth: 2,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#111D4A',
+              titleColor: '#F0F4FF',
+              bodyColor: '#A8B4D4',
+              borderColor: 'rgba(245,166,35,0.3)',
+              borderWidth: 1,
+              callbacks: {
+                label: (ctx: any) => {
+                  const val = ctx.parsed;
+                  const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                  const pct = ((val / total) * 100).toFixed(1);
+                  return `${ctx.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  /** Render or update the SIP growth area chart */
+  renderGrowthChart(): void {
+    if (!this.isBrowser || !this.growthChartRef?.nativeElement || !this.projectionRows.length) return;
+
+    import('chart.js').then(({ Chart, registerables }) => {
+      Chart.register(...registerables);
+
+      const labels = this.projectionRows.map(r => `Year ${r.year}`);
+      const investedData = this.projectionRows.map(r => r.invested);
+      const valueData = this.projectionRows.map(r => r.value);
+      const gainsData = this.projectionRows.map(r => r.gains);
+
+      // Destroy previous chart to rebuild with new mode
+      if (this.chartInstance) {
+        this.chartInstance.destroy();
+        this.chartInstance = null;
+      }
+
+      const ctx = this.growthChartRef.nativeElement.getContext('2d');
+      if (!ctx) return;
+
+      // Create premium gradient fills
+      const investedGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
+      investedGrad.addColorStop(0, 'rgba(168,180,212,0.18)');
+      investedGrad.addColorStop(1, 'rgba(168,180,212,0.01)');
+
+      const valueGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
+      valueGrad.addColorStop(0, 'rgba(245,166,35,0.28)');
+      valueGrad.addColorStop(0.7, 'rgba(245,166,35,0.06)');
+      valueGrad.addColorStop(1, 'rgba(245,166,35,0.0)');
+
+      const datasets: any[] = this.graphMode === 'value'
+        ? [
+            {
+              label: 'Portfolio Value',
+              data: valueData,
+              borderColor: '#F5A623',
+              backgroundColor: valueGrad,
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 3,
+              pointHoverRadius: 7,
+              pointBackgroundColor: '#F5A623'
+            }
+          ]
+        : [
+            {
+              label: 'Total Invested',
+              data: investedData,
+              borderColor: 'rgba(168,180,212,0.8)',
+              backgroundColor: investedGrad,
+              borderWidth: 2,
+              fill: true,
+              tension: 0.3,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#A8B4D4',
+              borderDash: [6, 3]
+            },
+            {
+              label: 'Portfolio Value',
+              data: valueData,
+              borderColor: '#F5A623',
+              backgroundColor: valueGrad,
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 3,
+              pointHoverRadius: 7,
+              pointBackgroundColor: '#F5A623'
+            }
+          ];
+
+      this.chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: {
+              labels: { color: '#A8B4D4', font: { size: 12 }, usePointStyle: true, pointStyle: 'circle' }
+            },
+            tooltip: {
+              backgroundColor: '#111D4A',
+              titleColor: '#F0F4FF',
+              bodyColor: '#A8B4D4',
+              borderColor: 'rgba(245,166,35,0.3)',
+              borderWidth: 1,
+              padding: 12,
+              callbacks: {
+                afterBody: (items: any[]) => {
+                  if (!items.length) return '';
+                  const idx = items[0].dataIndex;
+                  return `Returns: ₹${gainsData[idx].toLocaleString('en-IN')}`;
+                },
+                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#7B8DB5', font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              ticks: {
+                color: '#7B8DB5',
+                font: { size: 11 },
+                callback: (val: any) => '₹' + (val >= 10000000 ? (val / 10000000).toFixed(1) + 'Cr' : val >= 100000 ? (val / 100000).toFixed(1) + 'L' : (val / 1000).toFixed(0) + 'K')
+              },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            }
+          }
+        }
+      });
+    });
   }
 }

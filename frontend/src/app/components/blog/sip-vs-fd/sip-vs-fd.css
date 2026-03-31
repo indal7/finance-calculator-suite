@@ -1,37 +1,50 @@
+/* ── SIP vs FD Blog (Dark Navy Theme) ────────────────────── */
 .sipfd-article {
   padding: 2rem 0 4rem;
+  animation: pageIn 0.5s ease both;
 }
 
 .sipfd-wrap {
-  max-width: 980px;
+  max-width: 1060px;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.75rem;
 }
 
 .sipfd-breadcrumb {
   font-size: 0.82rem;
-  color: #5b6573;
+  color: var(--text-muted, #7B8DB5);
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
 }
 
 .sipfd-breadcrumb a {
-  color: #0f766e;
+  color: var(--gold, #F5A623);
   text-decoration: none;
+  transition: opacity 0.2s;
 }
 
 .sipfd-breadcrumb a:hover {
-  text-decoration: underline;
+  opacity: 0.8;
 }
 
 .sipfd-header {
-  border: 1px solid #d9e2ec;
-  border-radius: 14px;
-  background: #ffffff;
-  padding: 1.4rem;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+  padding: 2.5rem 2.5rem 2rem;
+  background: linear-gradient(135deg, var(--navy-light, #1A2A6C) 0%, var(--navy-mid, #111D4A) 100%);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-xl, 28px);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.sipfd-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent);
 }
 
 .sipfd-kicker {
@@ -39,20 +52,23 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.72rem;
-  color: #0f766e;
+  color: var(--gold, #F5A623);
   font-weight: 700;
 }
 
 .sipfd-header h1 {
   margin: 0 0 0.65rem;
-  font-size: clamp(1.4rem, 2.6vw, 2rem);
-  line-height: 1.25;
-  color: #0f172a;
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-primary, #F0F4FF);
+  letter-spacing: -0.02em;
 }
 
 .sipfd-lead {
   margin: 0;
-  color: #334155;
+  color: var(--text-secondary, #A8B4D4);
   line-height: 1.75;
 }
 
@@ -66,37 +82,39 @@
 .sipfd-meta p {
   margin: 0;
   font-size: 0.82rem;
-  color: #475569;
+  color: var(--text-muted, #7B8DB5);
 }
 
 .sipfd-section,
 .sipfd-faq,
 .sipfd-disclaimer {
-  border: 1px solid #d9e2ec;
-  border-radius: 14px;
-  background: #ffffff;
-  padding: 1.2rem 1.25rem;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+  background: var(--card-bg, #111D4A);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-md, 14px);
+  padding: 1.5rem 1.5rem;
+  box-shadow: var(--shadow-card);
 }
 
 .sipfd-section h2,
 .sipfd-faq h2,
 .sipfd-disclaimer h2 {
-  margin: 0 0 0.7rem;
-  font-size: 1.18rem;
-  color: #0f172a;
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary, #F0F4FF);
 }
 
 .sipfd-section h3 {
   margin: 1rem 0 0.45rem;
   font-size: 1rem;
-  color: #111827;
+  color: var(--gold-light, #FFD280);
 }
 
 .sipfd-section p,
 .sipfd-disclaimer p {
   margin: 0 0 0.7rem;
-  color: #334155;
+  color: var(--text-secondary, #A8B4D4);
   line-height: 1.75;
 }
 
@@ -106,20 +124,22 @@
 }
 
 .sipfd-section li {
-  color: #334155;
-  margin-bottom: 0.35rem;
+  color: var(--text-secondary, #A8B4D4);
+  margin-bottom: 0.4rem;
+  line-height: 1.65;
 }
 
 .sipfd-section a,
 .sipfd-links a {
-  color: #0f766e;
+  color: var(--gold, #F5A623);
   font-weight: 600;
   text-decoration: none;
+  transition: opacity 0.2s;
 }
 
 .sipfd-section a:hover,
 .sipfd-links a:hover {
-  text-decoration: underline;
+  opacity: 0.8;
 }
 
 .example-grid {
@@ -130,10 +150,10 @@
 }
 
 .example-card {
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: 12px;
   padding: 0.85rem;
-  background: #f8fafc;
+  background: rgba(11,20,55,0.6);
 }
 
 .example-card h3 {
@@ -144,19 +164,19 @@
   margin: 0;
   font-size: 1.15rem;
   font-weight: 800;
-  color: #0f766e;
+  color: var(--gold, #F5A623);
 }
 
 .example-note,
 .small-note {
   margin: 0.45rem 0 0;
-  color: #475569;
+  color: var(--text-muted, #7B8DB5);
   font-size: 0.86rem;
 }
 
 .table-wrap {
   overflow-x: auto;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: 10px;
 }
 
@@ -170,17 +190,18 @@
 .table-wrap td {
   padding: 0.68rem 0.7rem;
   text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-  color: #334155;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: var(--text-secondary, #A8B4D4);
   font-size: 0.9rem;
 }
 
 .table-wrap th {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: rgba(11,20,55,0.8);
+  color: var(--text-primary, #F0F4FF);
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border-bottom: 2px solid rgba(245,166,35,0.2);
 }
 
 .proscons-grid {
@@ -190,14 +211,14 @@
 }
 
 .proscons-grid > div {
-  border: 1px solid #dbe4ee;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: 12px;
   padding: 0.9rem;
-  background: #fcfdff;
+  background: rgba(11,20,55,0.6);
 }
 
 .sipfd-faq details {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(255,255,255,0.06);
   padding: 0.8rem 0;
 }
 
@@ -207,15 +228,20 @@
 
 .sipfd-faq summary {
   cursor: pointer;
-  color: #0f172a;
+  color: var(--text-primary, #F0F4FF);
   font-weight: 600;
   font-size: 0.92rem;
 }
 
 .sipfd-faq p {
   margin: 0.6rem 0 0;
-  color: #334155;
+  color: var(--text-secondary, #A8B4D4);
   font-size: 0.9rem;
+}
+
+.sipfd-disclaimer {
+  background: rgba(11,20,55,0.6);
+  border-color: rgba(245,166,35,0.12);
 }
 
 .sipfd-links {
@@ -225,16 +251,32 @@
 }
 
 .sipfd-links a {
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: 999px;
   padding: 0.42rem 0.9rem;
-  background: #ffffff;
+  background: var(--card-bg, #111D4A);
   font-size: 0.86rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.sipfd-links a:hover {
+  border-color: rgba(245,166,35,0.3);
+  background: var(--navy-light, #1A2A6C);
+  opacity: 1;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
   .sipfd-article {
     padding: 1.25rem 0 3rem;
+  }
+
+  .sipfd-header {
+    padding: 1.8rem 1.5rem 1.5rem;
   }
 
   .example-grid,

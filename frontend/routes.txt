@@ -9,7 +9,10 @@
 /blog
 /blog/sip-vs-fd
 /blog/sip-5000-per-month
+/blog/sip-1000-per-month
 /blog/emi-calculation-guide
+/blog/50-lakh-home-loan-emi
+/blog/10-lakh-fd-interest
 /about-us
 /contact-us
 /privacy-policy

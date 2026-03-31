@@ -1,6 +1,6 @@
 /* ── Home Page ────────────────────────────────────────────────── */
 .home-page {
-  max-width: 1060px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 2rem 5rem;
   display: flex;
@@ -15,8 +15,8 @@
   padding: 4rem 3rem 3.5rem;
   border-radius: var(--radius-xl, 28px);
   background: linear-gradient(135deg, var(--navy-light, #1A2A6C) 0%, var(--navy-mid, #111D4A) 60%, var(--navy, #0B1437) 100%);
-  border: 1px solid var(--border, rgba(255,255,255,0.07));
-  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.4));
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0,0,0,0.25));
   text-align: center;
   overflow: hidden;
   min-height: 340px;
@@ -27,13 +27,12 @@
 .home-hero::before {
   content: '';
   position: absolute;
-  top: -80px; left: 50%;
+  top: -60px; left: 50%;
   transform: translateX(-50%);
-  width: 500px; height: 300px;
+  width: 400px; height: 250px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245,166,35,0.10) 0%, transparent 70%);
   pointer-events: none;
-  will-change: transform;
 }
 
 .home-hero::after {
@@ -145,11 +144,11 @@
 }
 
 .calc-card {
-  background: var(--card-bg, rgba(17,29,74,0.7));
-  border: 1px solid var(--border, rgba(255,255,255,0.07));
+  background: var(--card-bg, #111D4A);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: var(--radius-lg, 20px);
   padding: 1.75rem;
-  box-shadow: var(--shadow-card, 0 8px 32px rgba(0,0,0,0.4));
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0,0,0,0.25));
   transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
   display: flex;
   flex-direction: column;
@@ -158,12 +157,28 @@
   color: inherit;
   min-height: 130px;
   contain: layout style;
+  position: relative;
+  overflow: hidden;
+}
+
+.calc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold, #F5A623), var(--emerald, #00C896));
+  opacity: 0;
+  transition: opacity 0.22s ease;
 }
 
 .calc-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(245,166,35,0.25);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 32px rgba(245,166,35,0.08);
+  transform: translateY(-4px);
+  border-color: rgba(245,166,35,0.2);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.calc-card:hover::before {
+  opacity: 1;
 }
 
 .calc-card-icon {
@@ -228,8 +243,8 @@
 .trust-section {
   text-align: center;
   padding: 2.5rem;
-  background: var(--card-bg, rgba(17,29,74,0.7));
-  border: 1px solid var(--border, rgba(255,255,255,0.07));
+  background: var(--card-bg, #111D4A);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
   border-radius: var(--radius-lg, 20px);
   min-height: 160px;
   contain: layout style;

@@ -1,8 +1,9 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, FdResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
@@ -18,7 +19,16 @@ export class FdCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
+  private readonly cdr      = inject(ChangeDetectorRef);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private sub?: Subscription;
+  private calcSub?: Subscription;
+
+  @ViewChild('fdGrowthChart') fdGrowthChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('fdDoughnutChart') fdDoughnutChartRef!: ElementRef<HTMLCanvasElement>;
+  private chartInstance: any = null;
+  private doughnutInstance: any = null;
+  fdProjectionCache: Array<{year: number; interest: number; maturity: number}> = [];
 
   form = this.fb.group({
     principal:            [100000, [Validators.required, Validators.min(1)]],
@@ -31,6 +41,7 @@ export class FdCalculator implements OnInit, OnDestroy {
   apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
   apiError = '';
   openFaq: number | null = null;
+  showFullTable = false;
 
   copied = false;
   private copyTimer?: ReturnType<typeof setTimeout>;
@@ -123,6 +134,65 @@ export class FdCalculator implements OnInit, OnDestroy {
     return rows;
   }
 
+  /** Rows visible in table — 5 by default, all when expanded */
+  get displayedRows(): Array<{year: number, interest: number, maturity: number}> {
+    return this.showFullTable ? this.fdProjectionCache : this.fdProjectionCache.slice(0, 5);
+  }
+
+  /** Format value in Indian notation (L / Cr) */
+  formatIndian(val: number): string {
+    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
+    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
+    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
+    return val.toFixed(0);
+  }
+
+  /** Format summary strip values (compact) */
+  formatCompact(val: number): string {
+    if (val >= 10000000) return '₹' + (val / 10000000).toFixed(1) + 'Cr';
+    if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';
+    if (val >= 1000) return '₹' + (val / 1000).toFixed(0) + 'K';
+    return '₹' + val.toFixed(0);
+  }
+
+  scrollToTop(): void {
+    if (this.isBrowser) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  /** Smart insights dynamically computed from current result */
+  get smartInsights(): Array<{icon: string; text: string}> {
+    if (!this.result) return [];
+    const { principal, annualRate, years, compoundingFrequency } = this.form.getRawValue() as any;
+    const insights: Array<{icon: string; text: string}> = [];
+
+    // Insight 1: Effective yield vs nominal rate
+    const effectiveYield = ((this.result.totalInterest / principal) * 100 / years).toFixed(1);
+    insights.push({
+      icon: '💰',
+      text: `Your effective yearly yield is <strong>${effectiveYield}%</strong> with ${compoundingFrequency === 12 ? 'monthly' : compoundingFrequency === 4 ? 'quarterly' : compoundingFrequency === 2 ? 'half-yearly' : 'annual'} compounding`
+    });
+
+    // Insight 2: Senior citizen benefit
+    const seniorRate = annualRate + 0.5;
+    const seniorMaturity = Math.round(principal * Math.pow(1 + seniorRate / 100 / compoundingFrequency, compoundingFrequency * years));
+    const extraEarnings = seniorMaturity - this.result.maturityAmount;
+    insights.push({
+      icon: '👴',
+      text: `Senior citizens earn <strong>\u20b9${this.formatIndian(extraEarnings)}</strong> extra with +0.5% rate benefit`
+    });
+
+    // Insight 3: Double your money
+    const doublingYears = (Math.log(2) / Math.log(1 + annualRate / 100 / compoundingFrequency) / compoundingFrequency).toFixed(1);
+    insights.push({
+      icon: '🚀',
+      text: `At <strong>${annualRate}%</strong>, your money doubles in approximately <strong>${doublingYears} years</strong>`
+    });
+
+    return insights;
+  }
+
   constructor() {
     this.seo.setTitle('FD Calculator India 2026 – SBI, HDFC, ICICI Fixed Deposit Interest & Maturity Calculator');
     this.seo.setDescription('Free FD calculator India to calculate fixed deposit maturity amount & interest for SBI, HDFC, ICICI, PNB & post office. Compare FD rates for regular & senior citizens 2026. No login.');
@@ -150,6 +220,16 @@ export class FdCalculator implements OnInit, OnDestroy {
       'senior citizen fd rates 2026', 'post office fd calculator'
     ]);
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
+
+    // ── REACTIVE CALCULATION: Auto-calculate on form value changes ──
+    this.calcSub = this.form.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(() => this.calculate());
+
+    // Calculate once with initial values so user sees result immediately
+    if (this.form.valid) {
+      this.calculate();
+    }
   }
 
   get f() { return this.form.controls; }
@@ -188,17 +268,186 @@ export class FdCalculator implements OnInit, OnDestroy {
 
     this.result = { maturityAmount, totalInterest, principal, localCalc: true };
 
+    // Cache projection rows and render chart
+    if (years >= 1) {
+      this.fdProjectionCache = this.getFdProjectionRows(principal, annualRate, years, compoundingFrequency);
+      setTimeout(() => this.renderGrowthChart(), 50);
+    }
+    setTimeout(() => this.renderFdDoughnutChart(principal, totalInterest), 50);
+
+    // Trigger change detection for OnPush strategy
+    this.cdr.markForCheck();
+
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();
     this.sub = this.svc.calculateFd({ principal, annualRate, years, compoundingFrequency }).subscribe({
-      next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; },
-      error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   }
+      next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
+      error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.calcSub?.unsubscribe();
     this.seo.removeJsonLd('fd-breadcrumb');
     this.seo.removeFAQSchema();
+    this.chartInstance?.destroy();
+    this.doughnutInstance?.destroy();
+  }
+
+  /** Render or update the FD growth line chart */
+  renderGrowthChart(): void {
+    if (!this.isBrowser || !this.fdGrowthChartRef?.nativeElement || !this.fdProjectionCache.length) return;
+
+    import('chart.js').then(({ Chart, registerables }) => {
+      Chart.register(...registerables);
+
+      const labels = this.fdProjectionCache.map(r => `Year ${r.year}`);
+      const principalLine = this.fdProjectionCache.map(() => this.result?.principal ?? 0);
+      const maturityData = this.fdProjectionCache.map(r => r.maturity);
+
+      if (this.chartInstance) {
+        this.chartInstance.data.labels = labels;
+        this.chartInstance.data.datasets[0].data = principalLine;
+        this.chartInstance.data.datasets[1].data = maturityData;
+        this.chartInstance.update('none');
+        return;
+      }
+
+      const ctx = this.fdGrowthChartRef.nativeElement.getContext('2d');
+      if (!ctx) return;
+
+      const investedGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
+      investedGrad.addColorStop(0, 'rgba(168,180,212,0.18)');
+      investedGrad.addColorStop(1, 'rgba(168,180,212,0.01)');
+
+      const valueGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
+      valueGrad.addColorStop(0, 'rgba(245,166,35,0.28)');
+      valueGrad.addColorStop(0.7, 'rgba(245,166,35,0.06)');
+      valueGrad.addColorStop(1, 'rgba(245,166,35,0.0)');
+
+      this.chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Principal',
+              data: principalLine,
+              borderColor: 'rgba(168,180,212,0.8)',
+              backgroundColor: investedGrad,
+              borderWidth: 2,
+              fill: true,
+              tension: 0,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#A8B4D4',
+              borderDash: [6, 3]
+            },
+            {
+              label: 'Maturity Value',
+              data: maturityData,
+              borderColor: '#F5A623',
+              backgroundColor: valueGrad,
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.3,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#F5A623'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: {
+              labels: { color: '#A8B4D4', font: { size: 12 }, usePointStyle: true, pointStyle: 'circle' }
+            },
+            tooltip: {
+              backgroundColor: '#111D4A',
+              titleColor: '#F0F4FF',
+              bodyColor: '#A8B4D4',
+              borderColor: 'rgba(245,166,35,0.3)',
+              borderWidth: 1,
+              callbacks: {
+                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#7B8DB5', font: { size: 11 } },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              ticks: {
+                color: '#7B8DB5',
+                font: { size: 11 },
+                callback: (val: any) => '₹' + (val >= 10000000 ? (val / 10000000).toFixed(1) + 'Cr' : val >= 100000 ? (val / 100000).toFixed(1) + 'L' : (val / 1000).toFixed(0) + 'K')
+              },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  /** Render or update the FD principal vs interest doughnut chart */
+  renderFdDoughnutChart(principal: number, totalInterest: number): void {
+    if (!this.isBrowser || !this.fdDoughnutChartRef?.nativeElement) return;
+
+    import('chart.js').then(({ Chart, registerables }) => {
+      Chart.register(...registerables);
+
+      if (this.doughnutInstance) {
+        this.doughnutInstance.data.datasets[0].data = [principal, totalInterest];
+        this.doughnutInstance.update('none');
+        return;
+      }
+
+      const ctx = this.fdDoughnutChartRef.nativeElement.getContext('2d');
+      if (!ctx) return;
+
+      this.doughnutInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal', 'Interest Earned'],
+          datasets: [{
+            data: [principal, totalInterest],
+            backgroundColor: ['#4B5EAA', '#00C896'],
+            borderColor: ['rgba(75,94,170,0.4)', 'rgba(0,200,150,0.4)'],
+            borderWidth: 2,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#111D4A',
+              titleColor: '#F0F4FF',
+              bodyColor: '#A8B4D4',
+              borderColor: 'rgba(245,166,35,0.3)',
+              borderWidth: 1,
+              callbacks: {
+                label: (ctx: any) => {
+                  const val = ctx.parsed;
+                  const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                  const pct = ((val / total) * 100).toFixed(1);
+                  return `${ctx.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
   }
 }

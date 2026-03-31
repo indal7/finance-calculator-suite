@@ -254,6 +254,28 @@ def calculate_fd(principal: float, annual_rate: float, years: float,
 
 
 @lru_cache(maxsize=256)
+def calculate_lumpsum(principal: float, annual_rate: float, years: float) -> dict:
+    """
+    Lumpsum (one-time investment) future value:
+        FV = P × (1 + r)^t
+
+    where P = principal, r = annual rate / 100, t = years.
+    Results are cached in-memory for repeated identical inputs.
+    """
+    r  = annual_rate / 100
+    fv = principal * math.pow(1 + r, years)
+
+    total_value       = round(fv, 2)
+    estimated_returns = round(total_value - principal, 2)
+
+    return {
+        "totalInvested":    round(principal, 2),
+        "estimatedReturns": estimated_returns,
+        "totalValue":       total_value,
+    }
+
+
+@lru_cache(maxsize=256)
 def calculate_cagr(beginning_value: float, ending_value: float, years: float) -> dict:
     """
     CAGR formula:

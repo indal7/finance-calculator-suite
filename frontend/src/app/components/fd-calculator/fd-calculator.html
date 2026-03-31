@@ -22,178 +22,237 @@
   </nav>
 
   <div class="page-hero">
-    <div class="hero-eyebrow">🏦 Free Tool · India</div>
     <h1>FD Calculator India – Calculate Fixed Deposit Returns &amp; Interest</h1>
     <p>
-      A <strong>Fixed Deposit (FD)</strong> is a safe, guaranteed-return investment offered by banks and NBFCs.
-      Calculate your maturity amount and total interest earned — supports <strong>SBI, HDFC, ICICI</strong> and all bank rates.
+      Enter your deposit amount, interest rate &amp; tenure to instantly see your maturity amount and interest earned.
     </p>
   </div>
 
-  <div class="card">
-    <h2>Enter FD Details</h2>
-    <form [formGroup]="form" (ngSubmit)="calculate()" class="form-grid" novalidate>
+  <!-- ── Split Layout: Input Left + Result Right ─────────── -->
+  <div class="calc-layout">
+    <!-- LEFT: Input Panel -->
+    <div class="calc-input-panel">
+      <div class="card">
+        <h2>Enter FD Details</h2>
+        <form [formGroup]="form" class="form-grid" novalidate>
 
-      <!-- Principal -->
-      <div class="form-group">
-        <label for="principal">Principal Amount (₹)</label>
-        <div class="slider-wrapper">
-          <input id="principal" type="number" formControlName="principal"
-                 min="1" placeholder="e.g. 100000"
-                 [class.invalid]="f['principal'].invalid && f['principal'].touched"
-                 (input)="syncSlider('principal')">
-          <div class="slider-row">
-            <input type="range" min="1000" max="5000000" step="1000"
-                   [value]="f['principal'].value"
-                   (input)="syncFromSlider('principal', $event)"
-                   [style.--progress-value]="getSliderPct('principal', 1000, 5000000) + '%'">
-            <span class="slider-value-display">₹{{ f['principal'].value | number:'1.0-0' }}</span>
+          <!-- Principal -->
+          <div class="form-group">
+            <label for="principal">Principal Amount (₹)</label>
+            <div class="slider-wrapper">
+              <input id="principal" type="number" formControlName="principal"
+                     min="1" placeholder="e.g. 100000"
+                     [class.invalid]="f['principal'].invalid && f['principal'].touched"
+                     (input)="syncSlider('principal')">
+              <div class="slider-row">
+                <input type="range" min="1000" max="5000000" step="1000"
+                       [value]="f['principal'].value"
+                       (input)="syncFromSlider('principal', $event)"
+                       [style.--progress-value]="getSliderPct('principal', 1000, 5000000) + '%'">
+                <span class="slider-value-display">₹{{ f['principal'].value | number:'1.0-0' }}</span>
+              </div>
+            </div>
+            @if (f['principal'].invalid && f['principal'].touched) {
+              <span class="error-msg">Enter a valid principal amount (min ₹1).</span>
+            }
           </div>
-        </div>
-        @if (f['principal'].invalid && f['principal'].touched) {
-          <span class="error-msg">Enter a valid principal amount (min ₹1).</span>
-        }
-      </div>
 
-      <!-- Annual Rate -->
-      <div class="form-group">
-        <label for="annualRate">Annual Interest Rate (%)</label>
-        <div class="slider-wrapper">
-          <input id="annualRate" type="number" formControlName="annualRate"
-                 min="0.01" step="0.1" placeholder="e.g. 7"
-                 [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
-                 (input)="syncSlider('annualRate')">
-          <div class="slider-row">
-            <input type="range" min="2" max="10" step="0.1"
-                   [value]="f['annualRate'].value"
-                   (input)="syncFromSlider('annualRate', $event)"
-                   [style.--progress-value]="getSliderPct('annualRate', 2, 10) + '%'">
-            <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
+          <!-- Annual Rate -->
+          <div class="form-group">
+            <label for="annualRate">Annual Interest Rate (%)</label>
+            <div class="slider-wrapper">
+              <input id="annualRate" type="number" formControlName="annualRate"
+                     min="0.01" step="0.1" placeholder="e.g. 7"
+                     [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
+                     (input)="syncSlider('annualRate')">
+              <div class="slider-row">
+                <input type="range" min="2" max="10" step="0.1"
+                       [value]="f['annualRate'].value"
+                       (input)="syncFromSlider('annualRate', $event)"
+                       [style.--progress-value]="getSliderPct('annualRate', 2, 10) + '%'">
+                <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
+              </div>
+            </div>
+            @if (f['annualRate'].invalid && f['annualRate'].touched) {
+              <span class="error-msg">Enter a valid interest rate.</span>
+            }
+            <span class="hint">💡 SBI FD: 6.8–7.1% · HDFC FD: 7.0–7.25% · Senior citizen: +0.5%</span>
           </div>
-        </div>
-        @if (f['annualRate'].invalid && f['annualRate'].touched) {
-          <span class="error-msg">Enter a valid interest rate.</span>
-        }
-        <span class="hint">💡 SBI FD: 6.8–7.1% · HDFC FD: 7.0–7.25% · Senior citizen: +0.5%</span>
-      </div>
 
-      <!-- Duration -->
-      <div class="form-group">
-        <label for="years">Duration (Years)</label>
-        <div class="slider-wrapper">
-          <input id="years" type="number" formControlName="years"
-                 min="0.08" step="0.25" placeholder="e.g. 3"
-                 [class.invalid]="f['years'].invalid && f['years'].touched"
-                 (input)="syncSlider('years')">
-          <div class="slider-row">
-            <input type="range" min="0.25" max="10" step="0.25"
-                   [value]="f['years'].value"
-                   (input)="syncFromSlider('years', $event)"
-                   [style.--progress-value]="getSliderPct('years', 0.25, 10) + '%'">
-            <span class="slider-value-display">{{ f['years'].value }} yr</span>
+          <!-- Duration -->
+          <div class="form-group">
+            <label for="years">Duration (Years)</label>
+            <div class="slider-wrapper">
+              <input id="years" type="number" formControlName="years"
+                     min="0.08" step="0.25" placeholder="e.g. 3"
+                     [class.invalid]="f['years'].invalid && f['years'].touched"
+                     (input)="syncSlider('years')">
+              <div class="slider-row">
+                <input type="range" min="0.25" max="10" step="0.25"
+                       [value]="f['years'].value"
+                       (input)="syncFromSlider('years', $event)"
+                       [style.--progress-value]="getSliderPct('years', 0.25, 10) + '%'">
+                <span class="slider-value-display">{{ f['years'].value }} yr</span>
+              </div>
+            </div>
+            @if (f['years'].invalid && f['years'].touched) {
+              <span class="error-msg">Enter a valid duration (min 1 month).</span>
+            }
           </div>
+
+          <!-- Compounding Frequency -->
+          <div class="form-group">
+            <label for="compoundingFrequency">Compounding Frequency</label>
+            <select id="compoundingFrequency" formControlName="compoundingFrequency" class="form-select">
+              @for (freq of frequencies; track freq.value) {
+                <option [value]="freq.value">{{ freq.label }}</option>
+              }
+            </select>
+            <span class="hint">💡 Most Indian banks use quarterly compounding.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Result Panel -->
+    <div class="calc-result-panel">
+      @if (result) {
+        <div class="result-card" role="region" aria-label="FD Calculation Result">
+          <h2>
+            FD Maturity Estimate
+            <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
+              {{ copied ? '✓ Copied' : '⎘ Copy' }}
+            </button>
+          </h2>
+
+          <!-- Hero stat — Maturity Amount prominently -->
+          <div class="result-hero-stat">
+            <div class="result-hero-label">Maturity Amount</div>
+            <div class="result-hero-value">₹{{ result.maturityAmount | number:'1.0-0' }}</div>
+            <div class="result-hero-sub">
+              <span class="hero-return-badge">+{{ (result.totalInterest / result.principal * 100) | number:'1.1-1' }}% earned</span>
+              in {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+            </div>
+          </div>
+
+          <!-- Compact stats row -->
+          <div class="result-stats-row">
+            <div class="result-stat-chip">
+              <span class="stat-chip-label">Principal</span>
+              <span class="stat-chip-value">₹{{ result.principal | number:'1.0-0' }}</span>
+            </div>
+            <div class="result-stat-chip accent">
+              <span class="stat-chip-label">Interest Earned</span>
+              <span class="stat-chip-value">₹{{ result.totalInterest | number:'1.0-0' }}</span>
+            </div>
+          </div>
+
+          <!-- Large Doughnut Chart -->
+          <div class="result-doughnut-section">
+            <div class="doughnut-legend-top">
+              <div class="doughnut-legend-item">
+                <span class="legend-swatch invested"></span>
+                <span>Principal</span>
+              </div>
+              <div class="doughnut-legend-item">
+                <span class="legend-swatch returns"></span>
+                <span>Interest Earned</span>
+              </div>
+            </div>
+            <div class="chart-container--doughnut">
+              <canvas #fdDoughnutChart></canvas>
+            </div>
+          </div>
+
         </div>
-        @if (f['years'].invalid && f['years'].touched) {
-          <span class="error-msg">Enter a valid duration (min 1 month).</span>
-        }
-      </div>
-
-      <!-- Compounding Frequency -->
-      <div class="form-group">
-        <label for="compoundingFrequency">Compounding Frequency</label>
-        <select id="compoundingFrequency" formControlName="compoundingFrequency" class="form-select">
-          @for (freq of frequencies; track freq.value) {
-            <option [value]="freq.value">{{ freq.label }}</option>
-          }
-        </select>
-        <span class="hint">💡 Most Indian banks use quarterly compounding.</span>
-      </div>
-
-      <button type="submit" class="btn-calculate" [disabled]="form.invalid">
-        Calculate Maturity Amount →
-      </button>
-    </form>
+      } @else {
+        <!-- Placeholder when no result -->
+        <div class="card calc-result-placeholder">
+          <div class="placeholder-icon">🏦</div>
+          <p>Adjust the sliders to see your maturity amount instantly</p>
+        </div>
+      }
+    </div>
   </div>
 
+  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
   @if (result) {
-    <div class="result-card" role="region" aria-label="FD Calculation Result">
-      <h2>
-        FD Maturity Estimate
-        <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
-          {{ copied ? '✓ Copied' : '⎘ Copy' }}
-        </button>
-        @if (apiStatus === 'loading') { <span class="api-badge loading">⏳ Verifying…</span> }
-        @if (apiStatus === 'success') { <span class="api-badge success">✅ Verified</span> }
-        @if (apiStatus === 'error')   { <span class="api-badge error" [title]="apiError">⚠ Local</span> }
-      </h2>
-      <div class="result-grid">
-        <div class="result-item">
-          <div class="label">Principal</div>
-          <div class="value">₹{{ result.principal | number:'1.0-0' }}</div>
-        </div>
-        <div class="result-item">
-          <div class="label">Total Interest</div>
-          <div class="value">₹{{ result.totalInterest | number:'1.0-0' }}</div>
-        </div>
-        <div class="result-item highlight">
-          <div class="label">Maturity Amount</div>
-          <div class="value">₹{{ result.maturityAmount | number:'1.0-0' }}</div>
-        </div>
-        <div class="result-item">
-          <div class="label">Effective Yield</div>
-          <div class="value">{{ (result.totalInterest / result.principal * 100) | number:'1.1-1' }}%</div>
-        </div>
-      </div>
-
-      <div class="result-visual">
-        <svg class="donut-chart" viewBox="0 0 90 90" width="90" height="90" aria-hidden="true">
-          <circle class="donut-bg"   cx="45" cy="45" r="35"/>
-          <circle class="donut-fill" cx="45" cy="45" r="35"
-            [style.stroke-dashoffset]="getDonutOffset(result.principal, result.maturityAmount)"/>
-        </svg>
-        <div class="donut-legend">
-          <div class="legend-row">
-            <span class="legend-dot invested"></span>
-            Principal: ₹{{ result.principal | number:'1.0-0' }}
-          </div>
-          <div class="legend-row">
-            <span class="legend-dot returns"></span>
-            Interest: ₹{{ result.totalInterest | number:'1.0-0' }}
-          </div>
-          <div class="legend-row legend-row--total">
-            <span class="legend-dot total"></span>
-            Maturity: ₹{{ result.maturityAmount | number:'1.0-0' }}
-          </div>
-        </div>
-      </div>
+  <div class="summary-strip">
+    <div class="summary-card">
+      <span class="summary-icon">💰</span>
+      <span class="summary-label">Principal</span>
+      <span class="summary-value">{{ formatCompact(result.principal) }}</span>
     </div>
-
-    <!-- ── FD Year-by-Year Growth Table ──────────────────────── -->
-    @if ((f['years'].value ?? 0) >= 1) {
-    <div class="card">
-      <h2>Year-by-Year FD Growth</h2>
-      <div class="projection-table-wrap">
-        <table class="projection-table">
-          <thead>
-            <tr>
-              <th>Year</th>
-              <th>Interest Earned</th>
-              <th>Maturity Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (row of getFdProjectionRows(f['principal'].value, f['annualRate'].value, f['years'].value, f['compoundingFrequency'].value); track row.year) {
-            <tr [class.highlight-row]="row.year === f['years'].value">
-              <td>{{ row.year }}</td>
-              <td class="gains-col">₹{{ row.interest | number:'1.0-0' }}</td>
-              <td class="value-col">₹{{ row.maturity | number:'1.0-0' }}</td>
-            </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="summary-card">
+      <span class="summary-icon">📈</span>
+      <span class="summary-label">Interest Earned</span>
+      <span class="summary-value accent">{{ formatCompact(result.totalInterest) }}</span>
     </div>
+    <div class="summary-card">
+      <span class="summary-icon">🏆</span>
+      <span class="summary-label">Maturity Amount</span>
+      <span class="summary-value gold">{{ formatCompact(result.maturityAmount) }}</span>
+    </div>
+  </div>
+  }
+
+  <!-- ═══ INTERACTIVE GRAPH SECTION ═══ -->
+  @if (result && (f['years'].value ?? 0) >= 1) {
+  <div class="card graph-section">
+    <div class="graph-header">
+      <h2>FD Growth Over Time</h2>
+    </div>
+    <div class="chart-container chart-container--growth">
+      <canvas #fdGrowthChart></canvas>
+    </div>
+  </div>
+  }
+
+  <!-- ═══ SMART INSIGHTS ═══ -->
+  @if (result && smartInsights.length) {
+  <div class="card insights-section">
+    <h2>💡 Smart Insights</h2>
+    <div class="insights-grid">
+      @for (insight of smartInsights; track insight.text) {
+      <div class="insight-card">
+        <span class="insight-icon">{{ insight.icon }}</span>
+        <span class="insight-text" [innerHTML]="insight.text"></span>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- ═══ BREAKDOWN TABLE (COLLAPSIBLE) ═══ -->
+  @if (result && (f['years'].value ?? 0) >= 1) {
+  <div class="card">
+    <h2>Year-by-Year FD Growth</h2>
+    <div class="projection-table-wrap">
+      <table class="projection-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Interest Earned</th>
+            <th>Maturity Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of displayedRows; track row.year) {
+          <tr [class.highlight-row]="row.year === f['years'].value">
+            <td>{{ row.year }}</td>
+            <td class="gains-col">₹{{ row.interest | number:'1.0-0' }}</td>
+            <td class="value-col">₹{{ row.maturity | number:'1.0-0' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (fdProjectionCache.length > 5) {
+    <button type="button" class="view-full-btn" (click)="showFullTable = !showFullTable">
+      {{ showFullTable ? '▲ Show Less' : '▼ View Full Table (' + fdProjectionCache.length + ' years)' }}
+    </button>
     }
+  </div>
   }
 
   <div class="card example-section">
@@ -342,6 +401,16 @@
       <a routerLink="/blog/10-lakh-fd-interest" class="related-link related-link--sky">₹10 Lakh FD Interest Guide – Bank-wise Comparison →</a>
       <a routerLink="/blog/sip-vs-fd"  class="related-link related-link--gold">SIP vs FD – Which is Better in 2026? →</a>
     </div>
+  </div>
+
+  <!-- ── Disclaimer ─────────────────────────────────────────── -->
+  <div class="disclaimer-section">
+    <p><strong>Disclaimer:</strong> FD interest rates shown are indicative and may change without prior notice. Actual maturity amounts depend on the bank's terms, compounding method, and applicable TDS deductions. This calculator is for estimation purposes only. Please confirm the latest FD rates with your bank before making deposits.</p>
+  </div>
+
+  <!-- ── Mobile Sticky CTA ── -->
+  <div class="mobile-sticky-cta" (click)="scrollToTop()">
+    🏦 Recalculate FD
   </div>
 
 </section>

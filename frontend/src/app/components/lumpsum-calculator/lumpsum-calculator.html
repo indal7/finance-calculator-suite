@@ -1,34 +1,311 @@
-<section class="coming-soon-page">
-  <div class="container">
-    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-      <a routerLink="/">Home</a> &rsaquo; <span>Lumpsum Calculator</span>
-    </nav>
-    <div class="coming-soon-card">
-      <div class="coming-soon-icon">💰</div>
-      <h1>Lumpsum Calculator</h1>
-      <p class="coming-soon-desc">
-        Our <strong>Lumpsum Investment Calculator</strong> is coming soon.
-        It will help you calculate the future value of a one-time investment
-        in mutual funds at different rates of return over various time horizons.
-      </p>
-      <div class="coming-soon-features">
-        <h2>What the Lumpsum Calculator will include:</h2>
-        <ul>
-          <li>✅ One-time investment amount</li>
-          <li>✅ Expected annual return rate</li>
-          <li>✅ Investment duration</li>
-          <li>✅ Comparison with SIP</li>
-        </ul>
-      </div>
-      <div class="coming-soon-cta">
-        <p>Meanwhile, explore our other free calculators:</p>
-        <div class="cta-links">
-          <a routerLink="/sip-calculator">📈 SIP Calculator</a>
-          <a routerLink="/fd-calculator">🏧 FD Calculator</a>
-          <a routerLink="/emi-calculator">🏦 EMI Calculator</a>
-          <a routerLink="/cagr-calculator">📊 CAGR Calculator</a>
-        </div>
+<section class="calc-page">
+
+  <!-- JSON-LD: Lumpsum Calculator -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Lumpsum Calculator India",
+    "url": "https://www.myinvestmentcalculator.in/lumpsum-calculator",
+    "description": "Free Lumpsum Investment Calculator India 2026. Calculate returns on one-time investments in mutual funds.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+    "inLanguage": "en-IN"
+  }
+  </script>
+
+  <!-- ── Breadcrumb ──────────────────────────────────────────── -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span class="breadcrumb-current">Lumpsum Calculator</span>
+  </nav>
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <div class="page-hero">
+    <h1>Lumpsum Calculator India – One-Time Investment Return Calculator (2026)</h1>
+    <p>
+      Enter your one-time investment amount, expected return &amp; time period to instantly see your wealth projection.
+    </p>
+  </div>
+
+  <!-- ── Split Layout: Input Left + Result Right ─────────── -->
+  <div class="calc-layout">
+    <!-- LEFT: Input Panel -->
+    <div class="calc-input-panel">
+      <div class="card">
+        <h2>Enter Lumpsum Details</h2>
+        <form [formGroup]="form" class="form-grid" novalidate>
+
+          <!-- Investment Amount -->
+          <div class="form-group">
+            <label for="principal">Investment Amount (₹)</label>
+            <div class="slider-wrapper">
+              <input id="principal" name="principal" type="number" formControlName="principal"
+                min="1000" max="10000000" placeholder="e.g. 100000" autocomplete="off"
+                [class.invalid]="f['principal'].invalid && f['principal'].touched"
+                (input)="syncSlider('principal')">
+              <div class="slider-row">
+                <input type="range" min="1000" max="1000000" step="1000" [value]="f['principal'].value"
+                  (input)="syncFromSlider('principal', $event)"
+                  [style.--progress-value]="getSliderPct('principal', 1000, 1000000) + '%'"
+                  aria-label="Investment amount slider">
+                <span class="slider-value-display">₹{{ f['principal'].value | number:'1.0-0' }}</span>
+              </div>
+            </div>
+            @if (f['principal'].invalid && f['principal'].touched) {
+            <span class="error-msg">Enter a valid investment amount (min ₹1,000).</span>
+            }
+          </div>
+
+          <!-- Annual Rate -->
+          <div class="form-group">
+            <label for="annualRate">Expected Annual Return (%)</label>
+            <div class="slider-wrapper">
+              <input id="annualRate" name="annualRate" type="number" formControlName="annualRate" min="1" max="30"
+                step="0.5" placeholder="e.g. 12" autocomplete="off"
+                [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched"
+                (input)="syncSlider('annualRate')">
+              <div class="slider-row">
+                <input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value"
+                  (input)="syncFromSlider('annualRate', $event)" [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'"
+                  aria-label="Expected annual return rate slider">
+                <span class="slider-value-display">{{ f['annualRate'].value }}%</span>
+              </div>
+            </div>
+            @if (f['annualRate'].invalid && f['annualRate'].touched) {
+            <span class="error-msg">Enter a valid annual return rate (e.g. 12).</span>
+            }
+            <span class="hint">💡 Historical equity mutual fund avg: 10–14% p.a.</span>
+          </div>
+
+          <!-- Years -->
+          <div class="form-group">
+            <label for="years">Investment Period (Years)</label>
+            <div class="slider-wrapper">
+              <input id="years" name="years" type="number" formControlName="years" min="1" max="40"
+                placeholder="e.g. 10" autocomplete="off"
+                [class.invalid]="f['years'].invalid && f['years'].touched" (input)="syncSlider('years')">
+              <div class="slider-row">
+                <input type="range" min="1" max="40" step="1" [value]="f['years'].value"
+                  (input)="syncFromSlider('years', $event)" [style.--progress-value]="getSliderPct('years', 1, 40) + '%'"
+                  aria-label="Investment period slider">
+                <span class="slider-value-display">{{ f['years'].value }} yr</span>
+              </div>
+            </div>
+            @if (f['years'].invalid && f['years'].touched) {
+            <span class="error-msg">Enter a duration of at least 1 year.</span>
+            }
+          </div>
+        </form>
       </div>
     </div>
+
+    <!-- RIGHT: Result Panel -->
+    <div class="calc-result-panel">
+      @if (result) {
+      <div class="result-card" role="region" aria-label="Lumpsum Calculation Result">
+        <h2>
+          Your Lumpsum Estimate
+          <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
+            {{ copied ? '✓ Copied' : '⎘ Copy' }}
+          </button>
+        </h2>
+
+        <!-- Hero stat — Total Value prominently -->
+        <div class="result-hero-stat">
+          <div class="result-hero-label">Total Value</div>
+          <div class="result-hero-value">₹{{ result.totalValue | number:'1.0-0' }}</div>
+          <div class="result-hero-sub">
+            <span class="hero-return-badge">+{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% returns</span>
+            over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+          </div>
+        </div>
+
+        <!-- Compact stats row -->
+        <div class="result-stats-row">
+          <div class="result-stat-chip">
+            <span class="stat-chip-label">Invested</span>
+            <span class="stat-chip-value">₹{{ result.totalInvested | number:'1.0-0' }}</span>
+          </div>
+          <div class="result-stat-chip accent">
+            <span class="stat-chip-label">Est. Returns</span>
+            <span class="stat-chip-value">₹{{ result.estimatedReturns | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <!-- Large Doughnut Chart — Groww-style -->
+        <div class="result-doughnut-section">
+          <div class="doughnut-legend-top">
+            <div class="doughnut-legend-item">
+              <span class="legend-swatch invested"></span>
+              <span>Invested Amount</span>
+            </div>
+            <div class="doughnut-legend-item">
+              <span class="legend-swatch returns"></span>
+              <span>Est. Returns</span>
+            </div>
+          </div>
+          <div class="chart-container--doughnut">
+            <canvas #doughnutChart></canvas>
+          </div>
+        </div>
+
+      </div>
+      } @else {
+      <!-- Placeholder when no result -->
+      <div class="card calc-result-placeholder">
+        <div class="placeholder-icon">📊</div>
+        <p>Adjust the sliders to see your lumpsum returns instantly</p>
+      </div>
+      }
+    </div>
   </div>
+
+  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
+  @if (result) {
+  <div class="summary-strip">
+    <div class="summary-card">
+      <span class="summary-icon">💰</span>
+      <span class="summary-label">Invested</span>
+      <span class="summary-value">{{ formatCompact(result.totalInvested) }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-icon">📈</span>
+      <span class="summary-label">Est. Returns</span>
+      <span class="summary-value accent">{{ formatCompact(result.estimatedReturns) }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-icon">🏆</span>
+      <span class="summary-label">Total Value</span>
+      <span class="summary-value gold">{{ formatCompact(result.totalValue) }}</span>
+    </div>
+  </div>
+  }
+
+  <!-- ═══ INTERACTIVE GRAPH SECTION ═══ -->
+  @if (result) {
+  <div class="card graph-section">
+    <div class="graph-header">
+      <h2>Lumpsum Growth Over Time</h2>
+    </div>
+    <div class="chart-container chart-container--growth">
+      <canvas #growthChart></canvas>
+    </div>
+  </div>
+  }
+
+  <!-- ═══ SMART INSIGHTS ═══ -->
+  @if (result && smartInsights.length) {
+  <div class="card insights-section">
+    <h2>💡 Smart Insights</h2>
+    <div class="insights-grid">
+      @for (insight of smartInsights; track insight.text) {
+      <div class="insight-card">
+        <span class="insight-icon">{{ insight.icon }}</span>
+        <span class="insight-text" [innerHTML]="insight.text"></span>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- ═══ BREAKDOWN TABLE (COLLAPSIBLE) ═══ -->
+  @if (result) {
+  <div class="card">
+    <h2>Year-by-Year Lumpsum Growth</h2>
+    <div class="projection-table-wrap">
+      <table class="projection-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Amount Invested</th>
+            <th>Estimated Gains</th>
+            <th>Total Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of displayedRows; track row.year) {
+          <tr [class.highlight-row]="row.year === f['years'].value">
+            <td>{{ row.year }}</td>
+            <td>₹{{ row.invested | number:'1.0-0' }}</td>
+            <td class="gains-col">₹{{ row.gains | number:'1.0-0' }}</td>
+            <td class="value-col">₹{{ row.value | number:'1.0-0' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (projectionRows.length > 5) {
+    <button type="button" class="view-full-btn" (click)="showFullTable = !showFullTable">
+      {{ showFullTable ? '▲ Show Less' : '▼ View Full Table (' + projectionRows.length + ' years)' }}
+    </button>
+    }
+  </div>
+  }
+
+  <!-- ── SEO Rich Content ───────────────────────────────────── -->
+  <div class="card example-section">
+    <h2>What is a Lumpsum Investment?</h2>
+    <div class="seo-section">
+      <p>
+        A <strong>lumpsum investment</strong> is when you invest a large sum of money at once into a mutual fund,
+        stock, or fixed-income instrument. Unlike SIP (Systematic Investment Plan) where you invest periodically,
+        lumpsum investing puts your entire capital to work immediately — maximising the compounding period.
+      </p>
+      <h3>Lumpsum vs SIP — Which is Better?</h3>
+      <p>
+        <strong>Lumpsum</strong> is ideal when you have surplus funds and markets are undervalued — your money compounds
+        from day one. <strong>SIP</strong> is better for salaried investors who don't have a large corpus upfront. It
+        smoothens out volatility through rupee cost averaging. Many smart investors use a combination of both strategies.
+      </p>
+      <h3>How the Lumpsum Calculator Works</h3>
+      <p>
+        This calculator uses the compound interest formula: <strong>FV = P × (1 + r)<sup>t</sup></strong>, where
+        <em>P</em> is your principal, <em>r</em> is the annual return rate, and <em>t</em> is the investment period.
+        The result shows your total corpus, estimated returns, and a year-by-year projection.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── FAQ Section ──────────────────────────────────────── -->
+  @if (faqs.length) {
+  <div class="card">
+    <h2>FAQs — Lumpsum Calculator India</h2>
+    <div class="faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+      <div class="faq-item" [class.open]="openFaq === i">
+        <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
+          {{ faq.q }}
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">{{ faq.a }}</div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- ── Related Calculators ────────────────────────────────── -->
+  <div class="card card--compact">
+    <h2>Related Calculators &amp; Articles</h2>
+    <div class="related-links">
+      <a routerLink="/sip-calculator" class="related-link related-link--gold">SIP Calculator – Plan Your Mutual Fund SIP →</a>
+      <a routerLink="/fd-calculator" class="related-link related-link--emerald">FD Calculator – Calculate Fixed Deposit Returns →</a>
+      <a routerLink="/cagr-calculator" class="related-link related-link--sky">CAGR Calculator – Measure Investment Growth →</a>
+      <a routerLink="/emi-calculator" class="related-link related-link--gold">EMI Calculator – Calculate Loan EMI →</a>
+    </div>
+  </div>
+
+  <!-- ── Disclaimer ─────────────────────────────────────────── -->
+  <div class="disclaimer-section">
+    <p><strong>Disclaimer:</strong> This lumpsum calculator provides estimates based on assumed constant returns. Actual mutual fund returns vary due to market conditions. Past performance does not guarantee future results. This is for informational purposes only. Consult a SEBI-registered advisor before investing.</p>
+  </div>
+
+  <!-- ── Mobile Sticky CTA ── -->
+  <div class="mobile-sticky-cta" (click)="scrollToTop()">
+    💰 Recalculate Lumpsum
+  </div>
+
 </section>

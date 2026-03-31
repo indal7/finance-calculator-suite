@@ -7,11 +7,13 @@ export interface SipRequest  { monthlyInvestment: number; annualRate: number; ye
 export interface EmiRequest  { principal: number; annualRate: number; years: number; }
 export interface FdRequest   { principal: number; annualRate: number; years: number; compoundingFrequency: number; }
 export interface CagrRequest { beginningValue: number; endingValue: number; years: number; }
+export interface LumpsumRequest { principal: number; annualRate: number; years: number; }
 
 export interface SipResult  { totalInvested: number; estimatedReturns: number; totalValue: number; }
 export interface EmiResult  { emi: number; totalPayment: number; totalInterest: number; }
 export interface FdResult   { maturityAmount: number; totalInterest: number; principal: number; }
 export interface CagrResult { cagr: number; absoluteReturn: number; totalGain: number; }
+export interface LumpsumResult { totalInvested: number; estimatedReturns: number; totalValue: number; }
 
 /** Standardised API envelope returned by the updated Lambda handlers. */
 interface ApiResponse<T> { status: string; data: T; error?: string; requestId?: string; }
@@ -54,6 +56,13 @@ export class CalculatorService {
 
   calculateCagr(req: CagrRequest): Observable<CagrResult> {
     return this.http.post<ApiResponse<CagrResult>>(`${this.apiBase}/cagr`, req).pipe(
+      map(res => extractData(res)),
+      catchError(this.handleError)
+    );
+  }
+
+  calculateLumpsum(req: LumpsumRequest): Observable<LumpsumResult> {
+    return this.http.post<ApiResponse<LumpsumResult>>(`${this.apiBase}/lumpsum`, req).pipe(
       map(res => extractData(res)),
       catchError(this.handleError)
     );
