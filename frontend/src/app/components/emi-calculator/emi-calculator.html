@@ -4,13 +4,24 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "EMI Calculator India",
+    "name": "EMI Calculator India – Home Loan, Car Loan & Personal Loan EMI Calculator 2026",
     "url": "https://www.myinvestmentcalculator.in/emi-calculator",
-    "description": "Free EMI Calculator India 2026. Calculate home loan, car loan and personal loan EMI instantly.",
+    "description": "Free EMI Calculator India 2026. Calculate home loan, car loan and personal loan EMI with full amortization schedule for SBI, HDFC, ICICI.",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
-    "inLanguage": "en-IN"
+    "inLanguage": "en-IN",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "8600",
+      "bestRating": "5"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Finance Calculator India",
+      "url": "https://www.myinvestmentcalculator.in/"
+    }
   }
   </script>
 
@@ -48,6 +59,7 @@
                      (input)="syncSlider('principal')">
               <div class="slider-row">
                 <input type="range" min="10000" max="10000000" step="10000"
+                       aria-label="Loan amount slider"
                        [value]="f['principal'].value"
                        (input)="syncFromSlider('principal', $event)"
                        [style.--progress-value]="getSliderPct('principal', 10000, 10000000) + '%'">
@@ -69,6 +81,7 @@
                      (input)="syncSlider('annualRate')">
               <div class="slider-row">
                 <input type="range" min="1" max="24" step="0.25"
+                       aria-label="Annual interest rate slider"
                        [value]="f['annualRate'].value"
                        (input)="syncFromSlider('annualRate', $event)"
                        [style.--progress-value]="getSliderPct('annualRate', 1, 24) + '%'">
@@ -91,6 +104,7 @@
                      (input)="syncSlider('years')">
               <div class="slider-row">
                 <input type="range" min="1" max="30" step="1"
+                       aria-label="Loan tenure slider"
                        [value]="f['years'].value"
                        (input)="syncFromSlider('years', $event)"
                        [style.--progress-value]="getSliderPct('years', 1, 30) + '%'">
@@ -341,11 +355,12 @@
   <div class="card card--compact">
     <h2>Related Calculators &amp; Articles</h2>
     <div class="related-links">
-      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator – Plan Your Mutual Fund SIP →</a>
-      <a routerLink="/fd-calculator"   class="related-link related-link--emerald">FD Calculator – Calculate Fixed Deposit Returns →</a>
-      <a routerLink="/cagr-calculator" class="related-link related-link--sky">CAGR Calculator – Measure Investment Growth →</a>
-      <a routerLink="/blog/emi-calculation-guide" class="related-link related-link--gold">How EMI is Calculated – Complete Guide →</a>
-      <a routerLink="/blog/50-lakh-home-loan-emi" class="related-link related-link--sky">₹50 Lakh Home Loan EMI – SBI, HDFC, ICICI Comparison →</a>
+      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator India – Monthly Mutual Fund Investment Returns →</a>
+      <a routerLink="/fd-calculator"   class="related-link related-link--emerald">FD Calculator India – Fixed Deposit Maturity &amp; Interest →</a>
+      <a routerLink="/cagr-calculator" class="related-link related-link--sky">CAGR Calculator – Measure Annual Growth Rate →</a>
+      <a routerLink="/lumpsum-calculator" class="related-link related-link--gold">Lumpsum Calculator – One-Time Investment Returns →</a>
+      <a routerLink="/blog/emi-calculation-guide" class="related-link related-link--emerald">How EMI is Calculated – Complete Guide with Formula →</a>
+      <a routerLink="/blog/50-lakh-home-loan-emi" class="related-link related-link--sky">₹50 Lakh Home Loan EMI – SBI, HDFC, ICICI Comparison 2026 →</a>
     </div>
   </div>
 

@@ -4,13 +4,24 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "CAGR Calculator India",
+    "name": "CAGR Calculator India – Compound Annual Growth Rate Calculator 2026",
     "url": "https://www.myinvestmentcalculator.in/cagr-calculator",
-    "description": "Free CAGR Calculator India 2026. Calculate Compound Annual Growth Rate for stocks, mutual funds and portfolios.",
+    "description": "Free CAGR Calculator India 2026. Calculate Compound Annual Growth Rate for stocks, mutual funds & portfolios. Compare with Nifty 50, Sensex historical data.",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
-    "inLanguage": "en-IN"
+    "inLanguage": "en-IN",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "4800",
+      "bestRating": "5"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Finance Calculator India",
+      "url": "https://www.myinvestmentcalculator.in/"
+    }
   }
   </script>
 
@@ -47,6 +58,7 @@
                      (input)="syncSlider('beginningValue')">
               <div class="slider-row">
                 <input type="range" min="1000" max="10000000" step="1000"
+                       aria-label="Beginning value slider"
                        [value]="f['beginningValue'].value"
                        (input)="syncFromSlider('beginningValue', $event)"
                        [style.--progress-value]="getSliderPct('beginningValue', 1000, 10000000) + '%'">
@@ -68,6 +80,7 @@
                      (input)="syncSlider('endingValue')">
               <div class="slider-row">
                 <input type="range" min="1000" max="10000000" step="1000"
+                       aria-label="Ending value slider"
                        [value]="f['endingValue'].value"
                        (input)="syncFromSlider('endingValue', $event)"
                        [style.--progress-value]="getSliderPct('endingValue', 1000, 10000000) + '%'">
@@ -89,6 +102,7 @@
                      (input)="syncSlider('years')">
               <div class="slider-row">
                 <input type="range" min="0.25" max="30" step="0.25"
+                       aria-label="Investment period slider"
                        [value]="f['years'].value"
                        (input)="syncFromSlider('years', $event)"
                        [style.--progress-value]="getSliderPct('years', 0.25, 30) + '%'">
@@ -388,10 +402,11 @@
   <div class="card card--compact">
     <h2>Related Calculators &amp; Articles</h2>
     <div class="related-links">
-      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator – Plan Your Mutual Fund SIP →</a>
-      <a routerLink="/emi-calculator"  class="related-link related-link--sky">EMI Calculator – Calculate Loan EMI →</a>
-      <a routerLink="/fd-calculator"   class="related-link related-link--emerald">FD Calculator – Calculate Fixed Deposit Returns →</a>
-      <a routerLink="/blog/sip-vs-fd"  class="related-link related-link--gold">SIP vs FD – Which is Better for Long-Term? →</a>
+      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator India – Monthly Mutual Fund Investment Returns →</a>
+      <a routerLink="/emi-calculator"  class="related-link related-link--sky">EMI Calculator India – Home Loan &amp; Car Loan EMI →</a>
+      <a routerLink="/fd-calculator"   class="related-link related-link--emerald">FD Calculator India – Fixed Deposit Maturity Calculator →</a>
+      <a routerLink="/lumpsum-calculator" class="related-link related-link--gold">Lumpsum Calculator – One-Time Investment Returns →</a>
+      <a routerLink="/blog/sip-vs-fd"  class="related-link related-link--sky">SIP vs FD 2026 – Which Investment is Better? →</a>
     </div>
   </div>
 

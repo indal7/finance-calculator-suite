@@ -205,8 +205,8 @@ export class EmiCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.seo.setTitle('EMI Calculator India 2026 – Free Home Loan, Car Loan & Personal Loan EMI Calculator');
-    this.seo.setDescription('Free EMI Calculator India for home loan, car loan & personal loan. Calculate monthly EMI, total interest & amortization schedule for SBI, HDFC, ICICI loans. No login.');
+    this.seo.setTitle('EMI Calculator India 2026 – Free Home Loan, Car & Personal Loan EMI Calculator');
+    this.seo.setDescription('Free EMI calculator India 2026. Calculate monthly EMI for home loan, car loan & personal loan. Full amortization schedule for SBI, HDFC, ICICI. ₹50 lakh loan EMI = ₹43,391/month at 8.5%.');
     this.seo.updateOgTags(
       'EMI Calculator India 2026 – Free Loan EMI Calculator Online',
       'Calculate your loan EMI instantly. Full amortization schedule. Free, accurate, no login required.',

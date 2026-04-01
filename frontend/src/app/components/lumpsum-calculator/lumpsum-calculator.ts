@@ -78,8 +78,8 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
   ];
 
   constructor() {
-    this.seo.setTitle('Lumpsum Calculator India 2026 – One-Time Investment Return Calculator');
-    this.seo.setDescription('Calculate returns on one-time lump sum investments in mutual funds. Free lumpsum investment calculator for Indian investors.');
+    this.seo.setTitle('Lumpsum Calculator India 2026 – Free One-Time Investment Return Calculator');
+    this.seo.setDescription('Free lumpsum calculator India 2026. Calculate returns on one-time mutual fund investments. ₹1 lakh at 12% for 10 years = ₹3.11 lakh. Year-by-year projections & comparison with SIP.');
     this.seo.setKeywords(['lumpsum calculator', 'lump sum investment calculator India', 'one time investment returns', 'mutual fund lumpsum returns', 'lumpsum vs SIP India']);
     this.seo.updateOgTags(
       'Lumpsum Calculator India – One-Time Investment Return Calculator',

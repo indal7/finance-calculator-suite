@@ -89,6 +89,8 @@
                 }
               },
               "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": false,
               "outputHashing": "all",
               "fileReplacements": [
                 {

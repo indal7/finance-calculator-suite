@@ -195,8 +195,8 @@ export class CagrCalculator implements OnInit, OnDestroy {
   ];
 
   constructor() {
-    this.seo.setTitle('CAGR Calculator India 2026 – Free Compound Annual Growth Rate Calculator Online');
-    this.seo.setDescription('Free CAGR calculator India to calculate compound annual growth rate of stocks, mutual funds & investments. Compare Nifty 50, Sensex & mutual fund CAGR. No login.');
+    this.seo.setTitle('CAGR Calculator India 2026 – Free Compound Annual Growth Rate Calculator');
+    this.seo.setDescription('Free CAGR calculator India 2026. Calculate compound annual growth rate of stocks, mutual funds & investments. Nifty 50 CAGR = 12.2% over 20 years. Compare your returns instantly.');
     this.seo.updateOgTags(
       'CAGR Calculator India 2026 – Free Annual Growth Rate Calculator',
       'Calculate your investment CAGR instantly. Compare with Nifty 50 & Sensex. Free, accurate, no login required.',

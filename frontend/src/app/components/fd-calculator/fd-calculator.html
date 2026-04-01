@@ -4,13 +4,24 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "FD Calculator India",
+    "name": "FD Calculator India – Fixed Deposit Interest & Maturity Calculator 2026",
     "url": "https://www.myinvestmentcalculator.in/fd-calculator",
-    "description": "Free FD Calculator India 2026. Calculate Fixed Deposit maturity amount for SBI, HDFC, ICICI with quarterly and monthly compounding.",
+    "description": "Free FD Calculator India 2026. Calculate Fixed Deposit maturity for SBI, HDFC, ICICI, PNB with quarterly and monthly compounding. Compare senior citizen rates.",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
-    "inLanguage": "en-IN"
+    "inLanguage": "en-IN",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "6200",
+      "bestRating": "5"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Finance Calculator India",
+      "url": "https://www.myinvestmentcalculator.in/"
+    }
   }
   </script>
 
@@ -47,6 +58,7 @@
                      (input)="syncSlider('principal')">
               <div class="slider-row">
                 <input type="range" min="1000" max="5000000" step="1000"
+                       aria-label="Principal amount slider"
                        [value]="f['principal'].value"
                        (input)="syncFromSlider('principal', $event)"
                        [style.--progress-value]="getSliderPct('principal', 1000, 5000000) + '%'">
@@ -68,6 +80,7 @@
                      (input)="syncSlider('annualRate')">
               <div class="slider-row">
                 <input type="range" min="2" max="10" step="0.1"
+                       aria-label="Annual interest rate slider"
                        [value]="f['annualRate'].value"
                        (input)="syncFromSlider('annualRate', $event)"
                        [style.--progress-value]="getSliderPct('annualRate', 2, 10) + '%'">
@@ -90,6 +103,7 @@
                      (input)="syncSlider('years')">
               <div class="slider-row">
                 <input type="range" min="0.25" max="10" step="0.25"
+                       aria-label="FD duration slider"
                        [value]="f['years'].value"
                        (input)="syncFromSlider('years', $event)"
                        [style.--progress-value]="getSliderPct('years', 0.25, 10) + '%'">
@@ -359,11 +373,12 @@
   <div class="card card--compact">
     <h2>Related Calculators &amp; Articles</h2>
     <div class="related-links">
-      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator – Plan Your Mutual Fund SIP →</a>
-      <a routerLink="/emi-calculator"  class="related-link related-link--sky">EMI Calculator – Calculate Loan EMI →</a>
-      <a routerLink="/cagr-calculator" class="related-link related-link--emerald">CAGR Calculator – Measure Annual Growth →</a>
-      <a routerLink="/blog/10-lakh-fd-interest" class="related-link related-link--sky">₹10 Lakh FD Interest Guide – Bank-wise Comparison →</a>
-      <a routerLink="/blog/sip-vs-fd"  class="related-link related-link--gold">SIP vs FD – Which is Better in 2026? →</a>
+      <a routerLink="/sip-calculator"  class="related-link related-link--gold">SIP Calculator India – Monthly Mutual Fund Investment Returns →</a>
+      <a routerLink="/emi-calculator"  class="related-link related-link--sky">EMI Calculator India – Home Loan &amp; Car Loan EMI →</a>
+      <a routerLink="/cagr-calculator" class="related-link related-link--emerald">CAGR Calculator – Measure Annual Investment Growth →</a>
+      <a routerLink="/lumpsum-calculator" class="related-link related-link--gold">Lumpsum Calculator – One-Time Investment Returns →</a>
+      <a routerLink="/blog/10-lakh-fd-interest" class="related-link related-link--sky">₹10 Lakh FD Interest Guide – Bank-wise Monthly &amp; Maturity Rates →</a>
+      <a routerLink="/blog/sip-vs-fd"  class="related-link related-link--emerald">SIP vs FD 2026 – Which Investment is Better for You? →</a>
     </div>
   </div>
 

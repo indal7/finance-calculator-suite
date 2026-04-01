@@ -199,8 +199,8 @@ export class FdCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.seo.setTitle('FD Calculator India 2026 – SBI, HDFC, ICICI Fixed Deposit Interest & Maturity Calculator');
-    this.seo.setDescription('Free FD calculator India to calculate fixed deposit maturity amount & interest for SBI, HDFC, ICICI, PNB & post office. Compare FD rates for regular & senior citizens 2026. No login.');
+    this.seo.setTitle('FD Calculator India 2026 – SBI, HDFC, ICICI Fixed Deposit Return Calculator');
+    this.seo.setDescription('Free FD calculator India 2026. Calculate fixed deposit maturity amount & interest for SBI, HDFC, ICICI, PNB. ₹10 lakh FD earns ₹5,833/month at 7%. Senior citizen rates included.');
     this.seo.updateOgTags(
       'FD Calculator India 2026 – Free Fixed Deposit Calculator Online',
       'Calculate your FD maturity amount instantly. Compare SBI, HDFC, ICICI rates. Free, accurate, no login required.',

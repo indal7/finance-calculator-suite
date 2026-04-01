@@ -167,8 +167,8 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   }
 
   constructor() {
-    this.seo.setTitle('SIP Calculator India 2026 – Free Online SIP Return Calculator for Mutual Funds');
-    this.seo.setDescription('Free SIP calculator India 2026. Calculate returns on ₹1000, ₹5000 or any monthly SIP. See how compounding grows your wealth over 5, 10, 20 years. Step-up SIP, inflation adjustment & ₹1 crore planning.');
+    this.seo.setTitle('SIP Calculator India 2026 – Free Mutual Fund SIP Return Calculator Online');
+    this.seo.setDescription('Free SIP calculator India 2026. Calculate SIP returns for ₹500, ₹1000, ₹5000/month. See how ₹5000 SIP grows to ₹11.6L in 10 years. Step-up SIP, year-by-year projections & ₹1 crore planning.');
     this.seo.updateOgTags(
       'SIP Calculator India 2026 – Free Online SIP Return Calculator',
       'Calculate your SIP returns instantly. Free, accurate, no login required.',
@@ -188,10 +188,11 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
     this.seo.setKeywords([
-      'sip calculator india', 'sip return calculator', 'mutual fund sip calculator',
-      'sip calculator online', 'sip investment calculator',
-      '₹5000 sip returns', '₹1000 sip returns', 'step up sip calculator',
-      'sip for 1 crore', 'monthly sip calculator', 'sbi sip calculator'
+      'sip calculator', 'sip calculator india', 'sip return calculator',
+      'mutual fund sip calculator', 'sip calculator online', 'monthly sip calculator india',
+      'sip investment calculator', '₹5000 sip returns', '₹1000 sip returns',
+      'step up sip calculator india', 'sip for 1 crore', 'sip calculator with inflation',
+      'sbi sip calculator', '5000 sip per month returns', '1000 sip per month returns'
     ]);
 
     // Reactive quick estimate for hero section (updates on every slider change)
