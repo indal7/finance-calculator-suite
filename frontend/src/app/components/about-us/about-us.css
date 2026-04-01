@@ -1,4 +1,4 @@
-/* ── About Page (Dark Navy Theme) ─────────────────────────── */
+/* ── About Page (Light Theme) ─────────────────────────────── */
 .about-page {
 	max-width: 1060px;
 	margin: 0 auto;
@@ -6,7 +6,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 1.75rem;
-	color: var(--text-primary, #F0F4FF);
+	color: var(--dark, #1a1a2e);
 }
 
 .about-breadcrumb {
@@ -14,11 +14,11 @@
 	flex-wrap: wrap;
 	gap: 0.4rem;
 	font-size: 0.82rem;
-	color: var(--text-muted, #7B8DB5);
+	color: var(--muted, #6c757d);
 }
 
 .about-breadcrumb a {
-	color: var(--gold, #F5A623);
+	color: var(--primary, #00B386);
 	text-decoration: none;
 	transition: opacity 0.2s;
 }
@@ -28,38 +28,18 @@
 }
 
 .about-hero {
-	background: linear-gradient(135deg, var(--navy-light, #1A2A6C) 0%, var(--navy-mid, #111D4A) 100%);
-	border: 1px solid var(--border, rgba(255,255,255,0.08));
-	border-radius: var(--radius-xl, 28px);
-	box-shadow: var(--shadow-card);
+	background: #fff;
+	border: 1.5px solid var(--border, #e9ecef);
+	border-radius: 16px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 	padding: 2.5rem 2.5rem 2rem;
 	text-align: center;
-	position: relative;
-	overflow: hidden;
-}
-
-.about-hero::before {
-	content: '';
-	position: absolute;
-	top: -60px; right: -60px;
-	width: 220px; height: 220px;
-	border-radius: 50%;
-	background: radial-gradient(circle, rgba(245,166,35,0.18) 0%, transparent 70%);
-	pointer-events: none;
-}
-
-.about-hero::after {
-	content: '';
-	position: absolute;
-	bottom: 0; left: 0; right: 0;
-	height: 1px;
-	background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent);
 }
 
 .about-hero h1 {
 	margin: 0 0 0.5rem;
 	font-family: var(--font-display, 'Syne', sans-serif);
-	color: var(--text-primary, #F0F4FF);
+	color: var(--dark, #1a1a2e);
 	font-size: clamp(1.8rem, 4vw, 2.5rem);
 	font-weight: 800;
 	letter-spacing: -0.02em;
@@ -68,7 +48,7 @@
 
 .about-hero p {
 	margin: 0;
-	color: var(--text-secondary, #A8B4D4);
+	color: var(--muted, #6c757d);
 	line-height: 1.7;
 }
 
@@ -83,15 +63,15 @@
 .about-meta p {
 	margin: 0;
 	font-size: 0.82rem;
-	color: var(--text-muted, #7B8DB5);
+	color: var(--muted, #6c757d);
 }
 
 .about-card {
-	background: var(--card-bg, #111D4A);
-	border: 1px solid var(--border, rgba(255,255,255,0.08));
-	border-radius: var(--radius-md, 14px);
+	background: #fff;
+	border: 1.5px solid var(--border, #e9ecef);
+	border-radius: 14px;
 	padding: 1.5rem 1.5rem;
-	box-shadow: var(--shadow-card);
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
 }
 
 .about-card h2 {
@@ -99,18 +79,19 @@
 	font-family: var(--font-display, 'Syne', sans-serif);
 	font-size: 1.2rem;
 	font-weight: 700;
-	color: var(--text-primary, #F0F4FF);
+	color: var(--dark, #1a1a2e);
 }
 
 .about-card h3 {
 	margin: 1rem 0 0.4rem;
 	font-size: 0.98rem;
-	color: var(--gold-light, #FFD280);
+	color: var(--primary, #00B386);
+	font-weight: 600;
 }
 
 .about-card p {
 	margin: 0 0 0.7rem;
-	color: var(--text-secondary, #A8B4D4);
+	color: var(--muted, #6c757d);
 	line-height: 1.75;
 }
 
@@ -120,14 +101,14 @@
 }
 
 .about-card li {
-	color: var(--text-secondary, #A8B4D4);
+	color: var(--muted, #6c757d);
 	margin-bottom: 0.4rem;
 	line-height: 1.65;
 }
 
 .about-card a,
 .about-links a {
-	color: var(--gold, #F5A623);
+	color: var(--primary, #00B386);
 	text-decoration: none;
 	font-weight: 600;
 	transition: opacity 0.2s;
@@ -139,8 +120,8 @@
 }
 
 .about-disclaimer {
-	background: rgba(11,20,55,0.6);
-	border-color: rgba(245,166,35,0.12);
+	background: var(--bg-body, #f8f9fa);
+	border-color: rgba(0, 179, 134, 0.15);
 }
 
 .about-links {
@@ -150,17 +131,17 @@
 }
 
 .about-links a {
-	border: 1px solid var(--border, rgba(255,255,255,0.08));
+	border: 1.5px solid var(--border, #e9ecef);
 	border-radius: 999px;
 	padding: 0.4rem 0.88rem;
 	font-size: 0.86rem;
-	background: var(--card-bg, #111D4A);
+	background: #fff;
 	transition: border-color 0.2s, background 0.2s;
 }
 
 .about-links a:hover {
-	border-color: rgba(245,166,35,0.3);
-	background: var(--navy-light, #1A2A6C);
+	border-color: var(--primary, #00B386);
+	background: rgba(0, 179, 134, 0.04);
 	opacity: 1;
 }
 

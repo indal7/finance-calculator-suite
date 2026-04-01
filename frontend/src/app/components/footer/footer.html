@@ -5,17 +5,11 @@
 
         <!-- Brand -->
         <div class="footer-brand">
-          <a routerLink="/" class="footer-logo" aria-label="Finance Calculator India – Home">
-            <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-              <rect x="4" y="18" width="5" height="7" rx="1" fill="#F5A623" opacity="0.4"/>
-              <rect x="12" y="12" width="5" height="13" rx="1" fill="#F5A623" opacity="0.7"/>
-              <rect x="20" y="5" width="5" height="20" rx="1" fill="#F5A623"/>
-            </svg>
-            <span>Finance Calculator India</span>
+          <a routerLink="/" class="footer-logo" aria-label="FinanceCalc India – Home">
+            <span class="footer-logo-text"><em>FinanceCalc</em> India</span>
           </a>
           <p class="footer-desc">
-            Free, accurate and instant financial calculators for Indian investors and loan seekers.
-            Plan your SIP investments, loan EMIs, FD returns and portfolio CAGR — all in one place.
+            India's most trusted free financial planning tool. Helping Indians make smarter investment decisions since 2019.
           </p>
         </div>
 
@@ -23,54 +17,53 @@
         <div class="footer-section">
           <h3>Calculators</h3>
           <nav aria-label="Calculator links">
-            <a routerLink="/sip-calculator">SIP Calculator</a>
+            <a routerLink="/">SIP Calculator</a>
             <a routerLink="/emi-calculator">EMI Calculator</a>
             <a routerLink="/fd-calculator">FD Calculator</a>
             <a routerLink="/cagr-calculator">CAGR Calculator</a>
-            <a routerLink="/ppf-calculator">PPF Calculator</a>
             <a routerLink="/lumpsum-calculator">Lumpsum Calculator</a>
-            <a routerLink="/income-tax-calculator">Income Tax Calculator</a>
           </nav>
         </div>
 
-        <!-- Resources -->
+        <!-- Learn -->
         <div class="footer-section">
-          <h3>Resources</h3>
-          <nav aria-label="Resource links">
-            <a routerLink="/blog">Finance Blog</a>
+          <h3>Learn</h3>
+          <nav aria-label="Learn links">
+            <a routerLink="/blog/sip-5000-per-month">What is SIP?</a>
+            <a routerLink="/blog/sip-vs-fd">SIP vs Lumpsum</a>
+            <a routerLink="/blog">Best Mutual Funds</a>
+            <a routerLink="/blog/emi-calculation-guide">How EMI works</a>
+          </nav>
+        </div>
+
+        <!-- Company -->
+        <div class="footer-section">
+          <h3>Company</h3>
+          <nav aria-label="Company links">
             <a routerLink="/about-us">About Us</a>
-            <a routerLink="/contact-us">Contact Us</a>
-          </nav>
-        </div>
-
-        <!-- Legal + Contact -->
-        <div class="footer-section">
-          <h3>Legal</h3>
-          <nav aria-label="Legal links">
+            <a routerLink="/contact-us">Contact</a>
             <a routerLink="/privacy-policy">Privacy Policy</a>
-            <a routerLink="/terms-and-conditions">Terms &amp; Conditions</a>
+            <a routerLink="/terms-and-conditions">Disclaimer</a>
           </nav>
-          <h3 class="mt-contact">Contact</h3>
-          <div class="footer-contact">
-            <a href="mailto:indalsaroj404@gmail.com" aria-label="Send email">indalsaroj404&#64;gmail.com</a>
-            <a href="tel:+919266425407" aria-label="Call us">+91-9266425407</a>
-          </div>
         </div>
 
+      </div>
+
+      <!-- Disclaimer Card -->
+      <div class="footer-disclaimer-card">
+        <p>
+          <span class="footer-disclaimer-icon">⚠</span>
+          <strong>Disclaimer:</strong> This website provides calculators for educational and informational purposes only. It does not constitute financial or investment advice. Please consult a SEBI-registered financial advisor before making investment decisions. Mutual fund investments are subject to market risks.
+        </p>
       </div>
     </div>
   </div>
 
   <!-- Bottom Bar -->
   <div class="footer-bottom">
-    <div class="footer-container">
-      <p class="copyright">&copy; {{ currentYear }} Finance Calculator India. All rights reserved.</p>
-      <p class="disclaimer">
-        <strong>Disclaimer:</strong> The calculations provided are for illustrative purposes only and
-        should not be considered as financial advice. Actual returns may vary based on market conditions.
-        Consult a SEBI-registered financial advisor before making investment decisions.
-        Mutual fund investments are subject to market risks. Read all scheme-related documents carefully.
-      </p>
+    <div class="footer-container footer-bottom-inner">
+      <p class="copyright">&copy; {{ currentYear }} FinanceCalc India. All rights reserved.</p>
+      <p class="footer-tagline">Made with <span class="footer-heart">♥</span> for Indian investors</p>
     </div>
   </div>
 </footer>

@@ -25,9 +25,7 @@ export class CagrCalculator implements OnInit, OnDestroy {
   private calcSub?: Subscription;
 
   @ViewChild('cagrGrowthChart') cagrGrowthChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('cagrDoughnutChart') cagrDoughnutChartRef!: ElementRef<HTMLCanvasElement>;
   private chartInstance: any = null;
-  private doughnutInstance: any = null;
   cagrProjectionCache: Array<{year: number; value: number; gain: number}> = [];
 
   form = this.fb.group({
@@ -110,6 +108,13 @@ export class CagrCalculator implements OnInit, OnDestroy {
   scrollToTop(): void {
     if (this.isBrowser) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  scrollToResult(): void {
+    if (this.isBrowser) {
+      const el = document.querySelector('.calc-result-panel');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -242,16 +247,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
     return Math.round(((val - min) / (max - min)) * 100);
   }
 
-  getDonutOffset(beginning: number | null, ending: number | null): number {
-    const safeBeginning = beginning ?? 0;
-    const safeEnding = ending ?? 0;
-
-    if (safeEnding <= 0) return 0;
-
-    const pct = Math.min(safeBeginning / safeEnding, 1);
-    return 220 * pct;
-  }
-
   toggleFaq(index: number): void {
     this.openFaq = this.openFaq === index ? null : index;
   }
@@ -272,7 +267,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
     // Cache projection rows and render chart
     this.cagrProjectionCache = this.getCagrProjectionRows(beginningValue, endingValue, years);
     setTimeout(() => this.renderGrowthChart(), 50);
-    setTimeout(() => this.renderCagrDoughnutChart(beginningValue, totalGain), 50);
 
     // Trigger change detection for OnPush strategy
     this.cdr.markForCheck();
@@ -291,7 +285,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
     this.seo.removeJsonLd('cagr-breadcrumb');
     this.seo.removeFAQSchema();
     this.chartInstance?.destroy();
-    this.doughnutInstance?.destroy();
   }
 
   /** Render or update the CAGR growth line chart */
@@ -318,13 +311,13 @@ export class CagrCalculator implements OnInit, OnDestroy {
       if (!ctx) return;
 
       const investedGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
-      investedGrad.addColorStop(0, 'rgba(168,180,212,0.18)');
-      investedGrad.addColorStop(1, 'rgba(168,180,212,0.01)');
+      investedGrad.addColorStop(0, 'rgba(173,181,189,0.18)');
+      investedGrad.addColorStop(1, 'rgba(173,181,189,0.01)');
 
       const valueGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
-      valueGrad.addColorStop(0, 'rgba(0,200,150,0.28)');
-      valueGrad.addColorStop(0.7, 'rgba(0,200,150,0.06)');
-      valueGrad.addColorStop(1, 'rgba(0,200,150,0.0)');
+      valueGrad.addColorStop(0, 'rgba(0,179,134,0.25)');
+      valueGrad.addColorStop(0.7, 'rgba(0,179,134,0.06)');
+      valueGrad.addColorStop(1, 'rgba(0,179,134,0.0)');
 
       this.chartInstance = new Chart(ctx, {
         type: 'line',
@@ -334,27 +327,27 @@ export class CagrCalculator implements OnInit, OnDestroy {
             {
               label: 'Initial Investment',
               data: baselineData,
-              borderColor: 'rgba(168,180,212,0.8)',
+              borderColor: 'rgba(173,181,189,0.8)',
               backgroundColor: investedGrad,
               borderWidth: 2,
               fill: true,
               tension: 0,
               pointRadius: 3,
               pointHoverRadius: 6,
-              pointBackgroundColor: '#A8B4D4',
+              pointBackgroundColor: '#adb5bd',
               borderDash: [6, 3]
             },
             {
               label: 'Investment Value',
               data: valueData,
-              borderColor: '#00C896',
+              borderColor: '#00B386',
               backgroundColor: valueGrad,
               borderWidth: 2.5,
               fill: true,
               tension: 0.3,
               pointRadius: 3,
               pointHoverRadius: 6,
-              pointBackgroundColor: '#00C896'
+              pointBackgroundColor: '#00B386'
             }
           ]
         },
@@ -364,13 +357,13 @@ export class CagrCalculator implements OnInit, OnDestroy {
           interaction: { intersect: false, mode: 'index' },
           plugins: {
             legend: {
-              labels: { color: '#A8B4D4', font: { size: 12 }, usePointStyle: true, pointStyle: 'circle' }
+              labels: { color: '#6c757d', font: { size: 12 }, usePointStyle: true, pointStyle: 'circle' }
             },
             tooltip: {
-              backgroundColor: '#111D4A',
-              titleColor: '#F0F4FF',
-              bodyColor: '#A8B4D4',
-              borderColor: 'rgba(0,200,150,0.3)',
+              backgroundColor: '#1a1a2e',
+              titleColor: '#ffffff',
+              bodyColor: '#ced4da',
+              borderColor: 'rgba(0,179,134,0.3)',
               borderWidth: 1,
               callbacks: {
                 label: (ctx: any) => `${ctx.dataset.label}: \u20b9${ctx.parsed.y.toLocaleString('en-IN')}`
@@ -379,71 +372,16 @@ export class CagrCalculator implements OnInit, OnDestroy {
           },
           scales: {
             x: {
-              ticks: { color: '#7B8DB5', font: { size: 11 } },
-              grid: { color: 'rgba(255,255,255,0.04)' }
+              ticks: { color: '#6c757d', font: { size: 11 } },
+              grid: { color: 'rgba(0,0,0,0.05)' }
             },
             y: {
               ticks: {
-                color: '#7B8DB5',
+                color: '#6c757d',
                 font: { size: 11 },
-                callback: (val: any) => '\u20b9' + (val >= 10000000 ? (val / 10000000).toFixed(1) + 'Cr' : val >= 100000 ? (val / 100000).toFixed(1) + 'L' : (val / 1000).toFixed(0) + 'K')
+                callback: (val: any) => '₹' + (val >= 10000000 ? (val / 10000000).toFixed(1) + 'Cr' : val >= 100000 ? (val / 100000).toFixed(1) + 'L' : (val / 1000).toFixed(0) + 'K')
               },
-              grid: { color: 'rgba(255,255,255,0.04)' }
-            }
-          }
-        }
-      });
-    });
-  }
-
-  /** Render or update the CAGR doughnut chart (initial vs gain) */
-  renderCagrDoughnutChart(beginningValue: number, totalGain: number): void {
-    if (!this.isBrowser || !this.cagrDoughnutChartRef?.nativeElement) return;
-
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
-
-      if (this.doughnutInstance) {
-        this.doughnutInstance.data.datasets[0].data = [beginningValue, totalGain];
-        this.doughnutInstance.update('none');
-        return;
-      }
-
-      const ctx = this.cagrDoughnutChartRef.nativeElement.getContext('2d');
-      if (!ctx) return;
-
-      this.doughnutInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Initial Investment', 'Total Gain'],
-          datasets: [{
-            data: [beginningValue, totalGain],
-            backgroundColor: ['#4B5EAA', '#00C896'],
-            borderColor: ['rgba(75,94,170,0.4)', 'rgba(0,200,150,0.4)'],
-            borderWidth: 2,
-            hoverOffset: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '65%',
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#111D4A',
-              titleColor: '#F0F4FF',
-              bodyColor: '#A8B4D4',
-              borderColor: 'rgba(0,200,150,0.3)',
-              borderWidth: 1,
-              callbacks: {
-                label: (ctx: any) => {
-                  const val = ctx.parsed;
-                  const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                  const pct = ((val / total) * 100).toFixed(1);
-                  return `${ctx.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
-                }
-              }
+              grid: { color: 'rgba(0,0,0,0.05)' }
             }
           }
         }

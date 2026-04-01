@@ -22,7 +22,8 @@
   </nav>
 
   <div class="page-hero">
-    <h1>FD Calculator India – Calculate Fixed Deposit Returns &amp; Interest</h1>
+    <span class="section-eyebrow">FD Calculator</span>
+    <h1>FD Calculator India – Calculate Fixed Deposit Returns &amp; Interest (2026)</h1>
     <p>
       Enter your deposit amount, interest rate &amp; tenure to instantly see your maturity amount and interest earned.
     </p>
@@ -110,91 +111,54 @@
             </select>
             <span class="hint">💡 Most Indian banks use quarterly compounding.</span>
           </div>
+
+          <!-- Calculate Button -->
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">
+            Calculate My FD →
+          </button>
         </form>
       </div>
     </div>
 
     <!-- RIGHT: Result Panel -->
-    <div class="calc-result-panel">
+    <div class="calc-result-panel" id="result-panel">
       @if (result) {
-        <div class="result-card" role="region" aria-label="FD Calculation Result">
-          <h2>
-            FD Maturity Estimate
-            <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
-              {{ copied ? '✓ Copied' : '⎘ Copy' }}
-            </button>
-          </h2>
+      <!-- Total Maturity Amount — Dark Card -->
+      <div class="total-value-card">
+        <span class="total-value-label">MATURITY AMOUNT</span>
+        <div class="total-value-amount">₹{{ result.maturityAmount | number:'1.0-0' }}</div>
+        <span class="total-value-sub">
+          +{{ (result.totalInterest / result.principal * 100) | number:'1.1-1' }}% earned in {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+        </span>
+      </div>
 
-          <!-- Hero stat — Maturity Amount prominently -->
-          <div class="result-hero-stat">
-            <div class="result-hero-label">Maturity Amount</div>
-            <div class="result-hero-value">₹{{ result.maturityAmount | number:'1.0-0' }}</div>
-            <div class="result-hero-sub">
-              <span class="hero-return-badge">+{{ (result.totalInterest / result.principal * 100) | number:'1.1-1' }}% earned</span>
-              in {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
-            </div>
-          </div>
-
-          <!-- Compact stats row -->
-          <div class="result-stats-row">
-            <div class="result-stat-chip">
-              <span class="stat-chip-label">Principal</span>
-              <span class="stat-chip-value">₹{{ result.principal | number:'1.0-0' }}</span>
-            </div>
-            <div class="result-stat-chip accent">
-              <span class="stat-chip-label">Interest Earned</span>
-              <span class="stat-chip-value">₹{{ result.totalInterest | number:'1.0-0' }}</span>
-            </div>
-          </div>
-
-          <!-- Large Doughnut Chart -->
-          <div class="result-doughnut-section">
-            <div class="doughnut-legend-top">
-              <div class="doughnut-legend-item">
-                <span class="legend-swatch invested"></span>
-                <span>Principal</span>
-              </div>
-              <div class="doughnut-legend-item">
-                <span class="legend-swatch returns"></span>
-                <span>Interest Earned</span>
-              </div>
-            </div>
-            <div class="chart-container--doughnut">
-              <canvas #fdDoughnutChart></canvas>
-            </div>
-          </div>
-
+      <!-- Principal + Interest Earned -->
+      <div class="result-pair">
+        <div class="result-pair-card">
+          <span class="result-pair-label">Principal</span>
+          <span class="result-pair-value">₹{{ result.principal | number:'1.0-0' }}</span>
+          <span class="result-pair-tag">Deposit amount</span>
         </div>
+        <div class="result-pair-card">
+          <span class="result-pair-label">Interest Earned</span>
+          <span class="result-pair-value result-pair-value--accent">₹{{ result.totalInterest | number:'1.0-0' }}</span>
+          <span class="result-pair-tag result-pair-tag--accent">+{{ (result.totalInterest / result.principal * 100) | number:'1.0-0' }}% growth</span>
+        </div>
+      </div>
+
+      <!-- Copy Button -->
+      <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied" style="align-self: flex-end;">
+        {{ copied ? '✓ Copied' : '⎘ Copy Result' }}
+      </button>
       } @else {
         <!-- Placeholder when no result -->
         <div class="card calc-result-placeholder">
           <div class="placeholder-icon">🏦</div>
-          <p>Adjust the sliders to see your maturity amount instantly</p>
+          <p>Adjust the sliders and click <strong>Calculate My FD</strong> to see your maturity amount</p>
         </div>
       }
     </div>
   </div>
-
-  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
-  @if (result) {
-  <div class="summary-strip">
-    <div class="summary-card">
-      <span class="summary-icon">💰</span>
-      <span class="summary-label">Principal</span>
-      <span class="summary-value">{{ formatCompact(result.principal) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">📈</span>
-      <span class="summary-label">Interest Earned</span>
-      <span class="summary-value accent">{{ formatCompact(result.totalInterest) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">🏆</span>
-      <span class="summary-label">Maturity Amount</span>
-      <span class="summary-value gold">{{ formatCompact(result.maturityAmount) }}</span>
-    </div>
-  </div>
-  }
 
   <!-- ═══ INTERACTIVE GRAPH SECTION ═══ -->
   @if (result && (f['years'].value ?? 0) >= 1) {
@@ -409,8 +373,8 @@
   </div>
 
   <!-- ── Mobile Sticky CTA ── -->
-  <div class="mobile-sticky-cta" (click)="scrollToTop()">
-    🏦 Recalculate FD
+  <div class="mobile-sticky-cta">
+    <button type="button" (click)="scrollToTop()">🏦 Calculate FD</button>
   </div>
 
 </section>

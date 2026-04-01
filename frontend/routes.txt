@@ -1,5 +1,4 @@
 /
-/sip-calculator
 /emi-calculator
 /fd-calculator
 /cagr-calculator

@@ -3,15 +3,14 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'SIP Calculator India 2026 – Free EMI, FD, CAGR & Mutual Fund Calculator Online',
-    loadComponent: () =>
-      import('./components/home/home').then(m => m.HomeComponent)
-  },
-  {
-    path: 'sip-calculator',
     title: 'SIP Calculator India 2026 – Free Online SIP Return Calculator for Mutual Funds',
     loadComponent: () =>
       import('./components/sip-calculator/sip-calculator').then(m => m.SipCalculator)
+  },
+  {
+    path: 'sip-calculator',
+    redirectTo: '',
+    pathMatch: 'full'
   },
   {
     path: 'emi-calculator',

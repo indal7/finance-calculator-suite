@@ -22,7 +22,8 @@
   </nav>
 
   <div class="page-hero">
-    <h1>CAGR Calculator India – Calculate Annual Growth Rate of Investment</h1>
+    <span class="section-eyebrow">CAGR Calculator</span>
+    <h1>CAGR Calculator India – Calculate Annual Growth Rate of Investment (2026)</h1>
     <p>
       Enter your beginning value, ending value &amp; time period to instantly calculate your compound annual growth rate.
     </p>
@@ -98,91 +99,63 @@
               <span class="error-msg">Enter a duration of at least 1 month.</span>
             }
           </div>
+
+          <!-- Calculate Button -->
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">
+            Calculate My CAGR →
+          </button>
         </form>
       </div>
     </div>
 
     <!-- RIGHT: Result Panel -->
-    <div class="calc-result-panel">
+    <div class="calc-result-panel" id="result-panel">
       @if (result) {
-        <div class="result-card" role="region" aria-label="CAGR Calculation Result">
-          <h2>
-            Investment Performance
-            <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
-              {{ copied ? '✓ Copied' : '⎘ Copy' }}
-            </button>
-          </h2>
+      <!-- CAGR — Dark Card -->
+      <div class="total-value-card">
+        <span class="total-value-label">CAGR</span>
+        <div class="total-value-amount">{{ result.cagr | number:'1.2-2' }}%</div>
+        <span class="total-value-sub">
+          {{ result.absoluteReturn | number:'1.1-1' }}% absolute return over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+        </span>
+      </div>
 
-          <!-- Hero stat — CAGR prominently -->
-          <div class="result-hero-stat">
-            <div class="result-hero-label">CAGR</div>
-            <div class="result-hero-value">{{ result.cagr | number:'1.2-2' }}%</div>
-            <div class="result-hero-sub">
-              <span class="hero-return-badge">{{ result.absoluteReturn | number:'1.1-1' }}% absolute return</span>
-              over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
-            </div>
-          </div>
-
-          <!-- Compact stats row -->
-          <div class="result-stats-row">
-            <div class="result-stat-chip">
-              <span class="stat-chip-label">Initial Value</span>
-              <span class="stat-chip-value">₹{{ f['beginningValue'].value | number:'1.0-0' }}</span>
-            </div>
-            <div class="result-stat-chip accent">
-              <span class="stat-chip-label">Total Gain</span>
-              <span class="stat-chip-value">₹{{ result.totalGain | number:'1.0-0' }}</span>
-            </div>
-          </div>
-
-          <!-- Large Doughnut Chart -->
-          <div class="result-doughnut-section">
-            <div class="doughnut-legend-top">
-              <div class="doughnut-legend-item">
-                <span class="legend-swatch invested"></span>
-                <span>Initial Value</span>
-              </div>
-              <div class="doughnut-legend-item">
-                <span class="legend-swatch returns"></span>
-                <span>Total Gain</span>
-              </div>
-            </div>
-            <div class="chart-container--doughnut">
-              <canvas #cagrDoughnutChart></canvas>
-            </div>
-          </div>
-
+      <!-- Initial Value + Total Gain -->
+      <div class="result-pair">
+        <div class="result-pair-card">
+          <span class="result-pair-label">Initial Value</span>
+          <span class="result-pair-value">₹{{ f['beginningValue'].value | number:'1.0-0' }}</span>
+          <span class="result-pair-tag">Starting investment</span>
         </div>
+        <div class="result-pair-card">
+          <span class="result-pair-label">Total Gain</span>
+          <span class="result-pair-value result-pair-value--accent">₹{{ result.totalGain | number:'1.0-0' }}</span>
+          <span class="result-pair-tag result-pair-tag--accent">{{ (result.totalGain / f['beginningValue'].value! * 100) | number:'1.0-0' }}% growth</span>
+        </div>
+      </div>
+
+      <!-- Final Value Card -->
+      <div class="result-pair">
+        <div class="result-pair-card" style="grid-column: 1 / -1; text-align: center;">
+          <span class="result-pair-label">Final Value</span>
+          <span class="result-pair-value">₹{{ f['endingValue'].value | number:'1.0-0' }}</span>
+          <span class="result-pair-tag">{{ (f['endingValue'].value! / f['beginningValue'].value!) | number:'1.1-1' }}x multiplier</span>
+        </div>
+      </div>
+
+      <!-- Copy Button -->
+      <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied" style="align-self: flex-end;">
+        {{ copied ? '✓ Copied' : '⎘ Copy Result' }}
+      </button>
       } @else {
         <!-- Placeholder when no result -->
         <div class="card calc-result-placeholder">
           <div class="placeholder-icon">📈</div>
-          <p>Adjust the sliders to see your investment CAGR instantly</p>
+          <p>Adjust the sliders and click <strong>Calculate My CAGR</strong> to see your investment performance</p>
         </div>
       }
     </div>
   </div>
-
-  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
-  @if (result) {
-  <div class="summary-strip">
-    <div class="summary-card">
-      <span class="summary-icon">💰</span>
-      <span class="summary-label">Initial Value</span>
-      <span class="summary-value">{{ formatCompact(f['beginningValue'].value!) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">📈</span>
-      <span class="summary-label">Total Gain</span>
-      <span class="summary-value accent">{{ formatCompact(result.totalGain) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">🏆</span>
-      <span class="summary-label">Final Value</span>
-      <span class="summary-value gold">{{ formatCompact(f['endingValue'].value!) }}</span>
-    </div>
-  </div>
-  }
 
   <!-- ═══ INTERACTIVE GRAPH SECTION ═══ -->
   @if (result) {
@@ -428,8 +401,8 @@
   </div>
 
   <!-- ── Mobile Sticky CTA ── -->
-  <div class="mobile-sticky-cta" (click)="scrollToTop()">
-    📊 Recalculate CAGR
+  <div class="mobile-sticky-cta">
+    <button type="button" (click)="scrollToTop()">📊 Calculate CAGR</button>
   </div>
 
 </section>

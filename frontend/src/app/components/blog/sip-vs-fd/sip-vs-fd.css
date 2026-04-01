@@ -1,4 +1,4 @@
-/* ── SIP vs FD Blog (Dark Navy Theme) ────────────────────── */
+/* ── SIP vs FD Blog (Light Theme) ─────────────────────────── */
 .sipfd-article {
   padding: 2rem 0 4rem;
   animation: pageIn 0.5s ease both;
@@ -13,14 +13,14 @@
 
 .sipfd-breadcrumb {
   font-size: 0.82rem;
-  color: var(--text-muted, #7B8DB5);
+  color: #999;
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
 }
 
 .sipfd-breadcrumb a {
-  color: var(--gold, #F5A623);
+  color: var(--primary, #00B386);
   text-decoration: none;
   transition: opacity 0.2s;
 }
@@ -31,10 +31,10 @@
 
 .sipfd-header {
   padding: 2.5rem 2.5rem 2rem;
-  background: linear-gradient(135deg, var(--navy-light, #1A2A6C) 0%, var(--navy-mid, #111D4A) 100%);
-  border: 1px solid var(--border, rgba(255,255,255,0.08));
-  border-radius: var(--radius-xl, 28px);
-  box-shadow: var(--shadow-card);
+  background: #fff;
+  border: 1px solid var(--border, #e9ecef);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   position: relative;
   overflow: hidden;
 }
@@ -43,8 +43,8 @@
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary, #00B386), transparent);
 }
 
 .sipfd-kicker {
@@ -52,7 +52,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.72rem;
-  color: var(--gold, #F5A623);
+  color: var(--primary, #00B386);
   font-weight: 700;
 }
 
@@ -62,13 +62,13 @@
   font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 800;
   line-height: 1.2;
-  color: var(--text-primary, #F0F4FF);
+  color: var(--dark, #1a1a2e);
   letter-spacing: -0.02em;
 }
 
 .sipfd-lead {
   margin: 0;
-  color: var(--text-secondary, #A8B4D4);
+  color: var(--muted, #6c757d);
   line-height: 1.75;
 }
 
@@ -82,17 +82,17 @@
 .sipfd-meta p {
   margin: 0;
   font-size: 0.82rem;
-  color: var(--text-muted, #7B8DB5);
+  color: #999;
 }
 
 .sipfd-section,
 .sipfd-faq,
 .sipfd-disclaimer {
-  background: var(--card-bg, #111D4A);
-  border: 1px solid var(--border, rgba(255,255,255,0.08));
-  border-radius: var(--radius-md, 14px);
+  background: #fff;
+  border: 1px solid var(--border, #e9ecef);
+  border-radius: 12px;
   padding: 1.5rem 1.5rem;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .sipfd-section h2,
@@ -102,19 +102,19 @@
   font-family: var(--font-display, 'Syne', sans-serif);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text-primary, #F0F4FF);
+  color: var(--dark, #1a1a2e);
 }
 
 .sipfd-section h3 {
   margin: 1rem 0 0.45rem;
   font-size: 1rem;
-  color: var(--gold-light, #FFD280);
+  color: var(--primary, #00B386);
 }
 
 .sipfd-section p,
 .sipfd-disclaimer p {
   margin: 0 0 0.7rem;
-  color: var(--text-secondary, #A8B4D4);
+  color: var(--muted, #6c757d);
   line-height: 1.75;
 }
 
@@ -124,14 +124,14 @@
 }
 
 .sipfd-section li {
-  color: var(--text-secondary, #A8B4D4);
+  color: var(--muted, #6c757d);
   margin-bottom: 0.4rem;
   line-height: 1.65;
 }
 
 .sipfd-section a,
 .sipfd-links a {
-  color: var(--gold, #F5A623);
+  color: var(--primary, #00B386);
   font-weight: 600;
   text-decoration: none;
   transition: opacity 0.2s;
@@ -150,10 +150,10 @@
 }
 
 .example-card {
-  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border: 1px solid var(--border, #e9ecef);
   border-radius: 12px;
   padding: 0.85rem;
-  background: rgba(11,20,55,0.6);
+  background: #f8f9fa;
 }
 
 .example-card h3 {
@@ -164,19 +164,19 @@
   margin: 0;
   font-size: 1.15rem;
   font-weight: 800;
-  color: var(--gold, #F5A623);
+  color: var(--primary, #00B386);
 }
 
 .example-note,
 .small-note {
   margin: 0.45rem 0 0;
-  color: var(--text-muted, #7B8DB5);
+  color: #999;
   font-size: 0.86rem;
 }
 
 .table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border: 1px solid var(--border, #e9ecef);
   border-radius: 10px;
 }
 
@@ -190,18 +190,18 @@
 .table-wrap td {
   padding: 0.68rem 0.7rem;
   text-align: left;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  color: var(--text-secondary, #A8B4D4);
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--muted, #6c757d);
   font-size: 0.9rem;
 }
 
 .table-wrap th {
-  background: rgba(11,20,55,0.8);
-  color: var(--text-primary, #F0F4FF);
+  background: #f8f9fa;
+  color: var(--dark, #1a1a2e);
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 2px solid rgba(245,166,35,0.2);
+  border-bottom: 2px solid rgba(0,179,134,0.2);
 }
 
 .proscons-grid {
@@ -211,14 +211,14 @@
 }
 
 .proscons-grid > div {
-  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border: 1px solid var(--border, #e9ecef);
   border-radius: 12px;
   padding: 0.9rem;
-  background: rgba(11,20,55,0.6);
+  background: #f8f9fa;
 }
 
 .sipfd-faq details {
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid #f0f0f0;
   padding: 0.8rem 0;
 }
 
@@ -228,20 +228,20 @@
 
 .sipfd-faq summary {
   cursor: pointer;
-  color: var(--text-primary, #F0F4FF);
+  color: var(--dark, #1a1a2e);
   font-weight: 600;
   font-size: 0.92rem;
 }
 
 .sipfd-faq p {
   margin: 0.6rem 0 0;
-  color: var(--text-secondary, #A8B4D4);
+  color: var(--muted, #6c757d);
   font-size: 0.9rem;
 }
 
 .sipfd-disclaimer {
-  background: rgba(11,20,55,0.6);
-  border-color: rgba(245,166,35,0.12);
+  background: #f8f9fa;
+  border-color: rgba(0,179,134,0.2);
 }
 
 .sipfd-links {
@@ -251,17 +251,17 @@
 }
 
 .sipfd-links a {
-  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border: 1px solid var(--border, #e9ecef);
   border-radius: 999px;
   padding: 0.42rem 0.9rem;
-  background: var(--card-bg, #111D4A);
+  background: #fff;
   font-size: 0.86rem;
   transition: border-color 0.2s, background 0.2s;
 }
 
 .sipfd-links a:hover {
-  border-color: rgba(245,166,35,0.3);
-  background: var(--navy-light, #1A2A6C);
+  border-color: rgba(0,179,134,0.3);
+  background: rgba(0,179,134,0.06);
   opacity: 1;
 }
 

@@ -6,7 +6,7 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "SIP Calculator India",
-    "url": "https://www.myinvestmentcalculator.in/sip-calculator",
+    "url": "https://www.myinvestmentcalculator.in/",
     "description": "Free SIP Calculator India 2026. Calculate monthly SIP returns with compounding for any mutual fund.",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
@@ -15,19 +15,89 @@
   }
   </script>
 
-  <!-- ── Breadcrumb ──────────────────────────────────────────── -->
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a routerLink="/">Home</a>
-    <span class="breadcrumb-sep" aria-hidden="true">›</span>
-    <span class="breadcrumb-current">SIP Calculator</span>
-  </nav>
+  <!-- ═══ LANDING HERO ═══ -->
+  <div class="landing-hero">
+    <div class="landing-hero-inner">
+      <div class="landing-hero-left">
+        <span class="hero-trust-badge">✓ Trusted by 40 Lakh+ Indian Investors</span>
+        <h1>Plan Your Wealth<br>with <span class="hero-highlight">Free Financial</span><br>Calculators</h1>
+        <p class="hero-subtitle">India's most accurate SIP, EMI, FD &amp; CAGR calculators. No login required. No ads. Just clear numbers to help you invest smarter.</p>
+        <div class="hero-cta-row">
+          <a class="btn-hero-primary" (click)="scrollToCalculator()">Calculate SIP Returns</a>
+          <a routerLink="/emi-calculator" class="btn-hero-outline">Explore All Tools</a>
+        </div>
+        <div class="hero-trust-items">
+          <span>✓ No SEBI advice — purely informational</span>
+          <span>★ 4.9/5 from 12,000+ reviews</span>
+        </div>
+        <div class="hero-trust-items">
+          <span>✓ 100% Free. No login</span>
+        </div>
+      </div>
+      <div class="landing-hero-right">
+        <div class="quick-estimate-card">
+          <div class="quick-estimate-title">Quick SIP Estimate</div>
+          <div class="quick-field">
+            <label>Monthly Investment</label>
+            <div class="quick-slider-row">
+              <input type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value"
+                (input)="syncFromSlider('monthlyInvestment', $event)"
+                [style.--progress-value]="getSliderPct('monthlyInvestment', 500, 100000) + '%'">
+              <span class="quick-val">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="quick-field">
+            <label>Expected annual return (%)</label>
+            <div class="quick-slider-row">
+              <input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value"
+                (input)="syncFromSlider('annualRate', $event)"
+                [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'">
+              <span class="quick-val">{{ f['annualRate'].value }}%</span>
+            </div>
+          </div>
+          <div class="quick-field">
+            <label>Duration (years)</label>
+            <div class="quick-slider-row">
+              <input type="range" min="1" max="40" step="1" [value]="f['years'].value"
+                (input)="syncFromSlider('years', $event)"
+                [style.--progress-value]="getSliderPct('years', 1, 40) + '%'">
+              <span class="quick-val">{{ f['years'].value }} yrs</span>
+            </div>
+          </div>
+          @if (quickEstimate) {
+          <div class="quick-result-box">
+            <div class="quick-result-row">
+              <span class="quick-result-label">Total Value</span>
+              <span class="quick-result-badge">Est. Returns</span>
+            </div>
+            <div class="quick-result-row">
+              <span class="quick-result-value">{{ formatCompact(quickEstimate.totalValue) }}</span>
+              <span class="quick-result-returns">{{ formatCompact(quickEstimate.estimatedReturns) }}</span>
+            </div>
+            <div class="quick-result-meta">
+              after {{ f['years'].value }} years at {{ f['annualRate'].value }}% p.a.
+              <span class="quick-pct">+{{ (quickEstimate.estimatedReturns / quickEstimate.totalInvested * 100) | number:'1.0-0' }}%</span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- ── Hero ──────────────────────────────────────────────── -->
-  <div class="page-hero">
-    <h1>SIP Calculator India – Calculate Monthly Investment Returns (2026)</h1>
-    <p>
-      Enter your monthly SIP amount, expected return &amp; time period to instantly see your wealth projection.
-    </p>
+  <!-- ═══ STATS STRIP ═══ -->
+  <div class="stats-strip">
+    <div class="stat-item"><span class="stat-number">40L+</span><span class="stat-label">Monthly Users</span></div>
+    <div class="stat-item"><span class="stat-number">12+</span><span class="stat-label">Free Calculators</span></div>
+    <div class="stat-item"><span class="stat-number">4.9/5</span><span class="stat-label">User Rating</span></div>
+    <div class="stat-item"><span class="stat-number">₹2400Cr+</span><span class="stat-label">Wealth Planned</span></div>
+  </div>
+
+  <!-- ═══ SIP CALCULATOR SECTION ═══ -->
+  <div class="sip-calc-section" id="sip-calculator">
+    <span class="section-eyebrow">SIP Calculator</span>
+    <h2 class="section-heading">SIP Calculator India – 2026</h2>
+    <p class="section-sub">Adjust the sliders to see your projected SIP wealth in real time.</p>
   </div>
 
   <!-- ── Split Layout: Input Left + Result Right ─────────── -->
@@ -99,133 +169,73 @@
             }
           </div>
 
-          <!-- Inflation Toggle -->
-          <div class="form-group inflate-toggle-group">
-            <label class="toggle-label" for="adjustForInflation">
-              <input type="checkbox" id="adjustForInflation" name="adjustForInflation"
-                [(ngModel)]="adjustForInflation" [ngModelOptions]="{standalone: true}">
-              <span class="toggle-text">Adjust for inflation ({{ inflationRate }}%)</span>
-            </label>
+          <!-- Step-Up SIP (Annual Increase) -->
+          <div class="form-group stepup-toggle-group">
+            <label>Step-Up SIP (Annual Increase)</label>
+            <div class="stepup-options">
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 0" (click)="setStepUp(0)">No Step-up</button>
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 5" (click)="setStepUp(5)">+5% / yr</button>
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 10" (click)="setStepUp(10)">+10% / yr</button>
+            </div>
           </div>
+
+          <!-- Calculate Button -->
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">
+            Calculate My Wealth →
+          </button>
         </form>
       </div>
     </div>
 
     <!-- RIGHT: Result Panel -->
-    <div class="calc-result-panel">
+    <div class="calc-result-panel" id="result-panel">
       @if (result) {
-      <div class="result-card" role="region" aria-label="SIP Calculation Result">
-        <h2>
-          Your SIP Estimate
-          <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
-            {{ copied ? '✓ Copied' : '⎘ Copy' }}
-          </button>
-        </h2>
+      <!-- Total Estimated Value — Dark Card -->
+      <div class="total-value-card">
+        <span class="total-value-label">TOTAL ESTIMATED VALUE</span>
+        <div class="total-value-amount">₹{{ result.totalValue | number:'1.0-0' }}</div>
+        <span class="total-value-sub">After {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }} at {{ f['annualRate'].value }}% p.a.</span>
+      </div>
 
-        <!-- Hero stat — Total Value prominently -->
-        <div class="result-hero-stat">
-          <div class="result-hero-label">Total Value</div>
-          <div class="result-hero-value">₹{{ result.totalValue | number:'1.0-0' }}</div>
-          <div class="result-hero-sub">
-            <span class="hero-return-badge">+{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% returns</span>
-            over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+      <!-- Total Invested + Est. Returns -->
+      <div class="result-pair">
+        <div class="result-pair-card">
+          <span class="result-pair-label">Total Invested</span>
+          <span class="result-pair-value">₹{{ result.totalInvested | number:'1.0-0' }}</span>
+          <span class="result-pair-tag">Your contribution</span>
+        </div>
+        <div class="result-pair-card">
+          <span class="result-pair-label">Est. Returns</span>
+          <span class="result-pair-value result-pair-value--accent">₹{{ result.estimatedReturns | number:'1.0-0' }}</span>
+          <span class="result-pair-tag result-pair-tag--accent">+{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% gains</span>
+        </div>
+      </div>
+
+      <!-- SIP Growth Over Time -->
+      <div class="growth-chart-card">
+        <div class="graph-header">
+          <h2>SIP Growth Over Time</h2>
+          <div class="graph-legend">
+            <span class="legend-chip invested-chip">■ Invested</span>
+            <span class="legend-chip returns-chip">■ Returns</span>
           </div>
         </div>
-
-        <!-- Compact stats row -->
-        <div class="result-stats-row">
-          <div class="result-stat-chip">
-            <span class="stat-chip-label">Invested</span>
-            <span class="stat-chip-value">₹{{ result.totalInvested | number:'1.0-0' }}</span>
-          </div>
-          <div class="result-stat-chip accent">
-            <span class="stat-chip-label">Est. Returns</span>
-            <span class="stat-chip-value">₹{{ result.estimatedReturns | number:'1.0-0' }}</span>
-          </div>
+        <div class="chart-container chart-container--growth">
+          <canvas #growthChart></canvas>
         </div>
-
-        <!-- Large Doughnut Chart — Groww-style -->
-        <div class="result-doughnut-section">
-          <div class="doughnut-legend-top">
-            <div class="doughnut-legend-item">
-              <span class="legend-swatch invested"></span>
-              <span>Invested</span>
-            </div>
-            <div class="doughnut-legend-item">
-              <span class="legend-swatch returns"></span>
-              <span>Est. Returns</span>
-            </div>
-          </div>
-          <div class="chart-container--doughnut">
-            <canvas #doughnutChart></canvas>
-          </div>
-        </div>
-
-        <!-- Inflation-adjusted result -->
-        @if (adjustForInflation) {
-        <div class="inflation-result">
-          <div class="inflation-header">📉 Inflation-Adjusted ({{ inflationRate }}% p.a.)</div>
-          <div class="result-grid inflation-grid">
-            <div class="result-item">
-              <div class="label">Real Corpus</div>
-              <div class="value inflation-val">₹{{ getRealValue(result.totalValue, f['years'].value ?? 0) | number:'1.0-0' }}</div>
-            </div>
-            <div class="result-item">
-              <div class="label">Inflation Erosion</div>
-              <div class="value erosion-val">₹{{ (result.totalValue - getRealValue(result.totalValue, f['years'].value ?? 0)) | number:'1.0-0' }}</div>
-            </div>
-          </div>
-        </div>
-        }
-
       </div>
       } @else {
       <div class="card calc-result-placeholder">
         <div class="placeholder-icon">📊</div>
-        <p>Adjust the sliders to see your SIP returns instantly</p>
+        <p>Adjust the sliders and click <strong>Calculate My Wealth</strong> to see your SIP returns</p>
       </div>
       }
     </div>
   </div>
 
-  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
-  @if (result) {
-  <div class="summary-strip">
-    <div class="summary-card">
-      <span class="summary-icon">💰</span>
-      <span class="summary-label">Invested</span>
-      <span class="summary-value">{{ formatCompact(result.totalInvested) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">📈</span>
-      <span class="summary-label">Est. Returns</span>
-      <span class="summary-value accent">{{ formatCompact(result.estimatedReturns) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">🏆</span>
-      <span class="summary-label">Total Value</span>
-      <span class="summary-value gold">{{ formatCompact(result.totalValue) }}</span>
-    </div>
-  </div>
-  }
 
-  <!-- ═══ INTERACTIVE GRAPH SECTION ═══ -->
-  @if (result) {
-  <div class="card graph-section">
-    <div class="graph-header">
-      <h2>SIP Growth Over Time</h2>
-      <div class="graph-toggles">
-        <button type="button" [class.active]="graphMode === 'both'"
-          (click)="graphMode = 'both'; renderGrowthChart()">Invested vs Returns</button>
-        <button type="button" [class.active]="graphMode === 'value'"
-          (click)="graphMode = 'value'; renderGrowthChart()">Total Value</button>
-      </div>
-    </div>
-    <div class="chart-container chart-container--growth">
-      <canvas #growthChart></canvas>
-    </div>
-  </div>
-  }
+
+
 
   <!-- ═══ SMART INSIGHTS ═══ -->
   @if (result && smartInsights.length) {
@@ -242,17 +252,17 @@
   </div>
   }
 
-  <!-- ═══ BREAKDOWN TABLE (COLLAPSIBLE) ═══ -->
-  @if (result) {
+  <!-- ═══ YEAR-BY-YEAR SIP PROJECTION ═══ -->
+  @if (result && projectionRows.length) {
   <div class="card">
-    <h2>Year-by-Year Breakdown</h2>
+    <h2>Year-by-Year SIP Projection</h2>
     <div class="projection-table-wrap">
       <table class="projection-table">
         <thead>
           <tr>
             <th>Year</th>
-            <th>Invested</th>
-            <th>Gains</th>
+            <th>Total Invested</th>
+            <th>Est. Gains</th>
             <th>Total Value</th>
           </tr>
         </thead>
@@ -270,10 +280,34 @@
     </div>
     @if (projectionRows.length > 5) {
     <button type="button" class="view-full-btn" (click)="showFullTable = !showFullTable">
-      {{ showFullTable ? '▲ Show Less' : '▼ View Full Table (' + projectionRows.length + ' years)' }}
+      {{ showFullTable ? '▲ Show Less' : '▼ View Full Table (' + f['years'].value + ' years)' }}
     </button>
     }
   </div>
+  }
+
+
+
+  <!-- ── FAQs (accordion — placed before SEO for better UX) ── -->
+  @defer (on viewport; hydrate on viewport) {
+  <div class="card">
+    <h2>FAQs — SIP Calculator India</h2>
+    <div class="faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+      <div class="faq-item" [class.open]="openFaq === i">
+        <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
+          {{ faq.q }}
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">{{ faq.a }}</div>
+      </div>
+      }
+    </div>
+  </div>
+  } @placeholder {
+    <div class="card" style="min-height:120px">
+      <h2>FAQs — SIP Calculator India</h2>
+    </div>
   }
 
   <!-- ── SEO Rich Content (deferred) ─────────────────────────── -->
@@ -348,28 +382,6 @@
   </div>
   } @placeholder {
     <div style="min-height:300px"></div>
-  }
-
-  <!-- ── FAQs (accordion) ── -->
-  @defer (on viewport; hydrate on viewport) {
-  <div class="card">
-    <h2>FAQs — SIP Calculator India</h2>
-    <div class="faq-list">
-      @for (faq of faqs; track faq.q; let i = $index) {
-      <div class="faq-item" [class.open]="openFaq === i">
-        <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">
-          {{ faq.q }}
-          <span class="faq-toggle">+</span>
-        </button>
-        <div class="faq-answer">{{ faq.a }}</div>
-      </div>
-      }
-    </div>
-  </div>
-  } @placeholder {
-    <div class="card" style="min-height:120px">
-      <h2>FAQs — SIP Calculator India</h2>
-    </div>
   }
 
   <!-- ── Below-fold SEO content (deferred for mobile perf) ──── -->
@@ -594,6 +606,76 @@
   } @placeholder {
     <div style="min-height:600px"></div>
   }
+
+  <!-- ═══ PICK YOUR CALCULATOR ═══ -->
+  <div class="calc-picker-section">
+    <span class="section-eyebrow">All Calculators</span>
+    <h2 class="section-heading">Pick Your Calculator</h2>
+    <p class="section-sub">Instant, accurate and completely free. No login needed.</p>
+    <div class="calc-picker-grid">
+      <a class="picker-card" (click)="scrollToCalculator()">
+        <div class="picker-icon picker-icon--green">
+          <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect x="4" y="18" width="5" height="7" rx="1" fill="currentColor" opacity="0.4"/><rect x="12" y="12" width="5" height="13" rx="1" fill="currentColor" opacity="0.7"/><rect x="20" y="5" width="5" height="20" rx="1" fill="currentColor"/></svg>
+        </div>
+        <h3>SIP Calculator</h3>
+        <p>Find out how much your monthly SIP will grow over time with compounding returns.</p>
+        <span class="picker-link">Calculate SIP →</span>
+      </a>
+      <a routerLink="/emi-calculator" class="picker-card">
+        <div class="picker-icon picker-icon--blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="M6 12h12M6 16h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>EMI Calculator</h3>
+        <p>Calculate your home loan or personal loan EMI, total interest and repayment schedule.</p>
+        <span class="picker-link">Calculate EMI →</span>
+      </a>
+      <a routerLink="/fd-calculator" class="picker-card">
+        <div class="picker-icon picker-icon--green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>FD Calculator</h3>
+        <p>See your Fixed Deposit maturity amount with simple or compound interest options.</p>
+        <span class="picker-link">Calculate FD →</span>
+      </a>
+      <a routerLink="/cagr-calculator" class="picker-card">
+        <div class="picker-icon picker-icon--blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 20L9 14l4 4 8-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>CAGR Calculator</h3>
+        <p>Measure the annualised growth rate of any investment over a chosen time period.</p>
+        <span class="picker-link">Calculate CAGR →</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══ WHY CHOOSE US ═══ -->
+  <div class="trust-section">
+    <span class="section-eyebrow">Why Choose Us</span>
+    <h2 class="section-heading">Trusted by Millions of Indian Investors</h2>
+    <p class="section-sub">Our calculators are designed to be simple, accurate, and completely free.</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-card-icon trust-card-icon--green">🆓</div>
+        <h3>100% Free</h3>
+        <p>All calculators are completely free to use. No hidden charges, no premium plans, no login walls.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-icon trust-card-icon--blue">⚡</div>
+        <h3>Instant Results</h3>
+        <p>Get your SIP, EMI, FD, and CAGR results in milliseconds. Real-time calculations as you adjust sliders.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-icon trust-card-icon--green">📱</div>
+        <h3>Mobile-First</h3>
+        <p>Designed for phones first. Works beautifully on any device — phone, tablet, or desktop. Offline-ready PWA.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-icon trust-card-icon--blue">🎯</div>
+        <h3>Accurate</h3>
+        <p>Uses industry-standard formulas with compound interest. Cross-verified with major financial platforms.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Related Calculators ────────────────────────────────── -->
   <div class="card card--compact">

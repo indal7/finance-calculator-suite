@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, CommonModule, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -23,8 +23,7 @@ export class EmiCalculator implements OnInit, OnDestroy {
   private calcSub?: Subscription;
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  @ViewChild('emiPieChart') emiPieChartRef!: ElementRef<HTMLCanvasElement>;
-  private chartInstance: any = null;
+
 
   form = this.fb.group({
     principal:  [500000, [Validators.required, Validators.min(1)]],
@@ -134,6 +133,13 @@ export class EmiCalculator implements OnInit, OnDestroy {
   scrollToTop(): void {
     if (this.isBrowser) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  scrollToResult(): void {
+    if (this.isBrowser) {
+      const el = document.querySelector('.calc-result-panel');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -252,15 +258,6 @@ export class EmiCalculator implements OnInit, OnDestroy {
     return Math.round(((val - min) / (max - min)) * 100);
   }
 
-  getDonutOffset(principal: number | null, total: number | null): number {
-    const safePrincipal = principal ?? 0;
-    const safeTotal = total ?? 0;
-
-    if (safeTotal <= 0) return 0;
-
-    return 220 * (safePrincipal / safeTotal);
-  }
-
   toggleFaq(index: number): void {
     this.openFaq = this.openFaq === index ? null : index;
   }
@@ -285,9 +282,6 @@ export class EmiCalculator implements OnInit, OnDestroy {
     // Trigger change detection for OnPush strategy
     this.cdr.markForCheck();
 
-    // Render EMI breakdown chart after DOM tick
-    setTimeout(() => this.renderEmiChart(principal, totalInterest), 50);
-
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();
     this.sub = this.svc.calculateEmi({ principal, annualRate, years }).subscribe({
@@ -301,61 +295,5 @@ export class EmiCalculator implements OnInit, OnDestroy {
     this.calcSub?.unsubscribe();
     this.seo.removeJsonLd('emi-breadcrumb');
     this.seo.removeFAQSchema();
-    this.chartInstance?.destroy();
-  }
-
-  /** Render or update the EMI principal vs interest doughnut chart */
-  renderEmiChart(principal: number, totalInterest: number): void {
-    if (!this.isBrowser || !this.emiPieChartRef?.nativeElement) return;
-
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
-
-      if (this.chartInstance) {
-        this.chartInstance.data.datasets[0].data = [principal, totalInterest];
-        this.chartInstance.update('none');
-        return;
-      }
-
-      const ctx = this.emiPieChartRef.nativeElement.getContext('2d');
-      if (!ctx) return;
-
-      this.chartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Principal', 'Interest'],
-          datasets: [{
-            data: [principal, totalInterest],
-            backgroundColor: ['#4B5EAA', '#00C896'],
-            borderColor: ['rgba(75,94,170,0.4)', 'rgba(0,200,150,0.4)'],
-            borderWidth: 2,
-            hoverOffset: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '65%',
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#111D4A',
-              titleColor: '#F0F4FF',
-              bodyColor: '#A8B4D4',
-              borderColor: 'rgba(245,166,35,0.3)',
-              borderWidth: 1,
-              callbacks: {
-                label: (ctx: any) => {
-                  const val = ctx.parsed;
-                  const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                  const pct = ((val / total) * 100).toFixed(1);
-                  return `${ctx.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
-                }
-              }
-            }
-          }
-        }
-      });
-    });
   }
 }

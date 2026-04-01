@@ -29,9 +29,7 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
   private calcSub?: Subscription;
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  @ViewChild('doughnutChart') doughnutChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('growthChart') growthChartRef!: ElementRef<HTMLCanvasElement>;
-  private doughnutChartInstance: any = null;
   private growthChartInstance: any = null;
 
   form = this.fb.group({
@@ -156,6 +154,13 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
     }
   }
 
+  scrollToResult(): void {
+    if (this.isBrowser) {
+      const el = document.querySelector('.calc-result-panel');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   /** Smart insights dynamically computed from current result */
   get smartInsights(): Array<{icon: string; text: string}> {
     if (!this.result) return [];
@@ -236,7 +241,6 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
 
     setTimeout(() => {
-      this.renderDoughnutChart();
       this.renderGrowthChart();
     }, 50);
 
@@ -256,63 +260,6 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
       rows.push({ year: y, invested: +principal.toFixed(0), value, gains: value - principal });
     }
     return rows;
-  }
-
-  renderDoughnutChart(): void {
-    if (!this.isBrowser || !this.doughnutChartRef?.nativeElement || !this.result) return;
-
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
-
-      const invested = this.result!.totalInvested;
-      const returns = this.result!.estimatedReturns;
-
-      if (this.doughnutChartInstance) {
-        this.doughnutChartInstance.data.datasets[0].data = [invested, returns];
-        this.doughnutChartInstance.update('none');
-        return;
-      }
-
-      const ctx = this.doughnutChartRef.nativeElement.getContext('2d');
-      if (!ctx) return;
-
-      this.doughnutChartInstance = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Invested Amount', 'Est. Returns'],
-          datasets: [{
-            data: [invested, returns],
-            backgroundColor: ['#4B5EAA', '#00C896'],
-            borderColor: ['rgba(75,94,170,0.4)', 'rgba(0,200,150,0.4)'],
-            borderWidth: 2,
-            hoverOffset: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '65%',
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#111D4A',
-              titleColor: '#F0F4FF',
-              bodyColor: '#A8B4D4',
-              borderColor: 'rgba(245,166,35,0.3)',
-              borderWidth: 1,
-              callbacks: {
-                label: (ctx: any) => {
-                  const val = ctx.parsed;
-                  const total = ctx.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                  const pct = ((val / total) * 100).toFixed(1);
-                  return `${ctx.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
-                }
-              }
-            }
-          }
-        }
-      });
-    });
   }
 
   renderGrowthChart(): void {
@@ -338,11 +285,11 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
 
       // Create premium gradient fills
       const investedGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
-      investedGrad.addColorStop(0, 'rgba(168,180,212,0.18)');
-      investedGrad.addColorStop(1, 'rgba(168,180,212,0.01)');
+      investedGrad.addColorStop(0, 'rgba(173,181,189,0.18)');
+      investedGrad.addColorStop(1, 'rgba(173,181,189,0.01)');
 
       const valueGrad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.clientHeight);
-      valueGrad.addColorStop(0, 'rgba(245,166,35,0.28)');
+      valueGrad.addColorStop(0, 'rgba(245,166,35,0.25)');
       valueGrad.addColorStop(0.7, 'rgba(245,166,35,0.06)');
       valueGrad.addColorStop(1, 'rgba(245,166,35,0.0)');
 
@@ -354,14 +301,14 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
             {
               label: 'Invested Amount',
               data: investedData,
-              borderColor: 'rgba(168,180,212,0.8)',
+              borderColor: 'rgba(173,181,189,0.8)',
               backgroundColor: investedGrad,
               borderWidth: 2,
               fill: true,
               tension: 0.3,
               pointRadius: 3,
               pointHoverRadius: 6,
-              pointBackgroundColor: '#A8B4D4'
+              pointBackgroundColor: '#adb5bd'
             },
             {
               label: 'Portfolio Value',
@@ -383,12 +330,12 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
           interaction: { intersect: false, mode: 'index' },
           plugins: {
             legend: {
-              labels: { color: '#A8B4D4', font: { size: 12 }, usePointStyle: true, pointStyle: 'circle' }
+              labels: { color: '#6c757d', font: { size: 12 }, usePointStyle: true, pointStyle: 'circle' }
             },
             tooltip: {
-              backgroundColor: '#111D4A',
-              titleColor: '#F0F4FF',
-              bodyColor: '#A8B4D4',
+              backgroundColor: '#1a1a2e',
+              titleColor: '#ffffff',
+              bodyColor: '#ced4da',
               borderColor: 'rgba(245,166,35,0.3)',
               borderWidth: 1,
               callbacks: {
@@ -398,16 +345,16 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
           },
           scales: {
             x: {
-              ticks: { color: '#7B8DB5', font: { size: 11 } },
-              grid: { color: 'rgba(255,255,255,0.04)' }
+              ticks: { color: '#6c757d', font: { size: 11 } },
+              grid: { color: 'rgba(0,0,0,0.05)' }
             },
             y: {
               ticks: {
-                color: '#7B8DB5',
+                color: '#6c757d',
                 font: { size: 11 },
                 callback: (val: any) => '₹' + (val >= 10000000 ? (val / 10000000).toFixed(1) + 'Cr' : val >= 100000 ? (val / 100000).toFixed(1) + 'L' : (val / 1000).toFixed(0) + 'K')
               },
-              grid: { color: 'rgba(255,255,255,0.04)' }
+              grid: { color: 'rgba(0,0,0,0.05)' }
             }
           }
         }
@@ -420,7 +367,6 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
     this.calcSub?.unsubscribe();
     this.seo.removeJsonLd('lumpsum-breadcrumb');
     this.seo.removeFAQSchema();
-    this.doughnutChartInstance?.destroy();
     this.growthChartInstance?.destroy();
   }
 }

@@ -23,7 +23,8 @@
 
   <!-- ── Hero ──────────────────────────────────────────────── -->
   <div class="page-hero">
-    <h1>EMI Calculator India – Calculate Loan EMI &amp; Interest Breakdown</h1>
+    <span class="section-eyebrow">EMI Calculator</span>
+    <h1>EMI Calculator India – Loan EMI &amp; Interest Breakdown (2026)</h1>
     <p>
       Enter your loan amount, interest rate &amp; tenure to instantly see your monthly EMI and interest breakdown.
     </p>
@@ -100,91 +101,62 @@
               <span class="error-msg">Enter a duration of at least 1 year.</span>
             }
           </div>
+
+          <!-- Calculate Button -->
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">
+            Calculate My EMI →
+          </button>
         </form>
       </div>
     </div>
 
     <!-- RIGHT: Result Panel -->
-    <div class="calc-result-panel">
+    <div class="calc-result-panel" id="result-panel">
       @if (result) {
-        <div class="result-card" role="region" aria-label="EMI Calculation Result">
-          <h2>
-            Your Loan Breakdown
-            <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
-              {{ copied ? '✓ Copied' : '⎘ Copy' }}
-            </button>
-          </h2>
+      <!-- Total Monthly EMI — Dark Card -->
+      <div class="total-value-card">
+        <span class="total-value-label">MONTHLY EMI</span>
+        <div class="total-value-amount">₹{{ result.emi | number:'1.0-0' }}</div>
+        <span class="total-value-sub">
+          {{ ((result.totalInterest / f['principal'].value!) * 100) | number:'1.1-1' }}% interest cost over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+        </span>
+      </div>
 
-          <!-- Hero stat — Monthly EMI prominently -->
-          <div class="result-hero-stat">
-            <div class="result-hero-label">Monthly EMI</div>
-            <div class="result-hero-value">₹{{ result.emi | number:'1.0-0' }}</div>
-            <div class="result-hero-sub">
-              <span class="hero-return-badge">{{ ((result.totalInterest / f['principal'].value!) * 100) | number:'1.1-1' }}% interest cost</span>
-              over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
-            </div>
-          </div>
-
-          <!-- Compact stats row -->
-          <div class="result-stats-row">
-            <div class="result-stat-chip">
-              <span class="stat-chip-label">Principal</span>
-              <span class="stat-chip-value">₹{{ f['principal'].value | number:'1.0-0' }}</span>
-            </div>
-            <div class="result-stat-chip accent">
-              <span class="stat-chip-label">Total Interest</span>
-              <span class="stat-chip-value">₹{{ result.totalInterest | number:'1.0-0' }}</span>
-            </div>
-          </div>
-
-          <!-- Large Doughnut Chart -->
-          <div class="result-doughnut-section">
-            <div class="doughnut-legend-top">
-              <div class="doughnut-legend-item">
-                <span class="legend-swatch invested"></span>
-                <span>Principal</span>
-              </div>
-              <div class="doughnut-legend-item">
-                <span class="legend-swatch returns"></span>
-                <span>Interest</span>
-              </div>
-            </div>
-            <div class="chart-container--doughnut">
-              <canvas #emiPieChart></canvas>
-            </div>
-          </div>
-
+      <!-- Principal + Total Interest -->
+      <div class="result-pair">
+        <div class="result-pair-card">
+          <span class="result-pair-label">Principal</span>
+          <span class="result-pair-value">₹{{ f['principal'].value | number:'1.0-0' }}</span>
+          <span class="result-pair-tag">Loan amount</span>
         </div>
+        <div class="result-pair-card">
+          <span class="result-pair-label">Total Interest</span>
+          <span class="result-pair-value result-pair-value--accent">₹{{ result.totalInterest | number:'1.0-0' }}</span>
+          <span class="result-pair-tag result-pair-tag--accent">{{ ((result.totalInterest / f['principal'].value!) * 100) | number:'1.0-0' }}% of principal</span>
+        </div>
+      </div>
+
+      <!-- Total Payment Card -->
+      <div class="result-pair">
+        <div class="result-pair-card" style="grid-column: 1 / -1; text-align: center;">
+          <span class="result-pair-label">Total Payment (Principal + Interest)</span>
+          <span class="result-pair-value">₹{{ result.totalPayment | number:'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <!-- Copy Button -->
+      <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied" style="align-self: flex-end;">
+        {{ copied ? '✓ Copied' : '⎘ Copy Result' }}
+      </button>
       } @else {
         <!-- Placeholder when no result -->
         <div class="card calc-result-placeholder">
           <div class="placeholder-icon">🏦</div>
-          <p>Adjust the sliders to see your loan breakdown instantly</p>
+          <p>Adjust the sliders and click <strong>Calculate My EMI</strong> to see your loan breakdown</p>
         </div>
       }
     </div>
   </div>
-
-  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
-  @if (result) {
-  <div class="summary-strip">
-    <div class="summary-card">
-      <span class="summary-icon">💰</span>
-      <span class="summary-label">Principal</span>
-      <span class="summary-value">{{ formatCompact(f['principal'].value!) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">🏦</span>
-      <span class="summary-label">Total Interest</span>
-      <span class="summary-value accent">{{ formatCompact(result.totalInterest) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">🏆</span>
-      <span class="summary-label">Total Payment</span>
-      <span class="summary-value gold">{{ formatCompact(result.totalPayment) }}</span>
-    </div>
-  </div>
-  }
 
   <!-- ═══ SMART INSIGHTS ═══ -->
   @if (result && smartInsights.length) {
@@ -383,8 +355,8 @@
   </div>
 
   <!-- ── Mobile Sticky CTA ── -->
-  <div class="mobile-sticky-cta" (click)="scrollToTop()">
-    🏦 Recalculate EMI
+  <div class="mobile-sticky-cta">
+    <button type="button" (click)="scrollToTop()">🏦 Calculate EMI</button>
   </div>
 
 </section>

@@ -24,6 +24,7 @@
 
   <!-- ── Hero ──────────────────────────────────────────────── -->
   <div class="page-hero">
+    <span class="section-eyebrow">Lumpsum Calculator</span>
     <h1>Lumpsum Calculator India – One-Time Investment Return Calculator (2026)</h1>
     <p>
       Enter your one-time investment amount, expected return &amp; time period to instantly see your wealth projection.
@@ -98,91 +99,54 @@
             <span class="error-msg">Enter a duration of at least 1 year.</span>
             }
           </div>
+
+          <!-- Calculate Button -->
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">
+            Calculate My Returns →
+          </button>
         </form>
       </div>
     </div>
 
     <!-- RIGHT: Result Panel -->
-    <div class="calc-result-panel">
+    <div class="calc-result-panel" id="result-panel">
       @if (result) {
-      <div class="result-card" role="region" aria-label="Lumpsum Calculation Result">
-        <h2>
-          Your Lumpsum Estimate
-          <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
-            {{ copied ? '✓ Copied' : '⎘ Copy' }}
-          </button>
-        </h2>
-
-        <!-- Hero stat — Total Value prominently -->
-        <div class="result-hero-stat">
-          <div class="result-hero-label">Total Value</div>
-          <div class="result-hero-value">₹{{ result.totalValue | number:'1.0-0' }}</div>
-          <div class="result-hero-sub">
-            <span class="hero-return-badge">+{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% returns</span>
-            over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
-          </div>
-        </div>
-
-        <!-- Compact stats row -->
-        <div class="result-stats-row">
-          <div class="result-stat-chip">
-            <span class="stat-chip-label">Invested</span>
-            <span class="stat-chip-value">₹{{ result.totalInvested | number:'1.0-0' }}</span>
-          </div>
-          <div class="result-stat-chip accent">
-            <span class="stat-chip-label">Est. Returns</span>
-            <span class="stat-chip-value">₹{{ result.estimatedReturns | number:'1.0-0' }}</span>
-          </div>
-        </div>
-
-        <!-- Large Doughnut Chart — Groww-style -->
-        <div class="result-doughnut-section">
-          <div class="doughnut-legend-top">
-            <div class="doughnut-legend-item">
-              <span class="legend-swatch invested"></span>
-              <span>Invested Amount</span>
-            </div>
-            <div class="doughnut-legend-item">
-              <span class="legend-swatch returns"></span>
-              <span>Est. Returns</span>
-            </div>
-          </div>
-          <div class="chart-container--doughnut">
-            <canvas #doughnutChart></canvas>
-          </div>
-        </div>
-
+      <!-- Total Value — Dark Card -->
+      <div class="total-value-card">
+        <span class="total-value-label">TOTAL VALUE</span>
+        <div class="total-value-amount">₹{{ result.totalValue | number:'1.0-0' }}</div>
+        <span class="total-value-sub">
+          +{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% returns over {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }}
+        </span>
       </div>
+
+      <!-- Invested + Returns -->
+      <div class="result-pair">
+        <div class="result-pair-card">
+          <span class="result-pair-label">Invested</span>
+          <span class="result-pair-value">₹{{ result.totalInvested | number:'1.0-0' }}</span>
+          <span class="result-pair-tag">One-time investment</span>
+        </div>
+        <div class="result-pair-card">
+          <span class="result-pair-label">Est. Returns</span>
+          <span class="result-pair-value result-pair-value--accent">₹{{ result.estimatedReturns | number:'1.0-0' }}</span>
+          <span class="result-pair-tag result-pair-tag--accent">{{ (result.totalValue / result.totalInvested) | number:'1.1-1' }}x growth</span>
+        </div>
+      </div>
+
+      <!-- Copy Button -->
+      <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied" style="align-self: flex-end;">
+        {{ copied ? '✓ Copied' : '⎘ Copy Result' }}
+      </button>
       } @else {
       <!-- Placeholder when no result -->
       <div class="card calc-result-placeholder">
         <div class="placeholder-icon">📊</div>
-        <p>Adjust the sliders to see your lumpsum returns instantly</p>
+        <p>Adjust the sliders and click <strong>Calculate My Returns</strong> to see your lumpsum projection</p>
       </div>
       }
     </div>
   </div>
-
-  <!-- ═══ RESULT SUMMARY STRIP ═══ -->
-  @if (result) {
-  <div class="summary-strip">
-    <div class="summary-card">
-      <span class="summary-icon">💰</span>
-      <span class="summary-label">Invested</span>
-      <span class="summary-value">{{ formatCompact(result.totalInvested) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">📈</span>
-      <span class="summary-label">Est. Returns</span>
-      <span class="summary-value accent">{{ formatCompact(result.estimatedReturns) }}</span>
-    </div>
-    <div class="summary-card">
-      <span class="summary-icon">🏆</span>
-      <span class="summary-label">Total Value</span>
-      <span class="summary-value gold">{{ formatCompact(result.totalValue) }}</span>
-    </div>
-  </div>
-  }
 
   <!-- ═══ INTERACTIVE GRAPH SECTION ═══ -->
   @if (result) {
@@ -304,8 +268,8 @@
   </div>
 
   <!-- ── Mobile Sticky CTA ── -->
-  <div class="mobile-sticky-cta" (click)="scrollToTop()">
-    💰 Recalculate Lumpsum
+  <div class="mobile-sticky-cta">
+    <button type="button" (click)="scrollToTop()">💰 Calculate Lumpsum</button>
   </div>
 
 </section>

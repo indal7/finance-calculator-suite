@@ -1,11 +1,6 @@
 /* ─── Main Content ─── */
 .main-content {
   min-height: calc(100vh - 130px);
-  padding: 2rem 0;
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    padding: 1rem 0;
-  }
+  padding: 0;
+  background: var(--bg-body, #f8f9fa);
 }
