@@ -12,6 +12,7 @@
 
   <!-- BRANDING -->
   <meta name="theme-color" content="#00B386">
+  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
 
   <!-- CANONICAL -->
   <link rel="canonical" href="https://www.myinvestmentcalculator.in/">
@@ -40,23 +41,15 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <!-- FONTS OPTIMIZATION — load only critical weights inline, defer the rest -->
+  <!-- FONTS OPTIMIZATION — single request, swap for fast LCP -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
-  <!-- Critical: DM Sans 400,700 + Syne 700 for above-fold text -->
   <link rel="preload" as="style" fetchpriority="high"
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Syne:wght@700&display=optional"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
     onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
     <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Syne:wght@700&display=optional">
-  </noscript>
-  <!-- Non-critical weights loaded after page is interactive -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=Syne:wght@800&display=optional" media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=Syne:wght@800&display=optional">
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap">
   </noscript>
 
   <!-- ✅ STRUCTURED DATA -->

@@ -1655,6 +1655,7 @@ code {
   text-decoration: none;
   color: var(--dark);
   cursor: pointer;
+  font: inherit;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
 }
 .picker-card:hover {
@@ -1731,6 +1732,8 @@ code {
   margin: 0 auto;
   padding: clamp(40px, 6vw, 72px) var(--sp-3);
   text-align: center;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
 
 .trust-grid {

@@ -37,7 +37,7 @@
 
 .footer-desc {
   font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.65);
   line-height: 1.7;
   margin: 0;
   max-width: 280px;
@@ -56,7 +56,7 @@
 .footer-section nav { display: flex; flex-direction: column; gap: 10px; }
 
 .footer-section nav a {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
   font-size: 0.88rem;
   transition: color 0.2s;
@@ -74,11 +74,11 @@
 .footer-disclaimer-card p {
   margin: 0;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.7;
 }
 .footer-disclaimer-card strong {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 600;
 }
 .footer-disclaimer-icon {
@@ -98,12 +98,12 @@
 }
 .copyright {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.6);
   margin: 0;
 }
 .footer-tagline {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.6);
   margin: 0;
 }
 .footer-heart {
