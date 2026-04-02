@@ -18,9 +18,8 @@ concurrency:
   group: cd-${{ github.ref }}
   cancel-in-progress: true
 
-# ap-south-1
 env:
-  AWS_REGION: ${{ vars.AWS_DEPLOY_REGION || 'us-east-1' }}
+  AWS_REGION: ${{ vars.AWS_DEPLOY_REGION || 'ap-south-1' }}
   TF_IN_AUTOMATION: true
 
 # ──────────────────────────────────────────────────────────────────────────────
