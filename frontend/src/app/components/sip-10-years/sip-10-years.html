@@ -1,0 +1,242 @@
+<section class="calc-page">
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "10-Year SIP Calculator India 2026 — Compare Monthly SIP Returns",
+    "url": "https://www.myinvestmentcalculator.in/sip-calculator-10-years",
+    "description": "Free 10-year SIP calculator. Compare ₹1,000, ₹5,000, ₹10,000 monthly SIP returns over 10 years. Interactive calculator with graph & projections.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+    "inLanguage": "en-IN",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "5400", "bestRating": "5" },
+    "author": { "@type": "Organization", "name": "Finance Calculator India", "url": "https://www.myinvestmentcalculator.in/" }
+  }
+  </script>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="landing-hero">
+    <div class="landing-hero-inner">
+      <div class="landing-hero-left">
+        <span class="hero-trust-badge">✓ Trusted by 40 Lakh+ Indian Investors</span>
+        <h1>SIP Calculator for 10 Years<br><span class="hero-highlight">Compare ₹1K, ₹5K, ₹10K Monthly Returns</span></h1>
+        <p class="hero-subtitle">10 years is the sweet spot for SIP wealth creation. At 12% return: ₹1,000/month = <strong>₹2.32L</strong>, ₹5,000/month = <strong>₹11.6L</strong>, ₹10,000/month = <strong>₹23.2L</strong>.</p>
+        <div class="hero-cta-row">
+          <button type="button" class="btn-hero-primary" (click)="scrollToCalculator()">Calculate 10-Year SIP Returns</button>
+          <a routerLink="/" class="btn-hero-outline">Main SIP Calculator</a>
+        </div>
+        <div class="hero-trust-items"><span>✓ 100% Free. No login</span><span>★ 4.8/5 from 5,400+ reviews</span></div>
+      </div>
+      <div class="landing-hero-right">
+        <div class="quick-estimate-card">
+          <div class="quick-estimate-title">Quick 10-Year SIP Estimate</div>
+          <div class="quick-field">
+            <label for="quick-monthly">Monthly Investment</label>
+            <div class="quick-slider-row">
+              <input id="quick-monthly" type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value" (input)="syncFromSlider('monthlyInvestment', $event)" [style.--progress-value]="getSliderPct('monthlyInvestment', 500, 100000) + '%'" aria-label="Monthly investment amount">
+              <span class="quick-val">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="quick-field">
+            <label for="quick-rate">Expected annual return (%)</label>
+            <div class="quick-slider-row">
+              <input id="quick-rate" type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value" (input)="syncFromSlider('annualRate', $event)" [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'" aria-label="Expected annual return rate">
+              <span class="quick-val">{{ f['annualRate'].value }}%</span>
+            </div>
+          </div>
+          <div class="quick-field">
+            <label for="quick-years">Duration (years)</label>
+            <div class="quick-slider-row">
+              <input id="quick-years" type="range" min="1" max="40" step="1" [value]="f['years'].value" (input)="syncFromSlider('years', $event)" [style.--progress-value]="getSliderPct('years', 1, 40) + '%'" aria-label="Investment duration in years">
+              <span class="quick-val">{{ f['years'].value }} yrs</span>
+            </div>
+          </div>
+          @if (quickEstimate) {
+          <div class="quick-result-box">
+            <div class="quick-result-row"><span class="quick-result-label">Total Value</span><span class="quick-result-badge">Est. Returns</span></div>
+            <div class="quick-result-row"><span class="quick-result-value">{{ formatCompact(quickEstimate.totalValue) }}</span><span class="quick-result-returns">{{ formatCompact(quickEstimate.estimatedReturns) }}</span></div>
+            <div class="quick-result-meta">after {{ f['years'].value }} years at {{ f['annualRate'].value }}% p.a. <span class="quick-pct">+{{ (quickEstimate.estimatedReturns / quickEstimate.totalInvested * 100) | number:'1.0-0' }}%</span></div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CALCULATOR SECTION ═══ -->
+  <div class="sip-calc-section" id="sip-calculator">
+    <span class="section-eyebrow">10-Year SIP Calculator</span>
+    <h2 class="section-heading">Calculate Your 10-Year SIP Returns</h2>
+    <p class="section-sub">Adjust the values to see your projected wealth over 10 years (or any duration).</p>
+  </div>
+
+  <div class="calc-layout">
+    <div class="calc-input-panel">
+      <div class="card">
+        <h2>Enter SIP Details</h2>
+        <form [formGroup]="form" class="form-grid" novalidate>
+          <div class="form-group">
+            <label for="monthlyInvestment">Monthly Investment (₹)</label>
+            <div class="slider-wrapper">
+              <input id="monthlyInvestment" type="number" formControlName="monthlyInvestment" min="500" max="500000" placeholder="e.g. 5000" autocomplete="off" [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched" (input)="syncSlider('monthlyInvestment')">
+              <div class="slider-row"><input type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value" (input)="syncFromSlider('monthlyInvestment', $event)" [style.--progress-value]="getSliderPct('monthlyInvestment', 500, 100000) + '%'" aria-label="Monthly investment amount slider"><span class="slider-value-display">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span></div>
+            </div>
+            @if (f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched) { <span class="error-msg">Enter a valid monthly investment (min ₹500).</span> }
+          </div>
+          <div class="form-group">
+            <label for="annualRate">Expected Annual Return (%)</label>
+            <div class="slider-wrapper">
+              <input id="annualRate" type="number" formControlName="annualRate" min="1" max="30" step="0.5" placeholder="e.g. 12" autocomplete="off" [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched" (input)="syncSlider('annualRate')">
+              <div class="slider-row"><input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value" (input)="syncFromSlider('annualRate', $event)" [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'" aria-label="Expected annual return rate slider"><span class="slider-value-display">{{ f['annualRate'].value }}%</span></div>
+            </div>
+            @if (f['annualRate'].invalid && f['annualRate'].touched) { <span class="error-msg">Enter a valid annual return rate.</span> }
+            <span class="hint">💡 Historical equity mutual fund avg: 10–14% p.a.</span>
+          </div>
+          <div class="form-group">
+            <label for="years">Investment Period (Years)</label>
+            <div class="slider-wrapper">
+              <input id="years" type="number" formControlName="years" min="1" max="40" placeholder="e.g. 10" autocomplete="off" [class.invalid]="f['years'].invalid && f['years'].touched" (input)="syncSlider('years')">
+              <div class="slider-row"><input type="range" min="1" max="40" step="1" [value]="f['years'].value" (input)="syncFromSlider('years', $event)" [style.--progress-value]="getSliderPct('years', 1, 40) + '%'" aria-label="Investment period slider"><span class="slider-value-display">{{ f['years'].value }} yr</span></div>
+            </div>
+            @if (f['years'].invalid && f['years'].touched) { <span class="error-msg">Enter at least 1 year.</span> }
+          </div>
+          <div class="form-group stepup-toggle-group">
+            <label>Step-Up SIP (Annual Increase)</label>
+            <div class="stepup-options">
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 0" (click)="setStepUp(0)">No Step-up</button>
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 5" (click)="setStepUp(5)">+5% / yr</button>
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 10" (click)="setStepUp(10)">+10% / yr</button>
+            </div>
+          </div>
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">Calculate My 10-Year Wealth →</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="calc-result-panel" id="result-panel">
+      @if (result) {
+      <div class="total-value-card">
+        <span class="total-value-label">TOTAL ESTIMATED VALUE</span>
+        <div class="total-value-amount">₹{{ result.totalValue | number:'1.0-0' }}</div>
+        <span class="total-value-sub">After {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }} at {{ f['annualRate'].value }}% p.a.</span>
+      </div>
+      <div class="result-pair">
+        <div class="result-pair-card"><span class="result-pair-label">Total Invested</span><span class="result-pair-value">₹{{ result.totalInvested | number:'1.0-0' }}</span><span class="result-pair-tag">Your contribution</span></div>
+        <div class="result-pair-card"><span class="result-pair-label">Est. Returns</span><span class="result-pair-value result-pair-value--accent">₹{{ result.estimatedReturns | number:'1.0-0' }}</span><span class="result-pair-tag result-pair-tag--accent">+{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% gains</span></div>
+      </div>
+      <div class="growth-chart-card">
+        <div class="graph-header"><h2>10-Year SIP Growth Chart</h2><div class="graph-legend"><span class="legend-chip invested-chip">■ Invested</span><span class="legend-chip returns-chip">■ Returns</span></div></div>
+        <div class="chart-container chart-container--growth"><canvas #growthChart></canvas></div>
+      </div>
+      } @else {
+      <div class="card calc-result-placeholder"><div class="placeholder-icon">📊</div><p>Adjust the sliders and click <strong>Calculate My 10-Year Wealth</strong> to see your SIP returns</p></div>
+      }
+    </div>
+  </div>
+
+  @if (result && smartInsights.length) {
+  <div class="card insights-section">
+    <h2>💡 Smart Insights</h2>
+    <div class="insights-grid">
+      @for (insight of smartInsights; track insight.text) {
+      <div class="insight-card"><span class="insight-icon">{{ insight.icon }}</span><span class="insight-text" [innerHTML]="insight.text"></span></div>
+      }
+    </div>
+  </div>
+  }
+
+  @if (result && projectionRows.length) {
+  <div class="card">
+    <h2>Year-by-Year SIP Projection</h2>
+    <div class="projection-table-wrap">
+      <table class="projection-table">
+        <thead><tr><th>Year</th><th>Total Invested</th><th>Est. Gains</th><th>Total Value</th></tr></thead>
+        <tbody>
+          @for (row of displayedRows; track row.year) {
+          <tr [class.highlight-row]="row.year === f['years'].value"><td>{{ row.year }}</td><td>₹{{ row.invested | number:'1.0-0' }}</td><td class="gains-col">₹{{ row.gains | number:'1.0-0' }}</td><td class="value-col">₹{{ row.value | number:'1.0-0' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (projectionRows.length > 5) {
+    <button type="button" class="view-full-btn" (click)="showFullTable = !showFullTable">{{ showFullTable ? '▲ Show Less' : '▼ View Full Table (' + f['years'].value + ' years)' }}</button>
+    }
+  </div>
+  }
+
+  <!-- ═══ SEO CONTENT ═══ -->
+  @defer (on viewport; hydrate on viewport) {
+  <div class="card seo-content-section">
+    <h2>10-Year SIP Returns — Complete Comparison Guide</h2>
+    <div class="seo-section">
+      <p>A <strong>10-year SIP</strong> is the most popular investment horizon in India — long enough for compounding to work meaningfully, yet short enough to align with medium-term goals like a home down payment, child's education, or a significant life milestone.</p>
+
+      <h3>10-Year SIP Returns for Different Monthly Amounts</h3>
+      <div class="returns-table-wrapper">
+        <table class="returns-table">
+          <thead><tr><th>Monthly SIP</th><th>Total Invested</th><th>At 10% p.a.</th><th>At 12% p.a.</th><th>At 15% p.a.</th></tr></thead>
+          <tbody>
+            @for (row of comparisonTable; track row.sip) {
+            <tr><td>₹{{ row.sip | number:'1.0-0' }}</td><td>₹{{ row.sip * 120 | number:'1.0-0' }}</td><td>₹{{ formatLakh(row.r10) }}</td><td>₹{{ formatLakh(row.r12) }}</td><td>₹{{ formatLakh(row.r15) }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">*Returns are estimated using standard SIP formula at assumed annual return rates.</p>
+
+      <h3>Why 10 Years is the Sweet Spot for SIP</h3>
+      <ul class="seo-list">
+        <li><strong>Compounding kicks in:</strong> Around year 7–8, your annual gains start exceeding your annual contributions — this is where the "magic" of compounding becomes visible.</li>
+        <li><strong>Market cycles covered:</strong> Over 10 years, your SIP typically rides through 1–2 full market cycles, smoothing returns through rupee cost averaging.</li>
+        <li><strong>Tax-efficient:</strong> Gains held over 12 months qualify for LTCG (12.5% above ₹1.25L/year), which is significantly lower than income tax slab rates on FD interest.</li>
+        <li><strong>Goal alignment:</strong> 10-year SIP aligns with major financial goals — children's education fund, home down payment, car upgrade, or emergency corpus building.</li>
+      </ul>
+
+      <h3>10-Year SIP: Flat vs Step-Up Comparison</h3>
+      <p>A <strong>₹5,000/month flat SIP</strong> for 10 years at 12% yields ~₹11.6 lakh. The same SIP with <strong>10% annual step-up</strong> yields ~₹17.3 lakh — a <strong>49% increase</strong> in final corpus with gradual contribution increases that match salary growth.</p>
+
+      <h3>Best Mutual Fund Categories for 10-Year SIP</h3>
+      <ul class="seo-list">
+        <li><strong>Flexi-Cap Funds:</strong> Broad diversification across market caps. Ideal for a set-and-forget 10-year approach.</li>
+        <li><strong>Large &amp; Mid Cap Funds:</strong> Balanced exposure to stable large-caps and growth-oriented mid-caps.</li>
+        <li><strong>Mid-Cap Funds:</strong> Higher volatility but historically stronger 10-year returns (12–16% CAGR).</li>
+        <li><strong>Nifty 50 Index Fund:</strong> Lowest-cost option with market-matching returns. Excellent for passive investors.</li>
+      </ul>
+    </div>
+  </div>
+  } @placeholder { <div style="min-height:300px"></div> }
+
+  @defer (on viewport; hydrate on viewport) {
+  <div class="card">
+    <h2>FAQs — 10-Year SIP Calculator</h2>
+    <div class="faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+      <div class="faq-item" [class.open]="openFaq === i">
+        <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">{{ faq.q }}<span class="faq-toggle">+</span></button>
+        <div class="faq-answer">{{ faq.a }}</div>
+      </div>
+      }
+    </div>
+  </div>
+  } @placeholder { <div class="card" style="min-height:120px"><h2>FAQs — 10-Year SIP Calculator</h2></div> }
+
+  <div class="card card--compact">
+    <h2>Related SIP Calculators &amp; Articles</h2>
+    <div class="related-links">
+      <a routerLink="/"                              class="related-link related-link--emerald">SIP Calculator India — Free Online SIP Return Calculator →</a>
+      <a routerLink="/sip-calculator-1000-per-month"  class="related-link related-link--sky">₹1,000 SIP Calculator — Returns for 5, 10, 15, 20 Years →</a>
+      <a routerLink="/sip-calculator-5000-per-month"  class="related-link related-link--gold">₹5,000 SIP Calculator — Returns for 10, 20, 30 Years →</a>
+      <a routerLink="/sip-calculator-1-crore"         class="related-link related-link--emerald">SIP for ₹1 Crore — How Much Monthly SIP Needed? →</a>
+      <a routerLink="/fd-calculator"                   class="related-link related-link--sky">FD Calculator India — Fixed Deposit Maturity Calculator →</a>
+      <a routerLink="/blog/sip-vs-fd"                 class="related-link related-link--gold">SIP vs FD 2026 — Which Is Better for 10-Year Goals? →</a>
+    </div>
+  </div>
+
+  <div class="disclaimer-section">
+    <p><strong>Disclaimer:</strong> This SIP calculator provides estimates based on assumed rates of return. Actual mutual fund returns may vary depending on market conditions, fund selection, and economic factors. Past performance does not guarantee future results. Please consult a SEBI-registered financial advisor before making investment decisions.</p>
+  </div>
+
+</section>

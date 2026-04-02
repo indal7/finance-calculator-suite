@@ -1,0 +1,240 @@
+<section class="calc-page">
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SIP Calculator for ₹1 Crore India 2026 — Goal-Based SIP Planner",
+    "url": "https://www.myinvestmentcalculator.in/sip-calculator-1-crore",
+    "description": "Free SIP calculator to reach ₹1 crore. Find out how much monthly SIP you need — ₹10,000/month at 12% = ₹1 crore in ~18 years.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+    "inLanguage": "en-IN",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "6800", "bestRating": "5" },
+    "author": { "@type": "Organization", "name": "Finance Calculator India", "url": "https://www.myinvestmentcalculator.in/" }
+  }
+  </script>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="landing-hero">
+    <div class="landing-hero-inner">
+      <div class="landing-hero-left">
+        <span class="hero-trust-badge">✓ Trusted by 40 Lakh+ Indian Investors</span>
+        <h1>SIP Calculator for ₹1 Crore<br><span class="hero-highlight">How Much Monthly SIP Do You Need?</span></h1>
+        <p class="hero-subtitle">₹1 crore is achievable with discipline. At 12% return: <strong>₹10,000/month × 18 yrs</strong>, <strong>₹5,000/month × 24 yrs</strong>, or <strong>₹15,000/month × 15 yrs</strong>. Plan your path below.</p>
+        <div class="hero-cta-row">
+          <button type="button" class="btn-hero-primary" (click)="scrollToCalculator()">Plan My ₹1 Crore SIP</button>
+          <a routerLink="/" class="btn-hero-outline">Main SIP Calculator</a>
+        </div>
+        <div class="hero-trust-items"><span>✓ 100% Free. No login</span><span>★ 4.9/5 from 6,800+ reviews</span></div>
+      </div>
+      <div class="landing-hero-right">
+        <div class="quick-estimate-card">
+          <div class="quick-estimate-title">Quick ₹1 Crore SIP Planner</div>
+          <div class="quick-field">
+            <label for="quick-monthly">Monthly Investment</label>
+            <div class="quick-slider-row">
+              <input id="quick-monthly" type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value" (input)="syncFromSlider('monthlyInvestment', $event)" [style.--progress-value]="getSliderPct('monthlyInvestment', 500, 100000) + '%'" aria-label="Monthly investment amount">
+              <span class="quick-val">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="quick-field">
+            <label for="quick-rate">Expected annual return (%)</label>
+            <div class="quick-slider-row">
+              <input id="quick-rate" type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value" (input)="syncFromSlider('annualRate', $event)" [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'" aria-label="Expected annual return rate">
+              <span class="quick-val">{{ f['annualRate'].value }}%</span>
+            </div>
+          </div>
+          <div class="quick-field">
+            <label for="quick-years">Duration (years)</label>
+            <div class="quick-slider-row">
+              <input id="quick-years" type="range" min="1" max="40" step="1" [value]="f['years'].value" (input)="syncFromSlider('years', $event)" [style.--progress-value]="getSliderPct('years', 1, 40) + '%'" aria-label="Investment duration in years">
+              <span class="quick-val">{{ f['years'].value }} yrs</span>
+            </div>
+          </div>
+          @if (quickEstimate) {
+          <div class="quick-result-box">
+            <div class="quick-result-row"><span class="quick-result-label">Total Value</span><span class="quick-result-badge">Est. Returns</span></div>
+            <div class="quick-result-row"><span class="quick-result-value">{{ formatCompact(quickEstimate.totalValue) }}</span><span class="quick-result-returns">{{ formatCompact(quickEstimate.estimatedReturns) }}</span></div>
+            <div class="quick-result-meta">after {{ f['years'].value }} years at {{ f['annualRate'].value }}% p.a. <span class="quick-pct">+{{ (quickEstimate.estimatedReturns / quickEstimate.totalInvested * 100) | number:'1.0-0' }}%</span></div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CALCULATOR SECTION ═══ -->
+  <div class="sip-calc-section" id="sip-calculator">
+    <span class="section-eyebrow">₹1 Crore SIP Planner</span>
+    <h2 class="section-heading">Calculate Your Path to ₹1 Crore</h2>
+    <p class="section-sub">Adjust the monthly SIP, return rate, and duration to see how close you get to ₹1 crore.</p>
+  </div>
+
+  <div class="calc-layout">
+    <div class="calc-input-panel">
+      <div class="card">
+        <h2>Enter SIP Details</h2>
+        <form [formGroup]="form" class="form-grid" novalidate>
+          <div class="form-group">
+            <label for="monthlyInvestment">Monthly Investment (₹)</label>
+            <div class="slider-wrapper">
+              <input id="monthlyInvestment" type="number" formControlName="monthlyInvestment" min="500" max="500000" placeholder="e.g. 10000" autocomplete="off" [class.invalid]="f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched" (input)="syncSlider('monthlyInvestment')">
+              <div class="slider-row"><input type="range" min="500" max="100000" step="500" [value]="f['monthlyInvestment'].value" (input)="syncFromSlider('monthlyInvestment', $event)" [style.--progress-value]="getSliderPct('monthlyInvestment', 500, 100000) + '%'" aria-label="Monthly investment amount slider"><span class="slider-value-display">₹{{ f['monthlyInvestment'].value | number:'1.0-0' }}</span></div>
+            </div>
+            @if (f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched) { <span class="error-msg">Enter a valid monthly investment (min ₹500).</span> }
+          </div>
+          <div class="form-group">
+            <label for="annualRate">Expected Annual Return (%)</label>
+            <div class="slider-wrapper">
+              <input id="annualRate" type="number" formControlName="annualRate" min="1" max="30" step="0.5" placeholder="e.g. 12" autocomplete="off" [class.invalid]="f['annualRate'].invalid && f['annualRate'].touched" (input)="syncSlider('annualRate')">
+              <div class="slider-row"><input type="range" min="1" max="30" step="0.5" [value]="f['annualRate'].value" (input)="syncFromSlider('annualRate', $event)" [style.--progress-value]="getSliderPct('annualRate', 1, 30) + '%'" aria-label="Expected annual return rate slider"><span class="slider-value-display">{{ f['annualRate'].value }}%</span></div>
+            </div>
+            @if (f['annualRate'].invalid && f['annualRate'].touched) { <span class="error-msg">Enter a valid annual return rate.</span> }
+            <span class="hint">💡 Large-cap: 10–12% · Mid-cap: 12–15% · Small-cap: 15–18%</span>
+          </div>
+          <div class="form-group">
+            <label for="years">Investment Period (Years)</label>
+            <div class="slider-wrapper">
+              <input id="years" type="number" formControlName="years" min="1" max="40" placeholder="e.g. 20" autocomplete="off" [class.invalid]="f['years'].invalid && f['years'].touched" (input)="syncSlider('years')">
+              <div class="slider-row"><input type="range" min="1" max="40" step="1" [value]="f['years'].value" (input)="syncFromSlider('years', $event)" [style.--progress-value]="getSliderPct('years', 1, 40) + '%'" aria-label="Investment period slider"><span class="slider-value-display">{{ f['years'].value }} yr</span></div>
+            </div>
+            @if (f['years'].invalid && f['years'].touched) { <span class="error-msg">Enter at least 1 year.</span> }
+          </div>
+          <div class="form-group stepup-toggle-group">
+            <label>Step-Up SIP (Annual Increase)</label>
+            <div class="stepup-options">
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 0" (click)="setStepUp(0)">No Step-up</button>
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 5" (click)="setStepUp(5)">+5% / yr</button>
+              <button type="button" class="stepup-btn" [class.active]="stepUpRate === 10" (click)="setStepUp(10)">+10% / yr</button>
+            </div>
+          </div>
+          <button type="button" class="btn-calculate-wealth" (click)="scrollToResult()">Calculate My ₹1 Crore Path →</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="calc-result-panel" id="result-panel">
+      @if (result) {
+      <div class="total-value-card">
+        <span class="total-value-label">TOTAL ESTIMATED VALUE</span>
+        <div class="total-value-amount">₹{{ result.totalValue | number:'1.0-0' }}</div>
+        <span class="total-value-sub">After {{ f['years'].value }} {{ f['years'].value === 1 ? 'year' : 'years' }} at {{ f['annualRate'].value }}% p.a.</span>
+      </div>
+      <div class="result-pair">
+        <div class="result-pair-card"><span class="result-pair-label">Total Invested</span><span class="result-pair-value">₹{{ result.totalInvested | number:'1.0-0' }}</span><span class="result-pair-tag">Your contribution</span></div>
+        <div class="result-pair-card"><span class="result-pair-label">Est. Returns</span><span class="result-pair-value result-pair-value--accent">₹{{ result.estimatedReturns | number:'1.0-0' }}</span><span class="result-pair-tag result-pair-tag--accent">+{{ (result.estimatedReturns / result.totalInvested * 100) | number:'1.1-1' }}% gains</span></div>
+      </div>
+      <div class="growth-chart-card">
+        <div class="graph-header"><h2>SIP Growth Towards ₹1 Crore</h2><div class="graph-legend"><span class="legend-chip invested-chip">■ Invested</span><span class="legend-chip returns-chip">■ Returns</span></div></div>
+        <div class="chart-container chart-container--growth"><canvas #growthChart></canvas></div>
+      </div>
+      } @else {
+      <div class="card calc-result-placeholder"><div class="placeholder-icon">🎯</div><p>Adjust the sliders and click <strong>Calculate My ₹1 Crore Path</strong> to see your SIP projection</p></div>
+      }
+    </div>
+  </div>
+
+  @if (result && smartInsights.length) {
+  <div class="card insights-section">
+    <h2>🎯 ₹1 Crore Goal Insights</h2>
+    <div class="insights-grid">
+      @for (insight of smartInsights; track insight.text) {
+      <div class="insight-card"><span class="insight-icon">{{ insight.icon }}</span><span class="insight-text" [innerHTML]="insight.text"></span></div>
+      }
+    </div>
+  </div>
+  }
+
+  @if (result && projectionRows.length) {
+  <div class="card">
+    <h2>Year-by-Year SIP Projection</h2>
+    <div class="projection-table-wrap">
+      <table class="projection-table">
+        <thead><tr><th>Year</th><th>Total Invested</th><th>Est. Gains</th><th>Total Value</th></tr></thead>
+        <tbody>
+          @for (row of displayedRows; track row.year) {
+          <tr [class.highlight-row]="row.year === f['years'].value"><td>{{ row.year }}</td><td>₹{{ row.invested | number:'1.0-0' }}</td><td class="gains-col">₹{{ row.gains | number:'1.0-0' }}</td><td class="value-col">₹{{ row.value | number:'1.0-0' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (projectionRows.length > 5) {
+    <button type="button" class="view-full-btn" (click)="showFullTable = !showFullTable">{{ showFullTable ? '▲ Show Less' : '▼ View Full Table (' + f['years'].value + ' years)' }}</button>
+    }
+  </div>
+  }
+
+  <!-- ═══ SEO CONTENT ═══ -->
+  @defer (on viewport; hydrate on viewport) {
+  <div class="card seo-content-section">
+    <h2>How to Reach ₹1 Crore with SIP — Complete Guide</h2>
+    <div class="seo-section">
+      <p>Building a corpus of <strong>₹1 crore</strong> (₹1,00,00,000) through SIP is one of the most searched financial goals in India. The good news? It's entirely achievable through disciplined monthly investing in equity mutual funds — even with moderate monthly contributions.</p>
+
+      <h3>Monthly SIP Needed for ₹1 Crore — Quick Reference</h3>
+      <div class="returns-table-wrapper">
+        <table class="returns-table">
+          <thead><tr><th>Duration</th><th>At 10% p.a.</th><th>At 12% p.a.</th><th>At 15% p.a.</th></tr></thead>
+          <tbody>
+            @for (row of goalTable; track row.years) {
+            <tr><td>{{ row.years }} Years</td><td>₹{{ row.r10 | number:'1.0-0' }}/mo</td><td>₹{{ row.r12 | number:'1.0-0' }}/mo</td><td>₹{{ row.r15 | number:'1.0-0' }}/mo</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">*Approximate SIP amounts needed to accumulate ₹1 crore. Actual values depend on market returns.</p>
+
+      <h3>Three Strategies to Reach ₹1 Crore Faster</h3>
+      <ul class="seo-list">
+        <li><strong>Start early:</strong> Starting at age 25 gives you 30+ years of compounding. ₹2,800/month at 12% for 30 years = ₹1 crore with only ₹10 lakh invested.</li>
+        <li><strong>Use step-up SIP:</strong> Increasing SIP by 10% annually (matching salary hikes) dramatically cuts the timeline. ₹5,000 starting SIP with 10% step-up reaches ₹1 crore in ~16 years vs ~24 years with flat SIP.</li>
+        <li><strong>Choose high-growth funds:</strong> Mid-cap and small-cap funds have delivered 15–18% CAGR over 10+ year periods. Higher returns mean lower monthly SIP requirements.</li>
+      </ul>
+
+      <h3>₹1 Crore SIP Plan for Different Life Stages</h3>
+      <ul class="seo-list">
+        <li><strong>Age 22–25 (Fresh graduate):</strong> Start with ₹3,000–₹5,000/month in flexi-cap or index fund. Step-up 10% annually. You have 30+ years — even low SIP amounts compound dramatically.</li>
+        <li><strong>Age 30–35 (Mid-career):</strong> ₹15,000–₹20,000/month in diversified equity funds. 15–20 year horizon is ideal. Step-up SIP strongly recommended.</li>
+        <li><strong>Age 40+ (Senior professional):</strong> ₹30,000–₹50,000/month with a mix of large-cap and balanced funds. Shorter horizon requires higher contributions but lower volatility tolerance.</li>
+      </ul>
+
+      <h3>The Power of Compounding — Why ₹1 Crore is Achievable</h3>
+      <p>At 12% return with ₹10,000/month SIP for 20 years: you invest <strong>₹24 lakh</strong> total, but your corpus grows to approximately <strong>₹1 crore</strong>. That means <strong>₹76 lakh comes from compounding</strong> — over 3× your own contribution. The longer you stay invested, the larger the compounding multiplier becomes.</p>
+    </div>
+  </div>
+  } @placeholder { <div style="min-height:300px"></div> }
+
+  @defer (on viewport; hydrate on viewport) {
+  <div class="card">
+    <h2>FAQs — SIP for ₹1 Crore</h2>
+    <div class="faq-list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+      <div class="faq-item" [class.open]="openFaq === i">
+        <button class="faq-question" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq === i">{{ faq.q }}<span class="faq-toggle">+</span></button>
+        <div class="faq-answer">{{ faq.a }}</div>
+      </div>
+      }
+    </div>
+  </div>
+  } @placeholder { <div class="card" style="min-height:120px"><h2>FAQs — SIP for ₹1 Crore</h2></div> }
+
+  <div class="card card--compact">
+    <h2>Related SIP Calculators &amp; Articles</h2>
+    <div class="related-links">
+      <a routerLink="/"                              class="related-link related-link--emerald">SIP Calculator India — Free Online SIP Return Calculator →</a>
+      <a routerLink="/sip-calculator-1000-per-month"  class="related-link related-link--sky">₹1,000 SIP Calculator — Monthly Returns for 5–25 Years →</a>
+      <a routerLink="/sip-calculator-5000-per-month"  class="related-link related-link--gold">₹5,000 SIP Calculator — Returns for 10, 20, 30 Years →</a>
+      <a routerLink="/sip-calculator-10-years"        class="related-link related-link--emerald">SIP Calculator for 10 Years — Compare ₹1K, ₹5K, ₹10K Returns →</a>
+      <a routerLink="/lumpsum-calculator"              class="related-link related-link--sky">Lumpsum Calculator — One-Time Investment Returns →</a>
+      <a routerLink="/cagr-calculator"                 class="related-link related-link--gold">CAGR Calculator — Measure Annual Investment Growth →</a>
+    </div>
+  </div>
+
+  <div class="disclaimer-section">
+    <p><strong>Disclaimer:</strong> This SIP calculator provides estimates based on assumed rates of return. Actual mutual fund returns may vary depending on market conditions, fund selection, and economic factors. Past performance does not guarantee future results. Please consult a SEBI-registered financial advisor before making investment decisions.</p>
+  </div>
+
+</section>

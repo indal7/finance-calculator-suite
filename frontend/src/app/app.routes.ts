@@ -49,6 +49,30 @@ export const routes: Routes = [
       import('./components/income-tax-calculator/income-tax-calculator').then(m => m.IncomeTaxCalculatorComponent)
   },
   {
+    path: 'sip-calculator-1000-per-month',
+    title: '₹1,000 SIP Calculator 2026 — Monthly Returns for 5, 10, 15, 20, 25 Years',
+    loadComponent: () =>
+      import('./components/sip-1000-per-month/sip-1000-per-month').then(m => m.Sip1000PerMonthComponent)
+  },
+  {
+    path: 'sip-calculator-5000-per-month',
+    title: '₹5,000 SIP Calculator 2026 — Monthly Returns for 10, 20, 30 Years',
+    loadComponent: () =>
+      import('./components/sip-5000-per-month/sip-5000-per-month').then(m => m.Sip5000PerMonthComponent)
+  },
+  {
+    path: 'sip-calculator-1-crore',
+    title: 'SIP Calculator for ₹1 Crore 2026 — How Much Monthly SIP Do You Need?',
+    loadComponent: () =>
+      import('./components/sip-1-crore/sip-1-crore').then(m => m.Sip1CroreComponent)
+  },
+  {
+    path: 'sip-calculator-10-years',
+    title: 'SIP Calculator for 10 Years 2026 — ₹1K, ₹5K, ₹10K Monthly Returns',
+    loadComponent: () =>
+      import('./components/sip-10-years/sip-10-years').then(m => m.Sip10YearsComponent)
+  },
+  {
     path: 'blog',
     title: 'Finance Blog – SIP, EMI, FD & Investment Tips India 2026',
     loadComponent: () =>

@@ -1,0 +1,19 @@
+/* ── 10-Year SIP Calculator – Component-scoped overrides ── */
+
+.returns-table-wrapper { overflow-x: auto; margin: 1rem 0; }
+.returns-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.returns-table th, .returns-table td { padding: 0.625rem 0.75rem; text-align: right; border-bottom: 1px solid var(--border); }
+.returns-table th { background: var(--gray-50); color: var(--text-secondary); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3px; }
+.returns-table td:first-child, .returns-table th:first-child { text-align: left; }
+.returns-table tbody tr:hover { background: var(--primary-light); }
+.table-note { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+.seo-content-section .seo-section p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75; margin-bottom: 1rem; }
+.seo-content-section .seo-section p strong { color: var(--text-primary); }
+.seo-content-section .seo-section h3 { margin-top: 1.5rem; }
+
+.seo-content-section,
+.card:has(.faq-list) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
+}
