@@ -30,7 +30,7 @@ import uuid
 import html
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -203,7 +203,8 @@ def handler(event: dict, context) -> dict:
         return bad_request(error, request_id)
 
     # Build DynamoDB item
-    now = datetime.now(timezone.utc).isoformat()
+    IST = timezone(timedelta(hours=5, minutes=30))
+    now = datetime.now(IST).isoformat()
     submission_id = str(uuid.uuid4())
     item = {
         "id":         submission_id,

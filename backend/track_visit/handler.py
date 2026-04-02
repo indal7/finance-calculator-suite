@@ -12,7 +12,7 @@ import html
 import os
 import re
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import boto3
 
@@ -79,7 +79,8 @@ def handler(event: dict, context: object) -> dict:
     visitor_id = hashlib.sha256(raw_fp.encode()).hexdigest()[:16]
 
     # ── Build DynamoDB item ──────────────────────────────────────────────
-    now = datetime.now(timezone.utc)
+    IST = timezone(timedelta(hours=5, minutes=30))
+    now = datetime.now(IST)
     visit_id = str(uuid.uuid4())
 
     item: dict = {
@@ -87,7 +88,8 @@ def handler(event: dict, context: object) -> dict:
         "visitor_id": visitor_id,
         "page_url": html.escape(page_url),
         "timestamp": now.isoformat(),
-        "date": now.strftime("%Y-%m-%d"),  # partition-friendly date key
+        "date": now.strftime("%Y-%m-%d"),  # partition-friendly date key (IST)
+        "ip_address": source_ip or None,
         "user_agent": html.escape(user_agent) if user_agent else None,
         "ip_hash": ip_hash or None,
         "referrer": html.escape(referrer) if referrer else None,
