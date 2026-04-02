@@ -1008,6 +1008,7 @@ code {
 
 /* ── Step-up Buttons ─────────────────────────────────────────── */
 .stepup-toggle-group { gap: var(--sp-2); }
+.stepup-label { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
 
 .stepup-options {
   display: grid;
