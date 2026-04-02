@@ -132,7 +132,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: us-east-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -147,7 +147,7 @@ jobs:
 
       - name: Terraform Plan (frontend)
         working-directory: terraform/frontend
-        run: terraform plan -var="aws_region=${{ env.AWS_REGION }}" -out=tfplan
+        run: terraform plan -out=tfplan
 
       - name: Terraform Apply (frontend)
         working-directory: terraform/frontend
@@ -177,7 +177,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: us-east-1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
