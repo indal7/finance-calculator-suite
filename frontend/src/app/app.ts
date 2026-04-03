@@ -1,5 +1,7 @@
-import { Component, inject, afterNextRender } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, afterNextRender, DestroyRef } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 import { HeaderComponent } from './components/header/header';
 import { FooterComponent } from './components/footer/footer';
 import { TrackingService } from './services/tracking.service';
@@ -15,6 +17,19 @@ export class App {
 
   constructor() {
     const tracking = inject(TrackingService);
-    afterNextRender(() => tracking.init());
+    const router = inject(Router);
+    const destroyRef = inject(DestroyRef);
+
+    afterNextRender(() => {
+      tracking.init();
+
+      // Fallback: force scroll-to-top on every navigation for edge cases
+      router.events.pipe(
+        filter(e => e instanceof NavigationEnd),
+        takeUntilDestroyed(destroyRef)
+      ).subscribe(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
+    });
   }
 }
