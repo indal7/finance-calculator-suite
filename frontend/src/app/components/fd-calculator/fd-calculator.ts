@@ -1,5 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -7,6 +6,7 @@ import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, FdResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
+import { BaseCalculator } from '../base-calculator';
 
 @Component({
   selector: 'app-fd-calculator',
@@ -15,12 +15,11 @@ import { SeoService } from '../../services/seo.service';
   templateUrl: './fd-calculator.html',
   styleUrls: ['./fd-calculator.css']
 })
-export class FdCalculator implements OnInit, OnDestroy {
+export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
   private readonly cdr      = inject(ChangeDetectorRef);
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private sub?: Subscription;
   private calcSub?: Subscription;
 
@@ -28,7 +27,7 @@ export class FdCalculator implements OnInit, OnDestroy {
   private chartInstance: any = null;
   fdProjectionCache: Array<{year: number; interest: number; maturity: number}> = [];
 
-  form = this.fb.group({
+  override form = this.fb.group({
     principal:            [100000, [Validators.required, Validators.min(1)]],
     annualRate:           [7,      [Validators.required, Validators.min(0.01)]],
     years:                [3,      [Validators.required, Validators.min(0.08)]],
@@ -36,13 +35,6 @@ export class FdCalculator implements OnInit, OnDestroy {
   });
 
   result: (FdResult & { localCalc: true }) | null = null;
-  apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  apiError = '';
-  openFaq: number | null = null;
-  showFullTable = false;
-
-  copied = false;
-  private copyTimer?: ReturnType<typeof setTimeout>;
 
   copyResult(): void {
     if (!this.result) return;
@@ -137,35 +129,6 @@ export class FdCalculator implements OnInit, OnDestroy {
     return this.showFullTable ? this.fdProjectionCache : this.fdProjectionCache.slice(0, 5);
   }
 
-  /** Format value in Indian notation (L / Cr) */
-  formatIndian(val: number): string {
-    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
-    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
-    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
-    return val.toFixed(0);
-  }
-
-  /** Format summary strip values (compact) */
-  formatCompact(val: number): string {
-    if (val >= 10000000) return '₹' + (val / 10000000).toFixed(1) + 'Cr';
-    if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';
-    if (val >= 1000) return '₹' + (val / 1000).toFixed(0) + 'K';
-    return '₹' + val.toFixed(0);
-  }
-
-  scrollToTop(): void {
-    if (this.isBrowser) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  scrollToResult(): void {
-    if (this.isBrowser) {
-      const el = document.querySelector('.calc-result-panel');
-      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
   /** Smart insights dynamically computed from current result */
   get smartInsights(): Array<{icon: string; text: string}> {
     if (!this.result) return [];
@@ -199,6 +162,7 @@ export class FdCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
+    super();
     this.seo.setTitle('FD Calculator India 2026 – SBI, HDFC, ICICI Fixed Deposit Return Calculator');
     this.seo.setDescription('Free FD calculator India 2026. Calculate fixed deposit maturity amount & interest for SBI, HDFC, ICICI, PNB. ₹10 lakh FD earns ₹5,833/month at 7%. Senior citizen rates included.');
     this.seo.updateOgTags(
@@ -235,24 +199,6 @@ export class FdCalculator implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.calculate();
     }
-  }
-
-  get f() { return this.form.controls; }
-
-  syncSlider(field: string): void { /* reactive */ }
-
-  syncFromSlider(field: string, event: Event): void {
-    const val = parseFloat((event.target as HTMLInputElement).value);
-    this.form.get(field)?.setValue(val);
-  }
-
-  getSliderPct(field: string, min: number, max: number): number {
-    const val = this.form.get(field)?.value ?? min;
-    return Math.round(((val - min) / (max - min)) * 100);
-  }
-
-  toggleFaq(index: number): void {
-    this.openFaq = this.openFaq === index ? null : index;
   }
 
   calculate(): void {
@@ -297,8 +243,8 @@ export class FdCalculator implements OnInit, OnDestroy {
   renderGrowthChart(): void {
     if (!this.isBrowser || !this.fdGrowthChartRef?.nativeElement || !this.fdProjectionCache.length) return;
 
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
+    import('../../services/chart-setup').then(({ registerChartComponents }) => {
+      const Chart = registerChartComponents();
 
       const labels = this.fdProjectionCache.map(r => `Year ${r.year}`);
       const principalLine = this.fdProjectionCache.map(() => this.result?.principal ?? 0);

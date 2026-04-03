@@ -1,8 +1,4 @@
 """Unit tests for utils.py formulas."""
-import sys
-import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
 import pytest
 from utils import calculate_sip, calculate_emi, calculate_fd, calculate_cagr
 

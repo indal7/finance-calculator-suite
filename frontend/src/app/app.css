@@ -1,3 +1,20 @@
+/* ─── Skip Link (a11y) ─── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  background: var(--primary, #00B386);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
 /* ─── Main Content ─── */
 .main-content {
   min-height: calc(100vh - 130px);

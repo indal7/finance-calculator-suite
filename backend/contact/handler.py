@@ -22,7 +22,6 @@ Response (201):
 }
 """
 
-import sys
 import os
 import re
 import time
@@ -31,8 +30,6 @@ import html
 import json
 import logging
 from datetime import datetime, timezone, timedelta
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from utils import (
     CORS_HEADERS, bad_request, server_error,

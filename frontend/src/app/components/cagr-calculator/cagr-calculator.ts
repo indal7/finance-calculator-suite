@@ -1,5 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -7,6 +6,7 @@ import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, CagrResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
+import { BaseCalculator } from '../base-calculator';
 
 @Component({
   selector: 'app-cagr-calculator',
@@ -15,12 +15,11 @@ import { SeoService } from '../../services/seo.service';
   templateUrl: './cagr-calculator.html',
   styleUrls: ['./cagr-calculator.css']
 })
-export class CagrCalculator implements OnInit, OnDestroy {
+export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
   private readonly cdr      = inject(ChangeDetectorRef);
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private sub?: Subscription;
   private calcSub?: Subscription;
 
@@ -28,20 +27,13 @@ export class CagrCalculator implements OnInit, OnDestroy {
   private chartInstance: any = null;
   cagrProjectionCache: Array<{year: number; value: number; gain: number}> = [];
 
-  form = this.fb.group({
+  override form = this.fb.group({
     beginningValue: [50000,  [Validators.required, Validators.min(0.01)]],
     endingValue:    [100000, [Validators.required, Validators.min(0.01)]],
     years:          [5,      [Validators.required, Validators.min(0.08)]]
   });
 
   result: (CagrResult & { localCalc: true }) | null = null;
-  apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  apiError = '';
-  openFaq: number | null = null;
-  showFullTable = false;
-
-  copied = false;
-  private copyTimer?: ReturnType<typeof setTimeout>;
 
   copyResult(): void {
     if (!this.result) return;
@@ -87,35 +79,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
   /** Rows visible in table — 5 by default, all when expanded */
   get displayedRows(): Array<{year: number; value: number; gain: number}> {
     return this.showFullTable ? this.cagrProjectionCache : this.cagrProjectionCache.slice(0, 5);
-  }
-
-  /** Format value in Indian notation (L / Cr) */
-  formatIndian(val: number): string {
-    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
-    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
-    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
-    return val.toFixed(0);
-  }
-
-  /** Format summary strip values (compact) */
-  formatCompact(val: number): string {
-    if (val >= 10000000) return '\u20b9' + (val / 10000000).toFixed(1) + 'Cr';
-    if (val >= 100000) return '\u20b9' + (val / 100000).toFixed(1) + 'L';
-    if (val >= 1000) return '\u20b9' + (val / 1000).toFixed(0) + 'K';
-    return '\u20b9' + val.toFixed(0);
-  }
-
-  scrollToTop(): void {
-    if (this.isBrowser) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  scrollToResult(): void {
-    if (this.isBrowser) {
-      const el = document.querySelector('.calc-result-panel');
-      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
   }
 
   /** Smart insights dynamically computed from current result */
@@ -195,6 +158,7 @@ export class CagrCalculator implements OnInit, OnDestroy {
   ];
 
   constructor() {
+    super();
     this.seo.setTitle('CAGR Calculator India 2026 – Free Compound Annual Growth Rate Calculator');
     this.seo.setDescription('Free CAGR calculator India 2026. Calculate compound annual growth rate of stocks, mutual funds & investments. Nifty 50 CAGR = 12.2% over 20 years. Compare your returns instantly.');
     this.seo.updateOgTags(
@@ -231,24 +195,6 @@ export class CagrCalculator implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.calculate();
     }
-  }
-
-  get f() { return this.form.controls; }
-
-  syncSlider(field: string): void { /* reactive */ }
-
-  syncFromSlider(field: string, event: Event): void {
-    const val = parseFloat((event.target as HTMLInputElement).value);
-    this.form.get(field)?.setValue(val);
-  }
-
-  getSliderPct(field: string, min: number, max: number): number {
-    const val = this.form.get(field)?.value ?? min;
-    return Math.round(((val - min) / (max - min)) * 100);
-  }
-
-  toggleFaq(index: number): void {
-    this.openFaq = this.openFaq === index ? null : index;
   }
 
   calculate(): void {
@@ -291,8 +237,8 @@ export class CagrCalculator implements OnInit, OnDestroy {
   renderGrowthChart(): void {
     if (!this.isBrowser || !this.cagrGrowthChartRef?.nativeElement || !this.cagrProjectionCache.length) return;
 
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
+    import('../../services/chart-setup').then(({ registerChartComponents }) => {
+      const Chart = registerChartComponents();
 
       const beginVal = this.form.getRawValue().beginningValue ?? 0;
       const labels = this.cagrProjectionCache.map(r => `Year ${r.year}`);

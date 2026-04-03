@@ -67,7 +67,7 @@ logger = get_logger()
 
 CORS_HEADERS = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin":  "*",
+    "Access-Control-Allow-Origin":  "https://www.myinvestmentcalculator.in",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
 }
@@ -162,6 +162,31 @@ def require_positive(data: dict, *keys: str, min_val: float = 0.0001) -> str | N
             return f"'{key}' must be a number."
         if num < min_val:
             return f"'{key}' must be greater than {min_val}."
+    return None
+
+
+# Upper-bound limits per field name
+_FIELD_LIMITS: dict[str, float] = {
+    "years":              100,
+    "annualRate":         100,
+    "principal":          100_000_000,   # 10 crore
+    "monthlyInvestment":  1_000_000,     # 10 lakh
+    "beginningValue":     100_000_000,   # 10 crore
+    "endingValue":        100_000_000,   # 10 crore
+    "compoundingFrequency": 365,
+}
+
+
+def require_bounded(data: dict, *keys: str, min_val: float = 0.0001) -> str | None:
+    """Validate that fields are positive AND within safe upper bounds."""
+    err = require_positive(data, *keys, min_val=min_val)
+    if err:
+        return err
+    for key in keys:
+        num = float(data[key])
+        limit = _FIELD_LIMITS.get(key)
+        if limit is not None and num > limit:
+            return f"'{key}' must be at most {limit:,.0f}."
     return None
 
 
@@ -294,4 +319,72 @@ def calculate_cagr(beginning_value: float, ending_value: float, years: float) ->
         "totalGain":      round(total_gain, 2),
     }
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Reusable Lambda handler wrapper
+# ──────────────────────────────────────────────────────────────────────────────
+
+from typing import Callable
+
+
+def make_calculator_handler(
+    *,
+    name: str,
+    required_fields: tuple[str, ...],
+    calculate_fn: Callable[..., dict],
+    extract_kwargs: Callable[[dict], dict],
+) -> Callable[[dict, Any], dict]:
+    """
+    Factory that creates a standardised Lambda handler for calculator endpoints.
+
+    Parameters
+    ----------
+    name:             Handler name for logging (e.g. "sip", "emi").
+    required_fields:  Body keys that must be present and positive.
+    calculate_fn:     The cached formula function from this module.
+    extract_kwargs:   A callable that takes the parsed body dict and returns
+                      the keyword arguments to pass to ``calculate_fn``.
+    """
+
+    def handler(event: dict, context: Any) -> dict:
+        request_id = get_request_id(event)
+        start_time = time.time()
+
+        # CORS preflight
+        http_method = event.get("httpMethod") or (
+            event.get("requestContext", {}).get("http", {}).get("method", "")
+        )
+        if http_method == "OPTIONS":
+            return {"statusCode": 200, "headers": CORS_HEADERS, "body": ""}
+
+        # Parse body
+        try:
+            body = parse_body(event)
+        except Exception:
+            return bad_request("Invalid JSON body.", request_id)
+
+        # Validate (positive + upper bounds)
+        error = require_bounded(body, *required_fields)
+        if error:
+            return bad_request(error, request_id)
+
+        # Log
+        params = {k: body[k] for k in required_fields}
+        source_ip = event.get("requestContext", {}).get("http", {}).get("sourceIp")
+        log_request(request_id, name, params, source_ip)
+
+        # Calculate
+        try:
+            kwargs = extract_kwargs(body)
+            result = calculate_fn(**kwargs)
+        except Exception as exc:
+            log_response(request_id, name, (time.time() - start_time) * 1000)
+            return server_error(str(exc), request_id)
+
+        duration_ms = (time.time() - start_time) * 1000
+        log_response(request_id, name, duration_ms)
+        return ok(result, request_id)
+
+    handler.__name__ = f"{name}_handler"
+    return handler
 

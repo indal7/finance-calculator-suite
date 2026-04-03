@@ -1,11 +1,12 @@
-import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, CommonModule, DecimalPipe } from '@angular/common';
+import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, EmiResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
+import { BaseCalculator } from '../base-calculator';
 
 @Component({
   selector: 'app-emi-calculator',
@@ -14,31 +15,21 @@ import { SeoService } from '../../services/seo.service';
   templateUrl: './emi-calculator.html',
   styleUrls: ['./emi-calculator.css']
 })
-export class EmiCalculator implements OnInit, OnDestroy {
+export class EmiCalculator extends BaseCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
   private readonly cdr      = inject(ChangeDetectorRef);
   private sub?: Subscription;
   private calcSub?: Subscription;
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-
-
-  form = this.fb.group({
+  override form = this.fb.group({
     principal:  [500000, [Validators.required, Validators.min(1)]],
     annualRate: [8.5,    [Validators.required, Validators.min(0.01)]],
     years:      [5,      [Validators.required, Validators.min(1)]]
   });
 
   result: (EmiResult & { localCalc: true }) | null = null;
-  apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  apiError = '';
-  openFaq: number | null = null;
-  showFullTable = false;
-
-  copied = false;
-  private copyTimer?: ReturnType<typeof setTimeout>;
 
   copyResult(): void {
     if (!this.result) return;
@@ -114,36 +105,7 @@ export class EmiCalculator implements OnInit, OnDestroy {
     return this.showFullTable ? rows : rows.slice(0, 5);
   }
 
-  /** Format value in Indian notation (L / Cr) */
-  formatIndian(val: number): string {
-    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
-    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
-    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
-    return val.toFixed(0);
-  }
-
-  /** Format summary strip values (compact) */
-  formatCompact(val: number): string {
-    if (val >= 10000000) return '₹' + (val / 10000000).toFixed(1) + 'Cr';
-    if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';
-    if (val >= 1000) return '₹' + (val / 1000).toFixed(0) + 'K';
-    return '₹' + val.toFixed(0);
-  }
-
-  scrollToTop(): void {
-    if (this.isBrowser) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  scrollToResult(): void {
-    if (this.isBrowser) {
-      const el = document.querySelector('.calc-result-panel');
-      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  /** Smart insights dynamically computed from current result */
+  /** Rows visible in table — 5 by default, all when expanded */
   get smartInsights(): Array<{icon: string; text: string}> {
     if (!this.result) return [];
     const { principal, annualRate, years } = this.form.getRawValue() as any;
@@ -205,6 +167,7 @@ export class EmiCalculator implements OnInit, OnDestroy {
   }
 
   constructor() {
+    super();
     this.seo.setTitle('EMI Calculator India 2026 – Free Home Loan, Car & Personal Loan EMI Calculator');
     this.seo.setDescription('Free EMI calculator India 2026. Calculate monthly EMI for home loan, car loan & personal loan. Full amortization schedule for SBI, HDFC, ICICI. ₹50 lakh loan EMI = ₹43,391/month at 8.5%.');
     this.seo.updateOgTags(
@@ -242,24 +205,6 @@ export class EmiCalculator implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.calculate();
     }
-  }
-
-  get f() { return this.form.controls; }
-
-  syncSlider(field: string): void { /* reactive */ }
-
-  syncFromSlider(field: string, event: Event): void {
-    const val = parseFloat((event.target as HTMLInputElement).value);
-    this.form.get(field)?.setValue(val);
-  }
-
-  getSliderPct(field: string, min: number, max: number): number {
-    const val = this.form.get(field)?.value ?? min;
-    return Math.round(((val - min) / (max - min)) * 100);
-  }
-
-  toggleFaq(index: number): void {
-    this.openFaq = this.openFaq === index ? null : index;
   }
 
   calculate(): void {

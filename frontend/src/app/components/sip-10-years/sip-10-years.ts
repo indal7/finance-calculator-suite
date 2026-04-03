@@ -168,8 +168,8 @@ export class Sip10YearsComponent implements OnInit, OnDestroy {
 
   renderGrowthChart(): void {
     if (!this.isBrowser || !this.growthChartRef?.nativeElement || !this.projectionRows.length) return;
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
+    import('../../services/chart-setup').then(({ registerChartComponents }) => {
+      const Chart = registerChartComponents();
       const labels = this.projectionRows.map(r => `Yr ${r.year}`);
       const investedData = this.projectionRows.map(r => r.invested);
       const returnsData = this.projectionRows.map(r => r.gains);

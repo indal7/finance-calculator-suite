@@ -17,6 +17,7 @@ import { filter } from 'rxjs';
 export class HeaderComponent {
   menuOpen = signal(false);
   scrolled = signal(false);
+  dropdownOpen = signal(false);
 
   constructor() {
     const router = inject(Router);
@@ -43,6 +44,14 @@ export class HeaderComponent {
     if (!this.menuOpen()) return;
     this.menuOpen.set(false);
     this.setBodyScroll(false);
+  }
+
+  toggleDropdown(): void {
+    this.dropdownOpen.update(v => !v);
+  }
+
+  closeDropdown(): void {
+    this.dropdownOpen.set(false);
   }
 
   private setBodyScroll(lock: boolean): void {

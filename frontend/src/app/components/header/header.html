@@ -17,7 +17,18 @@
       <a routerLink="/fd-calculator" routerLinkActive="active">FD</a>
       <a routerLink="/cagr-calculator" routerLinkActive="active">CAGR</a>
       <a routerLink="/blog" routerLinkActive="active">Blog</a>
-      <a routerLink="/about-us" routerLinkActive="active">About</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn" (click)="toggleDropdown()" [attr.aria-expanded]="dropdownOpen()">
+          More ▾
+        </button>
+        <div class="nav-dropdown-menu" [class.open]="dropdownOpen()">
+          <a routerLink="/ppf-calculator" routerLinkActive="active" (click)="closeDropdown()">PPF Calculator</a>
+          <a routerLink="/lumpsum-calculator" routerLinkActive="active" (click)="closeDropdown()">Lumpsum Calculator</a>
+          <a routerLink="/income-tax-calculator" routerLinkActive="active" (click)="closeDropdown()">Income Tax Calculator</a>
+          <a routerLink="/about-us" routerLinkActive="active" (click)="closeDropdown()">About Us</a>
+          <a routerLink="/contact-us" routerLinkActive="active" (click)="closeDropdown()">Contact Us</a>
+        </div>
+      </div>
     </nav>
 
     <!-- CTA (Desktop) -->

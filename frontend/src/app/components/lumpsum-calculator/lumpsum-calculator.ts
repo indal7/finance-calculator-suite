@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -7,6 +6,7 @@ import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, LumpsumResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
+import { BaseCalculator } from '../base-calculator';
 
 function positiveNumber(min = 0.01) {
   return Validators.compose([Validators.required, Validators.min(min)])!;
@@ -20,35 +20,26 @@ function positiveNumber(min = 0.01) {
   styleUrls: ['./lumpsum-calculator.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
+export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit, OnDestroy {
   private readonly fb  = inject(FormBuilder);
   private readonly svc = inject(CalculatorService);
   private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
   private sub?: Subscription;
   private calcSub?: Subscription;
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   @ViewChild('growthChart') growthChartRef!: ElementRef<HTMLCanvasElement>;
   private growthChartInstance: any = null;
 
-  form = this.fb.group({
+  override form = this.fb.group({
     principal:  [100000, positiveNumber(1000)],
     annualRate: [12,     positiveNumber(1)],
     years:      [10,     positiveNumber(1)]
   });
 
   result: (LumpsumResult & { localCalc: true }) | null = null;
-  apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  apiError = '';
 
   projectionRows: Array<{year: number; invested: number; value: number; gains: number}> = [];
-  showFullTable = false;
-
-  copied = false;
-  private copyTimer?: ReturnType<typeof setTimeout>;
-
-  openFaq: number | null = null;
 
   readonly faqs = [
     {
@@ -78,6 +69,7 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
   ];
 
   constructor() {
+    super();
     this.seo.setTitle('Lumpsum Calculator India 2026 – Free One-Time Investment Return Calculator');
     this.seo.setDescription('Free lumpsum calculator India 2026. Calculate returns on one-time mutual fund investments. ₹1 lakh at 12% for 10 years = ₹3.11 lakh. Year-by-year projections & comparison with SIP.');
     this.seo.setKeywords(['lumpsum calculator', 'lump sum investment calculator India', 'one time investment returns', 'mutual fund lumpsum returns', 'lumpsum vs SIP India']);
@@ -109,56 +101,9 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
     }
   }
 
-  get f() { return this.form.controls; }
-
-  syncSlider(field: string): void { }
-
-  syncFromSlider(field: string, event: Event): void {
-    const val = parseFloat((event.target as HTMLInputElement).value);
-    this.form.get(field)?.setValue(val);
-  }
-
-  getSliderPct(field: string, min: number, max: number): number {
-    const val = this.form.get(field)?.value ?? min;
-    return Math.round(((val - min) / (max - min)) * 100);
-  }
-
-  toggleFaq(index: number): void {
-    this.openFaq = this.openFaq === index ? null : index;
-  }
-
   /** Rows visible in table — 5 by default, all when expanded */
   get displayedRows(): Array<{year: number; invested: number; value: number; gains: number}> {
     return this.showFullTable ? this.projectionRows : this.projectionRows.slice(0, 5);
-  }
-
-  /** Format value in Indian notation (L / Cr) */
-  formatIndian(val: number): string {
-    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
-    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
-    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
-    return val.toFixed(0);
-  }
-
-  /** Format summary strip values (compact) */
-  formatCompact(val: number): string {
-    if (val >= 10000000) return '\u20b9' + (val / 10000000).toFixed(1) + 'Cr';
-    if (val >= 100000) return '\u20b9' + (val / 100000).toFixed(1) + 'L';
-    if (val >= 1000) return '\u20b9' + (val / 1000).toFixed(0) + 'K';
-    return '\u20b9' + val.toFixed(0);
-  }
-
-  scrollToTop(): void {
-    if (this.isBrowser) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  scrollToResult(): void {
-    if (this.isBrowser) {
-      const el = document.querySelector('.calc-result-panel');
-      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
   }
 
   /** Smart insights dynamically computed from current result */
@@ -265,8 +210,8 @@ export class LumpsumCalculatorComponent implements OnInit, OnDestroy {
   renderGrowthChart(): void {
     if (!this.isBrowser || !this.growthChartRef?.nativeElement || !this.projectionRows.length) return;
 
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
+    import('../../services/chart-setup').then(({ registerChartComponents }) => {
+      const Chart = registerChartComponents();
 
       const labels = this.projectionRows.map(r => `Year ${r.year}`);
       const investedData = this.projectionRows.map(r => r.invested);

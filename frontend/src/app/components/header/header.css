@@ -184,8 +184,49 @@
   .logo-name { font-size: 0.95rem; }
 }
 
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-btn {
+  color: var(--text-secondary, #495057);
+  background: none; border: none; cursor: pointer;
+  font-size: 0.875rem; font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm, 6px);
+  transition: color 0.2s, background 0.2s;
+}
+.nav-dropdown-btn:hover {
+  color: var(--text-primary, #1a1a2e);
+  background: var(--gray-100, #f1f3f5);
+}
+.nav-dropdown-menu {
+  display: none; position: absolute;
+  top: 100%; right: 0;
+  min-width: 200px;
+  background: var(--white, #fff);
+  border: 1px solid var(--border, #e9ecef);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  padding: 6px;
+  z-index: 10;
+}
+.nav-dropdown-menu.open { display: flex; flex-direction: column; }
+.nav-dropdown-menu a {
+  color: var(--text-secondary, #495057);
+  text-decoration: none;
+  font-size: 0.875rem; font-weight: 500;
+  padding: 10px 14px; border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-dropdown-menu a:hover,
+.nav-dropdown-menu a.active {
+  background: var(--primary-dim, rgba(0,179,134,0.08));
+  color: var(--primary, #00B386);
+}
+
 /* Focus */
 .nav-desktop a:focus-visible,
+.nav-dropdown-btn:focus-visible,
+.nav-dropdown-menu a:focus-visible,
 .header-cta:focus-visible,
 .logo:focus-visible,
 .hamburger:focus-visible,

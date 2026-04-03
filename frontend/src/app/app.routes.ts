@@ -146,6 +146,8 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: ''
+    title: 'Page Not Found – Finance Calculator India',
+    loadComponent: () =>
+      import('./components/not-found/not-found').then(m => m.NotFoundComponent)
   }
 ];

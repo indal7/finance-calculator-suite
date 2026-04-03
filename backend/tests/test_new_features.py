@@ -1,10 +1,6 @@
 """Tests for new backend features: structured logging, caching, and handler responses."""
-import sys
-import os
 import json
 import logging
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 from utils import (

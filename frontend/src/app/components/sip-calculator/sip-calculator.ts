@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnDestroy, OnInit, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
@@ -8,6 +7,7 @@ import { Subscription, debounceTime } from 'rxjs';
 
 import { CalculatorService, SipResult } from '../../services/calculator';
 import { SeoService } from '../../services/seo.service';
+import { BaseCalculator } from '../base-calculator';
 
 function positiveNumber(min = 0.01) {
   return Validators.compose([Validators.required, Validators.min(min)])!;
@@ -21,7 +21,7 @@ function positiveNumber(min = 0.01) {
   styleUrls: ['./sip-calculator.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SipCalculator implements OnInit, OnDestroy {
+export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
   public router = inject(Router);
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
@@ -29,12 +29,11 @@ export class SipCalculator implements OnInit, OnDestroy {
   private readonly cdr      = inject(ChangeDetectorRef);
   private sub?: Subscription;
   private quickSub?: Subscription;
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   @ViewChild('growthChart') growthChartRef!: ElementRef<HTMLCanvasElement>;
   private chartInstance: any = null;
 
-  form = this.fb.group({
+  override form = this.fb.group({
     monthlyInvestment: [5000,  positiveNumber(500)],
     annualRate:        [12,    positiveNumber(1)],
     years:             [10,    positiveNumber(1)]
@@ -42,20 +41,12 @@ export class SipCalculator implements OnInit, OnDestroy {
 
   result: (SipResult & { localCalc: true }) | null = null;
   quickEstimate: { totalValue: number; totalInvested: number; estimatedReturns: number } | null = null;
-  apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  apiError = '';
 
   /** Step-Up SIP annual increase percentage */
   stepUpRate = 0;
 
-  openFaq: number | null = null;
-  showFullTable = false;
-
   /** Cached computed values */
   projectionRows: Array<{year: number; invested: number; value: number; gains: number}> = [];
-
-copied = false;
-private copyTimer?: ReturnType<typeof setTimeout>;
 
   copyResult(): void {
     if (!this.result) return;
@@ -167,6 +158,7 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   }
 
   constructor() {
+    super();
     this.seo.setTitle('SIP Calculator India 2026 – Free Mutual Fund SIP Return Calculator Online');
     this.seo.setDescription('Free SIP calculator India 2026. Calculate SIP returns for ₹500, ₹1000, ₹5000/month. See how ₹5000 SIP grows to ₹11.6L in 10 years. Step-up SIP, year-by-year projections & ₹1 crore planning.');
     this.seo.updateOgTags(
@@ -209,31 +201,10 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     }
   }
 
-  get f() { return this.form.controls; }
-
-  /** Sync number input → keep slider in sync (just triggers change detection) */
-  syncSlider(field: string): void { /* Angular binds [value] reactively */ }
-
-  /** Sync range slider → patch form control value */
-  syncFromSlider(field: string, event: Event): void {
-    const val = parseFloat((event.target as HTMLInputElement).value);
-    this.form.get(field)?.setValue(val);
-  }
-
-  /** Returns 0–100 percentage for slider fill gradient */
-  getSliderPct(field: string, min: number, max: number): number {
-    const val = this.form.get(field)?.value ?? min;
-    return Math.round(((val - min) / (max - min)) * 100);
-  }
-
   /** Returns SVG stroke-dashoffset for donut chart (circumference ≈ 220) */
   getDonutOffset(invested: number, total: number): number {
     const pct = invested / total;
     return 220 * pct;
-  }
-
-  toggleFaq(index: number): void {
-    this.openFaq = this.openFaq === index ? null : index;
   }
 
   /** Set step-up rate and recalculate */
@@ -365,35 +336,13 @@ private copyTimer?: ReturnType<typeof setTimeout>;
     return insights;
   }
 
-  /** Format value in Indian notation (L / Cr) */
-  formatIndian(val: number): string {
-    if (val >= 10000000) return (val / 10000000).toFixed(2) + ' Cr';
-    if (val >= 100000) return (val / 100000).toFixed(2) + ' L';
-    if (val >= 1000) return (val / 1000).toFixed(1) + 'K';
-    return val.toFixed(0);
-  }
-
-  /** Format summary strip values (compact) */
-  formatCompact(val: number): string {
-    if (val >= 10000000) return '₹' + (val / 10000000).toFixed(1) + 'Cr';
-    if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';
-    if (val >= 1000) return '₹' + (val / 1000).toFixed(0) + 'K';
-    return '₹' + val.toFixed(0);
-  }
-
-  scrollToTop(): void {
-    if (this.isBrowser) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
   scrollToCalculator(): void {
     if (this.isBrowser) {
       document.getElementById('sip-calculator')?.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
-  scrollToResult(): void {
+  override scrollToResult(): void {
     this.calculate();
     if (this.isBrowser) {
       setTimeout(() => {
@@ -415,8 +364,8 @@ private copyTimer?: ReturnType<typeof setTimeout>;
   renderGrowthChart(): void {
     if (!this.isBrowser || !this.growthChartRef?.nativeElement || !this.projectionRows.length) return;
 
-    import('chart.js').then(({ Chart, registerables }) => {
-      Chart.register(...registerables);
+    import('../../services/chart-setup').then(({ registerChartComponents }) => {
+      const Chart = registerChartComponents();
 
       const labels = this.projectionRows.map(r => `Yr ${r.year}`);
       const investedData = this.projectionRows.map(r => r.invested);
