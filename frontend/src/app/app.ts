@@ -24,11 +24,14 @@ export class App {
       tracking.init();
 
       // Fallback: force scroll-to-top on every navigation for edge cases
+      // Skip when URL has a fragment (#anchor) so anchorScrolling still works
       router.events.pipe(
         filter(e => e instanceof NavigationEnd),
         takeUntilDestroyed(destroyRef)
-      ).subscribe(() => {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+      ).subscribe((e) => {
+        if (!(e as NavigationEnd).urlAfterRedirects.includes('#')) {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }
       });
     });
   }
