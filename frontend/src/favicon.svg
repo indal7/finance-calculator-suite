@@ -1,21 +1,129 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Background rounded square -->
-  <rect width="64" height="64" rx="14" fill="#0B1437"/>
-  <!-- Bar chart bars (representing finance/calculator) -->
-  <rect x="9"  y="38" width="10" height="18" rx="2.5" fill="#F5A623" opacity="0.7"/>
-  <rect x="23" y="26" width="10" height="30" rx="2.5" fill="#F5A623"/>
-  <rect x="37" y="32" width="10" height="24" rx="2.5" fill="#00C896" opacity="0.85"/>
-  <!-- Trend line on top -->
-  <polyline
-    points="14,36 28,24 42,30 56,14"
-    fill="none"
-    stroke="#F5A623"
-    stroke-width="3"
-    stroke-linecap="round"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background gradient: deep navy -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A1628;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0D2244;stop-opacity:1"/>
+    </linearGradient>
+    <!-- Gold gradient for bars -->
+    <linearGradient id="goldGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#B8860B;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1"/>
+    </linearGradient>
+    <!-- Teal gradient for accent bar -->
+    <linearGradient id="tealGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#00897B;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#26C6A0;stop-opacity:1"/>
+    </linearGradient>
+    <!-- Arrow gradient -->
+    <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFF176;stop-opacity:1"/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Soft shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Inner glow for rupee -->
+    <filter id="rupeeGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Clip to circle -->
+    <clipPath id="circleClip">
+      <circle cx="256" cy="256" r="240"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer ring / subtle border -->
+  <circle cx="256" cy="256" r="248" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.35"/>
+
+  <!-- Main background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGrad)" filter="url(#shadow)"/>
+
+  <!-- Subtle inner glow ring -->
+  <circle cx="256" cy="256" r="235" fill="none" stroke="#1E4080" stroke-width="6" opacity="0.5"/>
+
+  <!-- Grid lines (subtle) -->
+  <g clip-path="url(#circleClip)" opacity="0.07">
+    <line x1="80" y1="170" x2="430" y2="170" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="80" y1="240" x2="430" y2="240" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="80" y1="310" x2="430" y2="310" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="80" y1="380" x2="430" y2="380" stroke="#FFFFFF" stroke-width="1.5"/>
+  </g>
+
+  <!-- === CHART BARS === -->
+  <!-- Bar 1 (left, medium height) - Gold -->
+  <rect x="108" y="265" width="82" height="115" rx="10" ry="10" fill="url(#goldGrad)" filter="url(#glow)"/>
+  <!-- Bar top shine -->
+  <rect x="112" y="268" width="74" height="10" rx="5" fill="#FFF9C4" opacity="0.25"/>
+
+  <!-- Bar 2 (middle, tall) - Gold -->
+  <rect x="215" y="185" width="82" height="195" rx="10" ry="10" fill="url(#goldGrad)" filter="url(#glow)"/>
+  <!-- Bar top shine -->
+  <rect x="219" y="188" width="74" height="10" rx="5" fill="#FFF9C4" opacity="0.25"/>
+
+  <!-- Bar 3 (right, tallest) - Teal -->
+  <rect x="322" y="130" width="82" height="250" rx="10" ry="10" fill="url(#tealGrad)" filter="url(#glow)"/>
+  <!-- Bar top shine -->
+  <rect x="326" y="133" width="74" height="10" rx="5" fill="#B2DFDB" opacity="0.3"/>
+
+  <!-- === TREND LINE === -->
+  <!-- Line from bar1 top-center → bar2 top-center → bar3 top-center -->
+  <polyline 
+    points="149,258  256,178  363,123" 
+    fill="none" 
+    stroke="url(#arrowGrad)" 
+    stroke-width="7" 
+    stroke-linecap="round" 
     stroke-linejoin="round"
-  />
-  <!-- Trend line dot -->
-  <circle cx="56" cy="14" r="3.5" fill="#F5A623"/>
-  <!-- Rupee symbol hint — small ₹ top-left area -->
-  <text x="48" y="58" font-size="10" fill="#F5A623" font-family="system-ui,sans-serif" font-weight="700" opacity="0.5">₹</text>
+    filter="url(#glow)"
+    opacity="0.9"/>
+
+  <!-- Dot at start -->
+  <circle cx="149" cy="258" r="9" fill="#FFD700" filter="url(#glow)"/>
+  <circle cx="149" cy="258" r="4" fill="#FFF9C4"/>
+
+  <!-- Dot at middle -->
+  <circle cx="256" cy="178" r="9" fill="#FFD700" filter="url(#glow)"/>
+  <circle cx="256" cy="178" r="4" fill="#FFF9C4"/>
+
+  <!-- Dot at end (largest) -->
+  <circle cx="363" cy="123" r="14" fill="#FFD700" filter="url(#glow)"/>
+  <circle cx="363" cy="123" r="7" fill="#FFFDE7"/>
+
+  <!-- === RUPEE SYMBOL (bottom left badge) === -->
+  <!-- Badge circle background -->
+  <circle cx="148" cy="388" r="44" fill="#0D2244"/>
+  <circle cx="148" cy="388" r="42" fill="none" stroke="#FFD700" stroke-width="2.5" opacity="0.8"/>
+
+  <!-- Rupee ₹ symbol -->
+  <g transform="translate(122, 360)" filter="url(#rupeeGlow)">
+    <!-- Top horizontal lines -->
+    <line x1="0" y1="8" x2="46" y2="8" stroke="#FFD700" stroke-width="7" stroke-linecap="round"/>
+    <line x1="0" y1="22" x2="46" y2="22" stroke="#FFD700" stroke-width="7" stroke-linecap="round"/>
+    <!-- Vertical stem -->
+    <line x1="10" y1="8" x2="10" y2="58" stroke="#FFD700" stroke-width="7" stroke-linecap="round"/>
+    <!-- Semi-circle top (R shape) -->
+    <path d="M10,8 Q46,8 46,22 Q46,36 10,36" fill="none" stroke="#FFD700" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Diagonal slash -->
+    <line x1="10" y1="36" x2="46" y2="58" stroke="#FFD700" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <!-- === BOTTOM BASE LINE === -->
+  <line x1="90" y1="382" x2="422" y2="382" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.12"/>
+
+  <!-- Outer decorative ring (premium feel) -->
+  <circle cx="256" cy="256" r="246" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.2"/>
 </svg>
