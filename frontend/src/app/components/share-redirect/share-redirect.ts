@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShareService } from '../../services/share.service';
 
@@ -49,10 +50,14 @@ export class ShareRedirectComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly shareSvc = inject(ShareService);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   error = '';
 
   ngOnInit(): void {
+    // Only run redirect on the client — SSR would cause hydration mismatch
+    if (!this.isBrowser) return;
+
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     if (!id) {
       this.error = 'Invalid share link.';
@@ -66,8 +71,9 @@ export class ShareRedirectComponent implements OnInit {
           this.error = 'Unknown calculator type.';
           return;
         }
+        // Redirect to calculator page with sid param (new share URL format)
         this.router.navigate([routePath], {
-          queryParams: data.inputs,
+          queryParams: { sid: data.id },
           replaceUrl: true
         });
       },

@@ -176,7 +176,7 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.restoreFromQueryParams();
+    const pendingShare = this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
     this.seo.setKeywords([
@@ -196,7 +196,8 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
     this.updateQuickEstimate();
 
     // Calculate once with initial values so user sees result on page load
-    if (this.form.valid) {
+    // Skip if share restore is pending (async callback will calculate)
+    if (!pendingShare && this.form.valid) {
       this.calculate();
     }
   }

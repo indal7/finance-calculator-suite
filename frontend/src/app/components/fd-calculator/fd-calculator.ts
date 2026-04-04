@@ -180,7 +180,7 @@ export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.restoreFromQueryParams();
+    const pendingShare = this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/fd-calculator');
     this.seo.setKeywords([
       'fd calculator india', 'fixed deposit calculator', 'fd calculator online',
@@ -196,7 +196,7 @@ export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
       .subscribe(() => this.calculate());
 
     // Calculate once with initial values so user sees result immediately
-    if (this.form.valid) {
+    if (!pendingShare && this.form.valid) {
       this.calculate();
     }
   }

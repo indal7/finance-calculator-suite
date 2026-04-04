@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, inject, Injector, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -18,6 +18,7 @@ export abstract class BaseCalculator {
   protected readonly shareSvc = inject(ShareService);
   protected readonly route = inject(ActivatedRoute);
   protected readonly cdr = inject(ChangeDetectorRef);
+  private readonly injector = inject(Injector);
 
   /** FAQ accordion state */
   openFaq: number | null = null;
@@ -127,7 +128,8 @@ export abstract class BaseCalculator {
     this.shareSvc.saveShare(payload).subscribe({
       next: (res) => {
         const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.myinvestmentcalculator.in';
-        this.shareUrl = `${origin}/share/${res.id}`;
+        const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+        this.shareUrl = `${origin}${pathname}?sid=${res.id}`;
         this.shareStatus = 'done';
         navigator.clipboard.writeText(this.shareUrl).catch(() => {});
         this.cdr.markForCheck();
@@ -140,11 +142,56 @@ export abstract class BaseCalculator {
     });
   }
 
-  // ── Restore form from query params (shared link redirect) ─────────────
+  // ── Restore form from shared link or direct query params ──────────────
 
+  /**
+   * Checks for `sid` (share ID) query param → fetches inputs from API.
+   * Also checks for direct query params (e.g. ?monthlyInvestment=5000).
+   *
+   * Returns `true` if a share ID is being fetched (caller should skip
+   * auto-calculate — the callback will call calculate() itself).
+   * Returns `false` otherwise (caller should auto-calculate normally).
+   */
   protected restoreFromQueryParams(): boolean {
     const params = this.route.snapshot.queryParams;
-    const keys = Object.keys(params);
+
+    // ── Handle shared link with short ID (?sid=abc123) ──────────────────
+    const shareId = params['sid'];
+    if (shareId && this.isBrowser) {
+      this.shareSvc.getShare(shareId as string).subscribe({
+        next: (data) => {
+          const patch: Record<string, number> = {};
+          for (const key of Object.keys(this.form.controls)) {
+            if (data.inputs[key] !== undefined) {
+              const val = typeof data.inputs[key] === 'number'
+                ? data.inputs[key]
+                : parseFloat(data.inputs[key] as any);
+              if (!isNaN(val) && isFinite(val) && val > 0) {
+                patch[key] = val;
+              }
+            }
+          }
+          if (Object.keys(patch).length) {
+            this.form.patchValue(patch);
+          }
+          this.calculate();
+          this.cdr.markForCheck();
+          // Scroll to results after Angular renders the result panel
+          afterNextRender(() => {
+            scrollToElement('.calc-result-panel');
+          }, { injector: this.injector });
+        },
+        error: () => {
+          // Share fetch failed — fall through to defaults
+          this.calculate();
+          this.cdr.markForCheck();
+        }
+      });
+      return true; // Signal: async restore in progress, don't auto-calculate
+    }
+
+    // ── Handle direct query params (?monthlyInvestment=5000&...) ────────
+    const keys = Object.keys(params).filter(k => k !== 'sid');
     if (!keys.length) return false;
 
     const patch: Record<string, number> = {};
@@ -158,12 +205,7 @@ export abstract class BaseCalculator {
     }
     if (Object.keys(patch).length) {
       this.form.patchValue(patch);
-      // Scroll to results after calculation renders (shared link)
-      if (this.isBrowser) {
-        setTimeout(() => scrollToElement('.calc-result-panel'), 600);
-      }
-      return true;
     }
-    return false;
+    return false; // Direct params applied synchronously, caller should auto-calculate
   }
 }

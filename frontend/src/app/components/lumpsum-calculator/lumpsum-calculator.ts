@@ -88,7 +88,7 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
   }
 
   ngOnInit(): void {
-    this.restoreFromQueryParams();
+    const pendingShare = this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/lumpsum-calculator');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
 
@@ -96,7 +96,7 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
       .pipe(debounceTime(300))
       .subscribe(() => this.calculate());
 
-    if (this.form.valid) {
+    if (!pendingShare && this.form.valid) {
       this.calculate();
     }
   }

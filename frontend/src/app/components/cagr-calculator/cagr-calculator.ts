@@ -176,7 +176,7 @@ export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy 
   }
 
   ngOnInit(): void {
-    this.restoreFromQueryParams();
+    const pendingShare = this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/cagr-calculator');
     this.seo.setKeywords([
       'cagr calculator india', 'cagr calculator online',
@@ -192,7 +192,7 @@ export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy 
       .subscribe(() => this.calculate());
 
     // Calculate once with initial values so user sees result immediately
-    if (this.form.valid) {
+    if (!pendingShare && this.form.valid) {
       this.calculate();
     }
   }

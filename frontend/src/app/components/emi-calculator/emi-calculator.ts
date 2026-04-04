@@ -185,7 +185,7 @@ export class EmiCalculator extends BaseCalculator implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.restoreFromQueryParams();
+    const pendingShare = this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/emi-calculator');
     this.seo.setKeywords([
       'emi calculator india', 'home loan emi calculator', 'emi calculator online',
@@ -202,7 +202,7 @@ export class EmiCalculator extends BaseCalculator implements OnInit, OnDestroy {
       .subscribe(() => this.calculate());
 
     // Calculate once with initial values so user sees result immediately
-    if (this.form.valid) {
+    if (!pendingShare && this.form.valid) {
       this.calculate();
     }
   }
