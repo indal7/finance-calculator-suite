@@ -212,7 +212,10 @@ export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy 
 
     // Cache projection rows and render chart
     this.cagrProjectionCache = this.getCagrProjectionRows(beginningValue, endingValue, years);
-    setTimeout(() => this.renderGrowthChart(), 50);
+    setTimeout(() => {
+      this.renderGrowthChart();
+      if (!this.chartInstance) setTimeout(() => this.renderGrowthChart(), 400);
+    }, 100);
 
     // Trigger change detection for OnPush strategy
     this.cdr.markForCheck();

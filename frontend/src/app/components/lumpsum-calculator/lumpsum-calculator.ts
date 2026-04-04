@@ -187,7 +187,8 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
 
     setTimeout(() => {
       this.renderGrowthChart();
-    }, 50);
+      if (!this.growthChartInstance) setTimeout(() => this.renderGrowthChart(), 400);
+    }, 100);
 
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();

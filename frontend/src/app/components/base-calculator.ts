@@ -158,6 +158,10 @@ export abstract class BaseCalculator {
     }
     if (Object.keys(patch).length) {
       this.form.patchValue(patch);
+      // Scroll to results after calculation renders (shared link)
+      if (this.isBrowser) {
+        setTimeout(() => scrollToElement('.calc-result-panel'), 600);
+      }
       return true;
     }
     return false;

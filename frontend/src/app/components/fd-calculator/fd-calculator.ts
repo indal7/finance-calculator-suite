@@ -218,7 +218,10 @@ export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
     // Cache projection rows and render chart
     if (years >= 1) {
       this.fdProjectionCache = this.getFdProjectionRows(principal, annualRate, years, compoundingFrequency);
-      setTimeout(() => this.renderGrowthChart(), 50);
+      setTimeout(() => {
+        this.renderGrowthChart();
+        if (!this.chartInstance) setTimeout(() => this.renderGrowthChart(), 400);
+      }, 100);
     }
     // Trigger change detection for OnPush strategy
     this.cdr.markForCheck();

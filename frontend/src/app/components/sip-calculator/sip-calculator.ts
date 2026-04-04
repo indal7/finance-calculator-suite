@@ -264,10 +264,12 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
     // Trigger change detection for OnPush strategy
     this.cdr.markForCheck();
 
-    // Render growth chart after a tick (DOM needs to render the canvas first)
+    // Render growth chart after Angular renders the canvas (inside @if block)
     setTimeout(() => {
       this.renderGrowthChart();
-    }, 50);
+      // Retry if canvas wasn't in DOM yet (e.g. shared-link navigation)
+      if (!this.chartInstance) setTimeout(() => this.renderGrowthChart(), 400);
+    }, 100);
 
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();
