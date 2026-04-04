@@ -8,14 +8,31 @@ from unittest.mock import patch, MagicMock
 # Ensure backend is in the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-# Mock boto3 before importing the handler
+# Mock boto3 entirely so tests work without it installed
 mock_table = MagicMock()
 mock_dynamodb = MagicMock()
 mock_dynamodb.Table.return_value = mock_table
 
+_boto3_mock = MagicMock()
+_boto3_mock.resource.return_value = mock_dynamodb
+
+# Create a real-ish ClientError for botocore.exceptions
+class _FakeClientError(Exception):
+    pass
+
+_botocore_mock = MagicMock()
+_botocore_exceptions_mock = MagicMock()
+_botocore_exceptions_mock.ClientError = _FakeClientError
+
+sys.modules.setdefault('boto3', _boto3_mock)
+sys.modules.setdefault('botocore', _botocore_mock)
+sys.modules.setdefault('botocore.exceptions', _botocore_exceptions_mock)
+
 with patch.dict(os.environ, {'SHARE_TABLE_NAME': 'test-shared-results'}):
-    with patch('boto3.resource', return_value=mock_dynamodb):
-        from share.handler import _validate_post, _generate_id, _convert_decimals, handler
+    from share.handler import _validate_post, _generate_id, _convert_decimals, handler
+    # Patch the module-level _table to our mock so put_item/get_item work
+    import share.handler as _share_mod
+    _share_mod._table = mock_table
 
 
 class TestValidatePost:
