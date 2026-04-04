@@ -177,6 +177,7 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
     this.seo.setKeywords([
@@ -350,6 +351,22 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
         el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
+  }
+
+  downloadSipCSV(): void {
+    if (!this.projectionRows.length) return;
+    const rows = this.projectionRows.map(r => ({
+      Year: r.year,
+      'Total Invested (₹)': r.invested,
+      'Est. Gains (₹)': r.gains,
+      'Total Value (₹)': r.value
+    }));
+    this.downloadCSV(rows, 'sip-projection');
+  }
+
+  getSharePayload() {
+    const { monthlyInvestment, annualRate, years } = this.form.getRawValue() as any;
+    return { calculator: 'sip' as const, inputs: { monthlyInvestment, annualRate, years } };
   }
 
   ngOnDestroy(): void {

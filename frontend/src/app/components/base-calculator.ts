@@ -1,7 +1,9 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { formatIndian, formatCompact, scrollToTop, scrollToElement, getSliderPercent } from '../services/format.utils';
+import { ShareService, ShareRequest } from '../services/share.service';
 
 /**
  * Abstract base class for all calculator components.
@@ -13,6 +15,8 @@ import { formatIndian, formatCompact, scrollToTop, scrollToElement, getSliderPer
  */
 export abstract class BaseCalculator {
   protected readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  protected readonly shareSvc = inject(ShareService);
+  protected readonly route = inject(ActivatedRoute);
 
   /** FAQ accordion state */
   openFaq: number | null = null;
@@ -28,11 +32,17 @@ export abstract class BaseCalculator {
   apiStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
   apiError = '';
 
+  /** Share link state */
+  shareStatus: 'idle' | 'saving' | 'done' | 'error' = 'idle';
+  shareUrl = '';
+  shareError = '';
+
   // ── Abstract ──────────────────────────────────────────────────────────
 
   abstract readonly form: FormGroup;
   abstract readonly faqs: ReadonlyArray<{ q: string; a: string }>;
   abstract calculate(): void;
+  abstract getSharePayload(): ShareRequest;
 
   // ── Shared formatting (delegate to pure functions) ────────────────────
 
@@ -83,5 +93,70 @@ export abstract class BaseCalculator {
     this.copied = true;
     clearTimeout(this.copyTimer);
     this.copyTimer = setTimeout(() => { this.copied = false; }, 2200);
+  }
+
+  // ── CSV download for projection tables ────────────────────────────────
+
+  downloadCSV(rows: Array<Record<string, any>>, filename: string): void {
+    if (!rows.length) return;
+    const headers = Object.keys(rows[0]);
+    const csvLines = [
+      headers.join(','),
+      ...rows.map(row => headers.map(h => row[h]).join(','))
+    ];
+    const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Share results via backend ─────────────────────────────────────────
+
+  shareResults(): void {
+    if (!this.isBrowser) return;
+    this.shareStatus = 'saving';
+    this.shareUrl = '';
+    this.shareError = '';
+
+    const payload = this.getSharePayload();
+
+    this.shareSvc.saveShare(payload).subscribe({
+      next: (res) => {
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.myinvestmentcalculator.in';
+        this.shareUrl = `${origin}/share/${res.id}`;
+        this.shareStatus = 'done';
+        navigator.clipboard.writeText(this.shareUrl).catch(() => {});
+      },
+      error: (err) => {
+        this.shareError = err.message;
+        this.shareStatus = 'error';
+      }
+    });
+  }
+
+  // ── Restore form from query params (shared link redirect) ─────────────
+
+  protected restoreFromQueryParams(): boolean {
+    const params = this.route.snapshot.queryParams;
+    const keys = Object.keys(params);
+    if (!keys.length) return false;
+
+    const patch: Record<string, number> = {};
+    for (const key of Object.keys(this.form.controls)) {
+      if (params[key] !== undefined) {
+        const val = parseFloat(params[key]);
+        if (!isNaN(val) && isFinite(val) && val > 0) {
+          patch[key] = val;
+        }
+      }
+    }
+    if (Object.keys(patch).length) {
+      this.form.patchValue(patch);
+      return true;
+    }
+    return false;
   }
 }

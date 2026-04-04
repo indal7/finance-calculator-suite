@@ -89,6 +89,7 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
   }
 
   ngOnInit(): void {
+    this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/lumpsum-calculator');
     this.seo.updateFAQSchema(this.faqs.map(f => ({ question: f.q, answer: f.a })));
 
@@ -283,8 +284,15 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
               bodyColor: '#ced4da',
               borderColor: 'rgba(245,166,35,0.3)',
               borderWidth: 1,
+              padding: 12,
               callbacks: {
-                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
+                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`,
+                afterBody: (items: any[]) => {
+                  if (!items.length) return '';
+                  const idx = items[0].dataIndex;
+                  const gains = valueData[idx] - investedData[idx];
+                  return `Est. Returns: ₹${gains.toLocaleString('en-IN')}`;
+                }
               }
             }
           },
@@ -305,6 +313,18 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
         }
       });
     });
+  }
+
+  downloadLumpsumCSV(): void {
+    this.downloadCSV(
+      this.projectionRows.map(r => ({ 'Year': r.year, 'Total Invested (₹)': r.invested, 'Total Value (₹)': r.value, 'Est. Gains (₹)': r.gains })),
+      'lumpsum-projection.csv'
+    );
+  }
+
+  getSharePayload() {
+    const v = this.form.getRawValue();
+    return { calculator: 'lumpsum' as const, inputs: { principal: v.principal!, annualRate: v.annualRate!, years: v.years! } };
   }
 
   ngOnDestroy(): void {

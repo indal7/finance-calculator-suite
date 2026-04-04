@@ -103,7 +103,7 @@ resource "aws_apigatewayv2_api" "main" {
 
   cors_configuration {
     allow_origins = var.cors_allowed_origins
-    allow_methods = ["POST", "OPTIONS"]
+    allow_methods = ["GET", "POST", "OPTIONS"]
     allow_headers = ["Content-Type"]
     max_age       = 300
   }
@@ -133,11 +133,25 @@ resource "aws_apigatewayv2_stage" "default" {
     throttling_rate_limit  = 30
   }
 
+  route_settings {
+    route_key              = "POST /share"
+    throttling_burst_limit = 10
+    throttling_rate_limit  = 5
+  }
+
+  route_settings {
+    route_key              = "GET /share/{id}"
+    throttling_burst_limit = 20
+    throttling_rate_limit  = 10
+  }
+
   # Stage must wait for all routes to exist before applying route_settings
   depends_on = [
     aws_apigatewayv2_route.calculator,
     aws_apigatewayv2_route.contact,
     aws_apigatewayv2_route.track_visit,
+    aws_apigatewayv2_route.share_post,
+    aws_apigatewayv2_route.share_get,
   ]
 
   tags = local.common_tags
@@ -503,6 +517,139 @@ resource "aws_lambda_permission" "track_visit_api_gateway" {
   statement_id  = "AllowAPIGatewayInvokeTrackVisit"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.track_visit.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DynamoDB – Shared Results Table (Share Calculator Results)
+# ──────────────────────────────────────────────────────────────────────────────
+
+resource "aws_dynamodb_table" "shared_results" {
+  name         = "${var.project_name}-shared-results-${var.environment}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  # TTL: auto-expire shared results after 90 days
+  ttl {
+    attribute_name = "ttl"
+    enabled        = true
+  }
+
+  point_in_time_recovery {
+    enabled = false
+  }
+
+  tags = local.common_tags
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# IAM – DynamoDB read/write policy for share Lambda
+# ──────────────────────────────────────────────────────────────────────────────
+
+data "aws_iam_policy_document" "share_dynamodb" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:GetItem",
+    ]
+    resources = [
+      aws_dynamodb_table.shared_results.arn,
+    ]
+  }
+}
+
+resource "aws_iam_policy" "share_dynamodb" {
+  name   = "${var.project_name}-share-dynamodb-${var.environment}"
+  policy = data.aws_iam_policy_document.share_dynamodb.json
+
+  tags = local.common_tags
+}
+
+resource "aws_iam_role_policy_attachment" "share_dynamodb" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.share_dynamodb.arn
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Lambda – Share Results Handler
+# ──────────────────────────────────────────────────────────────────────────────
+
+data "archive_file" "share_zip" {
+  type        = "zip"
+  output_path = "${path.module}/../../backend/share/lambda_share.zip"
+
+  source {
+    content  = file("${path.module}/../../backend/utils.py")
+    filename = "utils.py"
+  }
+  source {
+    content  = file("${path.module}/../../backend/share/handler.py")
+    filename = "handler.py"
+  }
+}
+
+resource "aws_lambda_function" "share" {
+  function_name = "${var.project_name}-share-${var.environment}"
+  description   = "Finance Calculator Suite – Share results handler"
+  role          = aws_iam_role.lambda_exec.arn
+  runtime       = var.lambda_runtime
+  handler       = "handler.handler"
+  timeout       = 5
+  memory_size   = 128
+
+  filename         = data.archive_file.share_zip.output_path
+  source_code_hash = data.archive_file.share_zip.output_base64sha256
+
+  environment {
+    variables = {
+      SHARE_TABLE_NAME = aws_dynamodb_table.shared_results.name
+    }
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_log_group" "share_logs" {
+  name              = "/aws/lambda/${aws_lambda_function.share.function_name}"
+  retention_in_days = 14
+
+  tags = local.common_tags
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# API Gateway – Share routes (POST /share + GET /share/{id})
+# ──────────────────────────────────────────────────────────────────────────────
+
+resource "aws_apigatewayv2_integration" "share" {
+  api_id                 = aws_apigatewayv2_api.main.id
+  integration_type       = "AWS_PROXY"
+  integration_uri        = aws_lambda_function.share.invoke_arn
+  payload_format_version = "2.0"
+}
+
+resource "aws_apigatewayv2_route" "share_post" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "POST /share"
+  target    = "integrations/${aws_apigatewayv2_integration.share.id}"
+}
+
+resource "aws_apigatewayv2_route" "share_get" {
+  api_id    = aws_apigatewayv2_api.main.id
+  route_key = "GET /share/{id}"
+  target    = "integrations/${aws_apigatewayv2_integration.share.id}"
+}
+
+resource "aws_lambda_permission" "share_api_gateway" {
+  statement_id  = "AllowAPIGatewayInvokeShare"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.share.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
 }

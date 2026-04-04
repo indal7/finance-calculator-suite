@@ -238,6 +238,30 @@
           <canvas #growthChart></canvas>
         </div>
       </div>
+
+      <!-- Copy, Download & Share Actions -->
+      <div class="result-actions">
+        <button class="copy-result-btn" (click)="copyResult()" [class.copied]="copied">
+          {{ copied ? '✓ Copied' : '⎘ Copy Result' }}
+        </button>
+        @if (projectionRows.length) {
+        <button class="download-csv-btn" (click)="downloadSipCSV()">
+          ⬇ Download CSV
+        </button>
+        }
+        <button class="share-btn" (click)="shareResults()" [disabled]="shareStatus === 'saving'">
+          {{ shareStatus === 'saving' ? '… Saving' : '🔗 Share Results' }}
+        </button>
+      </div>
+      @if (shareUrl) {
+      <div class="share-url-box">
+        <span class="share-url-label">✓ Link copied!</span>
+        <code class="share-url">{{ shareUrl }}</code>
+      </div>
+      }
+      @if (shareError) {
+      <div class="share-error-msg">{{ shareError }}</div>
+      }
       } @else {
       <div class="card calc-result-placeholder">
         <div class="placeholder-icon">📊</div>

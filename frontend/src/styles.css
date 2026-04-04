@@ -457,6 +457,76 @@ input[type="range"]:hover::-webkit-slider-thumb {
   background: var(--primary);
 }
 
+/* Result actions row */
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
+  justify-content: flex-end;
+}
+
+/* Download CSV button */
+.download-csv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--gray-50);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 5px 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-height: 30px;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+.download-csv-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary-ring);
+  background: var(--primary-dim);
+}
+
+/* Share button */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primary);
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius-full);
+  padding: 5px 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-height: 30px;
+  transition: background var(--transition), border-color var(--transition);
+}
+.share-btn:hover { background: #009973; border-color: #009973; }
+.share-btn:disabled { opacity: 0.6; cursor: wait; }
+
+/* Share URL display */
+.share-url-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  font-size: 0.78rem;
+}
+.share-url-label { color: #16a34a; font-weight: 600; white-space: nowrap; }
+.share-url { color: #374151; word-break: break-all; font-size: 0.72rem; background: transparent; padding: 0; }
+.share-error-msg { color: #dc2626; font-size: 0.78rem; margin-top: 6px; }
+
 /* ── Result Hero Stat ──────────────────────────────────────── */
 .result-hero-stat {
   text-align: center;

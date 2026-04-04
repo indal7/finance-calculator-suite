@@ -186,6 +186,7 @@ export class EmiCalculator extends BaseCalculator implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/emi-calculator');
     this.seo.setKeywords([
       'emi calculator india', 'home loan emi calculator', 'emi calculator online',
@@ -233,6 +234,23 @@ export class EmiCalculator extends BaseCalculator implements OnInit, OnDestroy {
       next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
       error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
+  }
+
+  downloadEmiCSV(): void {
+    const rows = this.getAmortizationRows(
+      this.form.getRawValue().principal,
+      this.form.getRawValue().annualRate,
+      this.form.getRawValue().years
+    );
+    this.downloadCSV(
+      rows.map(r => ({ 'Year': r.year, 'EMI (₹)': r.emi, 'Principal Paid (₹)': r.principalPaid, 'Interest Paid (₹)': r.interestPaid, 'Balance (₹)': r.balance })),
+      'emi-schedule.csv'
+    );
+  }
+
+  getSharePayload() {
+    const v = this.form.getRawValue();
+    return { calculator: 'emi' as const, inputs: { principal: v.principal!, annualRate: v.annualRate!, years: v.years! } };
   }
 
   ngOnDestroy(): void {

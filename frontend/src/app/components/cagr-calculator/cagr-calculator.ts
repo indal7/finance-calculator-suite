@@ -177,6 +177,7 @@ export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy 
   }
 
   ngOnInit(): void {
+    this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/cagr-calculator');
     this.seo.setKeywords([
       'cagr calculator india', 'cagr calculator online',
@@ -223,6 +224,18 @@ export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy 
       next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
       error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
+  }
+
+  downloadCagrCSV(): void {
+    this.downloadCSV(
+      this.cagrProjectionCache.map(r => ({ 'Year': r.year, 'Value (₹)': r.value, 'Gain (₹)': r.gain })),
+      'cagr-projection.csv'
+    );
+  }
+
+  getSharePayload() {
+    const v = this.form.getRawValue();
+    return { calculator: 'cagr' as const, inputs: { beginningValue: v.beginningValue!, endingValue: v.endingValue!, years: v.years! } };
   }
 
   ngOnDestroy(): void {
@@ -311,8 +324,15 @@ export class CagrCalculator extends BaseCalculator implements OnInit, OnDestroy 
               bodyColor: '#ced4da',
               borderColor: 'rgba(0,179,134,0.3)',
               borderWidth: 1,
+              padding: 12,
               callbacks: {
-                label: (ctx: any) => `${ctx.dataset.label}: \u20b9${ctx.parsed.y.toLocaleString('en-IN')}`
+                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`,
+                afterBody: (items: any[]) => {
+                  if (!items.length) return '';
+                  const idx = items[0].dataIndex;
+                  const gain = valueData[idx] - beginVal;
+                  return `Total Gain: ₹${gain.toLocaleString('en-IN')}`;
+                }
               }
             }
           },

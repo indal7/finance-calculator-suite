@@ -145,6 +145,12 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'share/:id',
+    title: 'Shared Calculation – Finance Calculator India',
+    loadComponent: () =>
+      import('./components/share-redirect/share-redirect').then(m => m.ShareRedirectComponent)
+  },
+  {
     path: '**',
     title: 'Page Not Found – Finance Calculator India',
     loadComponent: () =>

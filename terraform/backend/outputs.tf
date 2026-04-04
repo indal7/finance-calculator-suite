@@ -55,3 +55,23 @@ output "track_visit_lambda_name" {
   description = "Track visit Lambda function name"
   value       = aws_lambda_function.track_visit.function_name
 }
+
+output "share_post_endpoint" {
+  description = "Full URL for creating shared results"
+  value       = "${aws_apigatewayv2_stage.default.invoke_url}/share"
+}
+
+output "share_get_endpoint" {
+  description = "URL pattern for retrieving shared results"
+  value       = "${aws_apigatewayv2_stage.default.invoke_url}/share/{id}"
+}
+
+output "shared_results_table_name" {
+  description = "DynamoDB table name for shared calculator results"
+  value       = aws_dynamodb_table.shared_results.name
+}
+
+output "share_lambda_name" {
+  description = "Share Lambda function name"
+  value       = aws_lambda_function.share.function_name
+}

@@ -181,6 +181,7 @@ export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.restoreFromQueryParams();
     this.seo.updateCanonical('https://www.myinvestmentcalculator.in/fd-calculator');
     this.seo.setKeywords([
       'fd calculator india', 'fixed deposit calculator', 'fd calculator online',
@@ -229,6 +230,18 @@ export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
       next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
       error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
+  }
+
+  downloadFdCSV(): void {
+    this.downloadCSV(
+      this.fdProjectionCache.map(r => ({ 'Year': r.year, 'Interest Earned (₹)': r.interest, 'Maturity Value (₹)': r.maturity })),
+      'fd-projection.csv'
+    );
+  }
+
+  getSharePayload() {
+    const v = this.form.getRawValue();
+    return { calculator: 'fd' as const, inputs: { principal: v.principal!, annualRate: v.annualRate!, years: v.years!, compoundingFrequency: v.compoundingFrequency! } };
   }
 
   ngOnDestroy(): void {
@@ -316,8 +329,15 @@ export class FdCalculator extends BaseCalculator implements OnInit, OnDestroy {
               bodyColor: '#ced4da',
               borderColor: 'rgba(245,166,35,0.3)',
               borderWidth: 1,
+              padding: 12,
               callbacks: {
-                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`
+                label: (ctx: any) => `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN')}`,
+                afterBody: (items: any[]) => {
+                  if (!items.length) return '';
+                  const idx = items[0].dataIndex;
+                  const interest = maturityData[idx] - (this.result?.principal ?? 0);
+                  return `Interest Earned: ₹${interest.toLocaleString('en-IN')}`;
+                }
               }
             }
           },
