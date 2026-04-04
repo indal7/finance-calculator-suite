@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -19,7 +19,6 @@ export class EmiCalculator extends BaseCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
-  private readonly cdr      = inject(ChangeDetectorRef);
   private sub?: Subscription;
   private calcSub?: Subscription;
 

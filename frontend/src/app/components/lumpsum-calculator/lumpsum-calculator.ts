@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -24,7 +24,6 @@ export class LumpsumCalculatorComponent extends BaseCalculator implements OnInit
   private readonly fb  = inject(FormBuilder);
   private readonly svc = inject(CalculatorService);
   private readonly seo = inject(SeoService);
-  private readonly cdr = inject(ChangeDetectorRef);
   private sub?: Subscription;
   private calcSub?: Subscription;
 

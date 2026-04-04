@@ -1,4 +1,4 @@
-import { inject, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -17,6 +17,7 @@ export abstract class BaseCalculator {
   protected readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   protected readonly shareSvc = inject(ShareService);
   protected readonly route = inject(ActivatedRoute);
+  protected readonly cdr = inject(ChangeDetectorRef);
 
   /** FAQ accordion state */
   openFaq: number | null = null;
@@ -129,10 +130,12 @@ export abstract class BaseCalculator {
         this.shareUrl = `${origin}/share/${res.id}`;
         this.shareStatus = 'done';
         navigator.clipboard.writeText(this.shareUrl).catch(() => {});
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.shareError = err.message;
         this.shareStatus = 'error';
+        this.cdr.markForCheck();
       }
     });
   }
