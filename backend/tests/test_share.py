@@ -82,11 +82,23 @@ class TestValidatePost:
 
     def test_negative_value(self):
         body = {"calculator": "sip", "inputs": {"monthlyInvestment": -100, "annualRate": 12, "years": 10}}
-        assert "must be positive" in _validate_post(body)
+        assert "must not be negative" in _validate_post(body)
 
     def test_value_exceeds_max(self):
         body = {"calculator": "sip", "inputs": {"monthlyInvestment": 99999999999, "annualRate": 12, "years": 10}}
         assert "exceeds maximum" in _validate_post(body)
+
+    def test_optional_stepup_rate_accepted(self):
+        body = {"calculator": "sip", "inputs": {"monthlyInvestment": 5000, "annualRate": 12, "years": 10, "stepUpRate": 10}}
+        assert _validate_post(body) is None
+
+    def test_optional_stepup_rate_zero_accepted(self):
+        body = {"calculator": "sip", "inputs": {"monthlyInvestment": 5000, "annualRate": 12, "years": 10, "stepUpRate": 0}}
+        assert _validate_post(body) is None
+
+    def test_optional_stepup_rate_rejected_for_emi(self):
+        body = {"calculator": "emi", "inputs": {"principal": 500000, "annualRate": 9, "years": 5, "stepUpRate": 10}}
+        assert "Unexpected input fields" in _validate_post(body)
 
 
 class TestGenerateId:

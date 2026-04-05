@@ -46,6 +46,9 @@ export abstract class BaseCalculator {
   abstract calculate(): void;
   abstract getSharePayload(): ShareRequest;
 
+  /** Override to restore non-form-control inputs (e.g. stepUpRate) from shared data */
+  protected restoreExtraInputs(_inputs: Record<string, number>): void {}
+
   // ── Shared formatting (delegate to pure functions) ────────────────────
 
   formatIndian(val: number): string { return formatIndian(val); }
@@ -174,6 +177,7 @@ export abstract class BaseCalculator {
           if (Object.keys(patch).length) {
             this.form.patchValue(patch);
           }
+          this.restoreExtraInputs(data.inputs);
           this.calculate();
           this.cdr.markForCheck();
           // Scroll to results after Angular renders the result panel

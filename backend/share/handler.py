@@ -77,6 +77,15 @@ _CALCULATOR_FIELDS: dict[str, set[str]] = {
     "lumpsum": {"principal", "annualRate", "years"},
 }
 
+# Optional fields that are allowed but not required
+_OPTIONAL_FIELDS: dict[str, set[str]] = {
+    "sip":     {"stepUpRate"},
+    "emi":     set(),
+    "fd":      set(),
+    "cagr":    set(),
+    "lumpsum": set(),
+}
+
 _MAX_INPUT_VALUE = 1_000_000_000  # 100 crore — sanity ceiling
 _TTL_DAYS = 90
 _ID_LENGTH = 6  # secrets.token_urlsafe(6) → 8 chars
@@ -100,13 +109,14 @@ def _validate_post(body: dict) -> str | None:
         return "'inputs' must be a non-empty object."
 
     expected_fields = _CALCULATOR_FIELDS[calculator]
+    optional_fields = _OPTIONAL_FIELDS.get(calculator, set())
     provided_fields = set(inputs.keys())
 
     missing = expected_fields - provided_fields
     if missing:
         return f"Missing input fields: {', '.join(sorted(missing))}"
 
-    extra = provided_fields - expected_fields
+    extra = provided_fields - expected_fields - optional_fields
     if extra:
         return f"Unexpected input fields: {', '.join(sorted(extra))}"
 
@@ -115,6 +125,10 @@ def _validate_post(body: dict) -> str | None:
             num = float(value)
         except (TypeError, ValueError):
             return f"'{field}' must be a number."
+        if num < 0:
+            return f"'{field}' must not be negative."
+        if field in optional_fields and num == 0:
+            continue  # optional fields can be zero (e.g. stepUpRate=0)
         if num <= 0:
             return f"'{field}' must be positive."
         if num > _MAX_INPUT_VALUE:

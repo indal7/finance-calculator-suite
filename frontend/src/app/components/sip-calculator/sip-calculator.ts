@@ -211,6 +211,9 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
   /** Set step-up rate and recalculate */
   setStepUp(rate: number): void {
     this.stepUpRate = rate;
+    if (this.form.valid) {
+      this.calculate();
+    }
   }
 
   /** Lightweight quick estimate for hero section (no chart, no API call) */
@@ -368,7 +371,22 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
 
   getSharePayload() {
     const { monthlyInvestment, annualRate, years } = this.form.getRawValue() as any;
-    return { calculator: 'sip' as const, inputs: { monthlyInvestment, annualRate, years } };
+    const inputs: Record<string, number> = { monthlyInvestment, annualRate, years };
+    if (this.stepUpRate > 0) {
+      inputs['stepUpRate'] = this.stepUpRate;
+    }
+    return { calculator: 'sip' as const, inputs };
+  }
+
+  override restoreExtraInputs(inputs: Record<string, number>): void {
+    if (inputs['stepUpRate'] !== undefined) {
+      const rate = typeof inputs['stepUpRate'] === 'number'
+        ? inputs['stepUpRate']
+        : parseFloat(inputs['stepUpRate'] as any);
+      if (!isNaN(rate) && isFinite(rate) && rate >= 0) {
+        this.stepUpRate = rate;
+      }
+    }
   }
 
   ngOnDestroy(): void {
