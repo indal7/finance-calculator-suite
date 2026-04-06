@@ -117,7 +117,7 @@ resource "aws_cloudfront_function" "www_redirect" {
       // request.uri contains the path only; query string is forwarded automatically
       var host = request.headers.host ? request.headers.host.value : '';
 
-      if (host === '${local.root_domain}') {
+      if (host === '${local.root_domain}' && request.uri !== '/ads.txt') {
         return {
           statusCode: 301,
           statusDescription: 'Moved Permanently',
