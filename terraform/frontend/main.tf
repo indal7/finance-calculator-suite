@@ -108,23 +108,56 @@ resource "aws_s3_bucket_policy" "frontend" {
 resource "aws_cloudfront_function" "www_redirect" {
   name    = "${var.project_name}-www-redirect-${var.environment}"
   runtime = "cloudfront-js-1.0"
-  comment = "Redirect myinvestmentcalculator.in to www.myinvestmentcalculator.in"
+  comment = "Domain redirect, trailing-slash normalisation, and clean-URL rewrite"
   publish = true
 
   code = <<-EOT
     function handler(event) {
       var request = event.request;
-      // request.uri contains the path only; query string is forwarded automatically
+      var uri = request.uri;
       var host = request.headers.host ? request.headers.host.value : '';
 
-      if (host === '${local.root_domain}' && request.uri !== '/ads.txt') {
+      // Normalise: strip trailing slash (keep root /)
+      var clean = (uri.length > 1 && uri.endsWith('/'))
+        ? uri.replace(/\/+$/, '')
+        : uri;
+
+      // 1. Redirect bare root domain → www (also normalise slash in one hop)
+      if (host === '${local.root_domain}' && uri !== '/ads.txt') {
         return {
           statusCode: 301,
           statusDescription: 'Moved Permanently',
           headers: {
-            location: { value: 'https://${local.www_domain}' + request.uri }
+            location: { value: 'https://${local.www_domain}' + clean }
           }
         };
+      }
+
+      // 2. Trailing-slash → 301 to non-trailing version
+      if (clean !== uri) {
+        return {
+          statusCode: 301,
+          statusDescription: 'Moved Permanently',
+          headers: {
+            location: { value: 'https://' + host + clean }
+          }
+        };
+      }
+
+      // 3. Legacy /sip-calculator → homepage (route is just a client redirect)
+      if (uri === '/sip-calculator') {
+        return {
+          statusCode: 301,
+          statusDescription: 'Moved Permanently',
+          headers: {
+            location: { value: 'https://${local.www_domain}/' }
+          }
+        };
+      }
+
+      // 4. Clean URLs → S3 prerendered file (e.g. /blog → /blog/index.html)
+      if (uri !== '/' && !uri.includes('.')) {
+        request.uri = uri + '/index.html';
       }
 
       return request;
