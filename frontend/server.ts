@@ -21,6 +21,22 @@ export function app(): express.Express {
   // Enable gzip/deflate compression for all responses
   server.use(compression());
 
+  // Strip trailing slashes with a 301 redirect (e.g. /blog/ → /blog)
+  server.use((req, res, next) => {
+    if (req.path !== '/' && req.path.endsWith('/')) {
+      const cleanPath = req.path.slice(0, -1);
+      const query = req.url.slice(req.path.length);
+      res.redirect(301, cleanPath + query);
+    } else {
+      next();
+    }
+  });
+
+  // Permanent redirect: /sip-calculator → / (canonical URL)
+  server.get('/sip-calculator', (_req, res) => {
+    res.redirect(301, '/');
+  });
+
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
