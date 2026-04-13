@@ -7,7 +7,7 @@ import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
 // Cache-Control values
-const SSR_CACHE_CONTROL = 'public, max-age=300, s-maxage=600, stale-while-revalidate=120';
+const SSR_CACHE_CONTROL = 'public, max-age=300, s-maxage=600, stale-while-revalidate=86400';
 const STATIC_IMMUTABLE  = 'public, max-age=31536000, immutable';
 
 export function app(): express.Express {

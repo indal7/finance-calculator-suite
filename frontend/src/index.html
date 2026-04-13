@@ -25,6 +25,8 @@
   <!-- BRANDING -->
   <meta name="theme-color" content="#00B386">
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com" crossorigin>
 
   <!-- HREFLANG -->
   <link rel="alternate" hreflang="en-IN" href="https://www.myinvestmentcalculator.in/">
@@ -73,21 +75,62 @@
         "@type": "WebSite",
         "url": "https://www.myinvestmentcalculator.in/",
         "name": "Finance Calculator India",
+        "alternateName": ["FinanceCalc India", "My Investment Calculator"],
         "description": "Free financial calculators for Indian investors — SIP, EMI, FD, CAGR & Lumpsum. No login required.",
-        "inLanguage": "en-IN"
+        "inLanguage": "en-IN",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.myinvestmentcalculator.in/?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
       },
       {
         "@type": "Organization",
         "name": "Finance Calculator India",
         "url": "https://www.myinvestmentcalculator.in/",
-        "logo": "https://www.myinvestmentcalculator.in/favicon-180x180.png",
-
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.myinvestmentcalculator.in/favicon-180x180.png",
+          "width": 180,
+          "height": 180
+        },
+        "sameAs": [],
         "contactPoint": {
           "@type": "ContactPoint",
           "telephone": "+91-9266425407",
           "contactType": "customer support",
           "areaServed": "IN",
           "availableLanguage": "English"
+        }
+      },
+      {
+        "@type": "FinancialService",
+        "name": "Free Financial Calculators India",
+        "description": "SIP Calculator, EMI Calculator, FD Calculator, CAGR Calculator, PPF Calculator & Lumpsum Calculator — free tools for Indian investors.",
+        "url": "https://www.myinvestmentcalculator.in/",
+        "areaServed": {
+          "@type": "Country",
+          "name": "India"
+        },
+        "serviceType": "Financial Calculator",
+        "provider": {
+          "@type": "Organization",
+          "name": "Finance Calculator India"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Free Calculators",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "SIP Calculator", "url": "https://www.myinvestmentcalculator.in/" }},
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "EMI Calculator", "url": "https://www.myinvestmentcalculator.in/emi-calculator" }},
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "FD Calculator", "url": "https://www.myinvestmentcalculator.in/fd-calculator" }},
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "CAGR Calculator", "url": "https://www.myinvestmentcalculator.in/cagr-calculator" }},
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "PPF Calculator", "url": "https://www.myinvestmentcalculator.in/ppf-calculator" }},
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Lumpsum Calculator", "url": "https://www.myinvestmentcalculator.in/lumpsum-calculator" }}
+          ]
         }
       }
     ]

@@ -1,9 +1,18 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /share/
 
 # Specific bot controls
 User-agent: AdsBot-Google
 Allow: /
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
 
 Sitemap: https://www.myinvestmentcalculator.in/sitemap.xml

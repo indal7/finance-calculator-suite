@@ -173,6 +173,20 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
         { '@type': 'ListItem', 'position': 2, 'name': 'SIP Calculator', 'item': 'https://www.myinvestmentcalculator.in/' }
       ]
     }, 'sip-breadcrumb');
+
+    this.seo.injectJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      'name': 'How to Calculate SIP Returns Online',
+      'description': 'Step-by-step guide to calculate your SIP mutual fund returns using our free calculator.',
+      'totalTime': 'PT1M',
+      'step': [
+        { '@type': 'HowToStep', 'position': 1, 'name': 'Enter Monthly Investment', 'text': 'Input the amount you plan to invest every month (e.g., ₹5,000). You can start with as little as ₹500.' },
+        { '@type': 'HowToStep', 'position': 2, 'name': 'Enter Expected Return Rate', 'text': 'Enter the expected annual return rate (e.g., 12%). Historical equity mutual fund average is 10–14% p.a.' },
+        { '@type': 'HowToStep', 'position': 3, 'name': 'Enter Investment Duration', 'text': 'Select how many years you plan to invest (e.g., 10 years). Longer duration = more compounding benefit.' },
+        { '@type': 'HowToStep', 'position': 4, 'name': 'View Your SIP Returns', 'text': 'Click Calculate to see your total invested amount, estimated gains, year-by-year projection and final corpus.' }
+      ]
+    }, 'sip-howto');
   }
 
   ngOnInit(): void {
@@ -348,6 +362,14 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
     }
   }
 
+  /** Set monthly investment preset amount */
+  setPreset(amount: number): void {
+    this.form.patchValue({ monthlyInvestment: amount });
+    if (this.form.valid) {
+      this.calculate();
+    }
+  }
+
   override scrollToResult(): void {
     this.calculate();
     if (this.isBrowser) {
@@ -393,6 +415,7 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
     this.quickSub?.unsubscribe();
     this.seo.removeJsonLd('sip-breadcrumb');
+    this.seo.removeJsonLd('sip-howto');
     this.seo.removeFAQSchema();
     this.chartInstance?.destroy();
   }

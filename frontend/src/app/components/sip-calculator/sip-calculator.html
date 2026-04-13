@@ -141,6 +141,14 @@
             @if (f['monthlyInvestment'].invalid && f['monthlyInvestment'].touched) {
             <span class="error-msg">Enter a valid monthly investment amount (min ₹500).</span>
             }
+            <div class="sip-presets">
+              <span class="preset-label">Popular:</span>
+              <button type="button" class="preset-btn" [class.active]="f['monthlyInvestment'].value === 500" (click)="setPreset(500)">₹500</button>
+              <button type="button" class="preset-btn" [class.active]="f['monthlyInvestment'].value === 1000" (click)="setPreset(1000)">₹1,000</button>
+              <button type="button" class="preset-btn" [class.active]="f['monthlyInvestment'].value === 5000" (click)="setPreset(5000)">₹5,000</button>
+              <button type="button" class="preset-btn" [class.active]="f['monthlyInvestment'].value === 10000" (click)="setPreset(10000)">₹10,000</button>
+              <button type="button" class="preset-btn" [class.active]="f['monthlyInvestment'].value === 25000" (click)="setPreset(25000)">₹25,000</button>
+            </div>
           </div>
 
           <!-- Annual Rate -->
@@ -730,6 +738,19 @@
       <a routerLink="/blog/sip-5000-per-month" class="related-link related-link--gold">₹5,000 SIP for 10 Years – Returns &amp; Wealth Growth Guide →</a>
       <a routerLink="/blog/sip-1000-per-month" class="related-link related-link--sky">₹1,000 SIP Monthly Returns – How Much Can You Earn? →</a>
       <a routerLink="/blog/sip-vs-fd"          class="related-link related-link--emerald">SIP vs FD 2026 – Which Investment is Better? →</a>
+    </div>
+  </div>
+
+  <!-- ── Start Investing CTA ──────────────────────────────── -->
+  <div class="cta-banner">
+    <div class="cta-banner-inner">
+      <h2>Ready to Start Your SIP Journey?</h2>
+      <p>Join lakhs of Indian investors who plan their wealth using our free tools. Calculate your first SIP return now — it takes less than 30 seconds.</p>
+      <div class="cta-banner-buttons">
+        <button type="button" class="btn-cta-primary" (click)="scrollToCalculator()">Start SIP Calculator →</button>
+        <a routerLink="/sip-calculator-1-crore" class="btn-cta-outline">Plan ₹1 Crore Goal</a>
+        <a routerLink="/blog/sip-vs-fd" class="btn-cta-outline">Compare SIP vs FD</a>
+      </div>
     </div>
   </div>
 
