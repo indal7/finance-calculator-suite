@@ -25,5 +25,5 @@ variable "domain_name" {
 variable "acm_certificate_arn" {
   description = "ACM certificate ARN for CloudFront (must be in us-east-1). Set via TF_VAR_acm_certificate_arn or -var flag."
   type        = string
-  default     = "arn:aws:acm:us-east-1:492661377251:certificate/679e1c55-24cd-4cf7-a646-e0420d6a6491"
+  default     = "arn:aws:acm:us-east-1:492661377251:certificate/ff925500-b91f-4354-af0f-47c12fa68922"
 }
