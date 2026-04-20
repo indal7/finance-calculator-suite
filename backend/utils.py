@@ -1,3 +1,4 @@
+# Write access verified
 """
 utils.py – Shared validation helpers, financial formulas, structured logging,
            in-memory caching, and standardized API responses for
