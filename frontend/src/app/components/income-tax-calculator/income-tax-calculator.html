@@ -1,33 +1,253 @@
-<section class="coming-soon-page">
-  <div class="container">
-    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-      <a routerLink="/">Home</a> &rsaquo; <span>Income Tax Calculator</span>
-    </nav>
-    <div class="coming-soon-card">
-      <div class="coming-soon-icon">📋</div>
-      <h1>Income Tax Calculator</h1>
-      <p class="coming-soon-desc">
-        Our <strong>Income Tax Calculator for FY 2026-27</strong> is coming soon.
-        It will help you compare tax liability under the new and old tax regimes
-        and find the most tax-efficient option for your income and deductions.
+<section class="calc-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a> › <span>Income Tax Calculator</span>
+  </nav>
+
+  <div class="page-hero">
+    <span class="section-eyebrow">Income Tax Calculator</span>
+    <h1>Income Tax Calculator India – FY 2026-27 Tax Liability Calculator</h1>
+    <p>
+      Understand your tax liability under India's new and old tax regimes. Compare deductions, find out your take-home salary, 
+      and plan your investments for maximum tax savings.
+    </p>
+  </div>
+
+  <!-- Income Tax Education Content -->
+  <div class="card example-section">
+    <h2>Complete Guide to Income Tax in India 2026-27</h2>
+    <div class="seo-section">
+      <p>
+        Understanding your <strong>income tax liability</strong> is crucial for effective financial planning. India's income tax system 
+        offers two regimes: the <strong>Old Tax Regime</strong> (with various deductions and exemptions) and the <strong>New Tax Regime</strong> 
+        (with lower tax rates but limited deductions). Choosing the right regime can save you ₹1,00,000+ annually.
       </p>
-      <div class="coming-soon-features">
-        <h2>What the Income Tax Calculator will include:</h2>
-        <ul>
-          <li>✅ Income under new regime</li>
-          <li>✅ Income under old regime (with 80C/80D/HRA deductions)</li>
-          <li>✅ Tax slab comparison (new vs old regime)</li>
-          <li>✅ Take-home salary calculation</li>
-        </ul>
+
+      <h3>Income Tax Basics for Individuals in India</h3>
+      <p>
+        <strong>Income Tax</strong> is a direct tax levied by the Government of India on the income earned by individuals, 
+        businesses, and organizations. For salaried individuals, tax is typically deducted at source (TDS) from salary. 
+        However, with investments, deductions, and various allowances, your actual tax liability can be significantly different.
+      </p>
+      <ul class="seo-list">
+        <li><strong>Financial Year:</strong> April 1 to March 31 (e.g., FY 2025-26 is April 2025 to March 2026).</li>
+        <li><strong>Tax Filing Deadline:</strong> July 31 of the next financial year (e.g., July 31, 2026 for FY 2025-26).</li>
+        <li><strong>Assessment Year:</strong> The year following the financial year (e.g., AY 2026-27 for FY 2025-26).</li>
+        <li><strong>Tax Authority:</strong> Income Tax Department (Ministry of Finance, Government of India).</li>
+      </ul>
+
+      <h3>Two Tax Regimes – Old vs New (FY 2026-27)</h3>
+      <p>
+        As per the Finance Act 2020, taxpayers can choose between two tax calculation methods annually. 
+        Let's understand the differences:
+      </p>
+
+      <h4>New Tax Regime (Default from FY 2023-24)</h4>
+      <p>
+        The <strong>New Tax Regime</strong> offers lower tax rates but doesn't allow most deductions under Section 80C, 80D, etc.
+      </p>
+      <div class="projection-table-wrap">
+        <table class="projection-table">
+          <thead>
+            <tr>
+              <th>Income Slab</th>
+              <th>Tax Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Up to ₹3,00,000</td><td>Nil</td></tr>
+            <tr><td>₹3,00,001 – ₹6,00,000</td><td>5%</td></tr>
+            <tr><td>₹6,00,001 – ₹9,00,000</td><td>10%</td></tr>
+            <tr><td>₹9,00,001 – ₹12,00,000</td><td>15%</td></tr>
+            <tr><td>₹12,00,001 – ₹15,00,000</td><td>20%</td></tr>
+            <tr><td>Above ₹15,00,000</td><td>30%</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="coming-soon-cta">
-        <p>Meanwhile, explore our other free calculators:</p>
-        <div class="cta-links">
-          <a routerLink="/">📈 SIP Calculator</a>
-          <a routerLink="/fd-calculator">🏧 FD Calculator</a>
-          <a routerLink="/emi-calculator">🏦 EMI Calculator</a>
-          <a routerLink="/ppf-calculator">🏦 PPF Calculator</a>
-        </div>
+      <p><strong>Benefits:</strong> Lower tax rates, simpler calculation, no need to track deductions.</p>
+      <p><strong>Drawback:</strong> Cannot claim deductions under 80C (PPF, ELSS, insurance), 80D (health insurance), HRA, etc.</p>
+
+      <h4>Old Tax Regime</h4>
+      <p>
+        The <strong>Old Tax Regime</strong> allows various deductions and exemptions but has higher tax slabs:
+      </p>
+      <div class="projection-table-wrap">
+        <table class="projection-table">
+          <thead>
+            <tr>
+              <th>Income Slab</th>
+              <th>Tax Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Up to ₹2,50,000</td><td>Nil</td></tr>
+            <tr><td>₹2,50,001 – ₹5,00,000</td><td>5%</td></tr>
+            <tr><td>₹5,00,001 – ₹10,00,000</td><td>20%</td></tr>
+            <tr><td>Above ₹10,00,000</td><td>30%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Available Deductions:</strong></p>
+      <ul class="seo-list">
+        <li><strong>Section 80C:</strong> ₹1,50,000 for PPF, ELSS, life insurance, principal repayment of home loan.</li>
+        <li><strong>Section 80D:</strong> ₹25,000 (₹50,000 if 60+) for health insurance premium.</li>
+        <li><strong>Section 80E:</strong> Interest on education loan (no limit).</li>
+        <li><strong>HRA (House Rent Allowance):</strong> Exempt up to ₹25,000/month or 40-50% of salary (varies by city).</li>
+        <li><strong>LTA (Leave Travel Allowance):</strong> ₹25,000/annum for 2 trips home.</li>
+        <li><strong>Standard Deduction:</strong> ₹50,000 flat deduction.</li>
+      </ul>
+
+      <h3>Choosing the Right Tax Regime – Examples</h3>
+      <p>
+        <strong>Example 1 – Salaried person with high deductions:</strong><br>
+        Annual salary: ₹15,00,000<br>
+        HRA (Delhi): ₹7,00,000<br>
+        Section 80C investment: ₹1,50,000 (PPF)<br>
+        Health insurance (80D): ₹25,000
+      </p>
+      <p>
+        <strong>Old Regime calculation:</strong><br>
+        Gross: ₹15,00,000<br>
+        Less HRA: ₹7,00,000<br>
+        Less 80C: ₹1,50,000<br>
+        Less 80D: ₹25,000<br>
+        Less Standard Deduction: ₹50,000<br>
+        Taxable income: ₹4,75,000<br>
+        Tax @ 5%: ₹23,750<br>
+        <strong>Total tax: ₹23,750</strong>
+      </p>
+      <p>
+        <strong>New Regime calculation:</strong><br>
+        Gross: ₹15,00,000 (no deductions allowed)<br>
+        Taxable income: ₹15,00,000<br>
+        Tax: 5% up to ₹6L + 10% (₹6L-₹9L) + 15% (₹9L-₹12L) + 20% (₹12L-₹15L)<br>
+        <strong>Total tax: ₹1,74,000</strong>
+      </p>
+      <p>
+        <strong>Verdict:</strong> Old regime saves ₹1,50,250 in this case!
+      </p>
+
+      <h3>Key Deductions & Tax Planning Strategies</h3>
+      <p>
+        <strong>Section 80C – ₹1,50,000 Deduction:</strong>
+      </p>
+      <ul class="seo-list">
+        <li>Public Provident Fund (PPF) – ₹1,50,000/year, fully deductible.</li>
+        <li>ELSS (Equity-Linked Saving Scheme) – Mutual funds with 3-year lock-in.</li>
+        <li>Life Insurance Premium – Deductible (term plan premiums qualify).</li>
+        <li>Principal Repayment – Home loan principal (not interest) is deductible.</li>
+        <li>NSC (National Savings Certificate) – Government savings scheme.</li>
+        <li>Sukanya Samriddhi Yojana – For girl child's education/marriage.</li>
+      </ul>
+      <p>
+        <strong>Tip:</strong> If you have high income and want to save tax, maximize Section 80C investments. 
+        A ₹1,50,000 investment can save ₹45,000 in taxes (at 30% slab).
+      </p>
+
+      <p>
+        <strong>Section 80D – Medical Insurance:</strong>
+      </p>
+      <ul class="seo-list">
+        <li>₹25,000 for self, spouse, and children (total).</li>
+        <li>₹50,000 if you're 60 years or older (senior citizen).</li>
+        <li>Health insurance premium from any insurance company qualifies.</li>
+      </ul>
+
+      <h3>Tax on Different Income Sources</h3>
+      <p>
+        <strong>Salary Income:</strong> Taxed as per slab rates after deductions. TDS (Tax Deducted at Source) is automatically deducted monthly.
+      </p>
+      <p>
+        <strong>Dividends & Interest Income:</strong>
+      </p>
+      <ul class="seo-list">
+        <li>FD Interest > ₹40,000/year → TDS of 20% is deducted.</li>
+        <li>Dividend Income → 10% TDS if > ₹5,000/year.</li>
+        <li>Both are added to your income and taxed at your slab rate.</li>
+      </ul>
+      <p>
+        <strong>Capital Gains (from selling stocks, mutual funds):</strong>
+      </p>
+      <ul class="seo-list">
+        <li><strong>Short-Term (held < 1 year):</strong> Taxed as ordinary income at your slab rate.</li>
+        <li><strong>Long-Term (held ≥ 1 year):</strong> LTCG tax 12.5% + 4% cess on gains above ₹1,25,000.</li>
+      </ul>
+      <p>
+        <strong>Rental Income:</strong> Fully taxable. You can claim deductions for property tax, maintenance, and depreciation.
+      </p>
+
+      <h3>How to Calculate Your Take-Home Salary</h3>
+      <p>
+        Your actual monthly/annual take-home after tax is not just gross salary minus tax. Here's the calculation:
+      </p>
+      <p>
+        <strong>Take-Home = Gross Salary – Tax – Employee Contribution to PF – Health Insurance Deduction</strong>
+      </p>
+      <p>
+        <strong>Example:</strong> Monthly salary ₹1,00,000<br>
+        Annual gross: ₹12,00,000<br>
+        Employee PF contribution: ₹1,80,000 (12% of ₹15L)<br>
+        Estimated tax (old regime with deductions): ₹50,000/year<br>
+        Annual take-home: ₹12,00,000 – ₹50,000 – ₹1,80,000 = ₹9,70,000<br>
+        Monthly take-home: ~₹80,833
+      </p>
+
+      <h3>Common Tax Mistakes to Avoid</h3>
+      <ul class="seo-list">
+        <li><strong>Not filing returns on time:</strong> Late filing attracts penalties and may trigger income tax notice.</li>
+        <li><strong>Choosing wrong regime:</strong> Many high earners still stick to old regime despite new regime being better — calculate annually.</li>
+        <li><strong>Missing deductions:</strong> ₹1,50,000 Section 80C deduction is often overlooked. Ensure you claim PPF, ELSS, or insurance.</li>
+        <li><strong>Not reporting all income sources:</strong> Interest, dividends, and rental income must be reported even if TDS is deducted.</li>
+        <li><strong>Ignoring TDS reconciliation:</strong> Match TDS credited in your Form 26AS with actual tax paid.</li>
+      </ul>
+
+      <h3>New Tax Regime Benefits for Specific Groups</h3>
+      <p>
+        <strong>Young Professionals (Age 20-35):</strong> Often prefer new regime for simplicity, especially if they don't own homes yet.
+      </p>
+      <p>
+        <strong>Senior Citizens (Age 60+):</strong> Old regime is usually better due to higher exemption limits and deduction thresholds.
+      </p>
+      <p>
+        <strong>Homeowners:</strong> Old regime is typically better to claim HRA and home loan principal repayment under 80C.
+      </p>
+      <p>
+        <strong>High-Earner Investors:</strong> Old regime with maximum Section 80C and 80D utilization provides the most tax savings.
+      </p>
+    </div>
+  </div>
+
+  <!-- Related Calculator -->
+  <div class="card">
+    <h2>Plan Your Investments for Tax Savings</h2>
+    <p>
+      Use the <a routerLink="/">SIP calculator</a> to plan your ELSS investments and maximize your Section 80C deduction. 
+      Investing ₹1,50,000/year in ELSS not only saves ₹45,000+ in taxes (at 30% slab) but also provides growth through equity mutual funds.
+    </p>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="card">
+    <h2>Frequently Asked Questions – Income Tax</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question"><strong>Can I switch between old and new tax regime every year?</strong></button>
+        <div class="faq-answer">Yes! You can choose either regime for each financial year. However, once you switch to the new regime, you cannot claim old regime deductions in that year. Most taxpayers calculate both scenarios and pick the one that minimizes tax.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question"><strong>Is HRA taxable in the new regime?</strong></button>
+        <div class="faq-answer">No, HRA is exempt in both regimes if you receive it as part of salary. However, in the new regime, you cannot claim exemption — your full salary is taxable. This makes the new regime unfavorable for renters in major cities.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question"><strong>When should I file my income tax return?</strong></button>
+        <div class="faq-answer">The deadline is July 31 of the assessment year (e.g., July 31, 2026 for FY 2025-26). If you've had TDS deducted or refund pending, filing before the deadline ensures you get your refund faster.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question"><strong>Do I need to file ITR if my income is below the taxable limit?</strong></button>
+        <div class="faq-answer">If your income is below the basic exemption limit, you technically don't need to file. However, filing is beneficial if you've had significant TDS deducted — you'll get a refund.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question"><strong>What documents do I need for income tax filing?</strong></button>
+        <div class="faq-answer">You'll need: Form 26AS (TDS certificate from banks), salary slips, investment proofs (PPF, insurance, ELSS receipts), Form 16 (from employer), and bank account statements for interest and other income.</div>
       </div>
     </div>
   </div>
