@@ -52,17 +52,27 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
     if (!this.result) return;
     const { totalInvested, estimatedReturns, totalValue } = this.result;
     const { monthlyInvestment, annualRate, years } = this.form.getRawValue() as any;
-    const text = [
+    const textLines = [
       `SIP Calculator Result`,
       `Monthly Investment: ₹${monthlyInvestment?.toLocaleString('en-IN')}`,
       `Annual Return: ${annualRate}%`,
-      `Period: ${years} years`,
+      `Period: ${years} years`
+    ];
+    
+    // Include step-up rate if enabled
+    if (this.stepUpRate > 0) {
+      textLines.push(`Step-Up: +${this.stepUpRate}% per year`);
+    }
+    
+    textLines.push(
       `─────────────────`,
       `Total Invested:  ₹${totalInvested?.toLocaleString('en-IN')}`,
       `Estimated Gains: ₹${estimatedReturns?.toLocaleString('en-IN')}`,
       `Total Value:     ₹${totalValue?.toLocaleString('en-IN')}`,
       `Calculated at www.myinvestmentcalculator.in`
-    ].join('\n');
+    );
+    
+    const text = textLines.join('\n');
     navigator.clipboard.writeText(text).catch(() => {});
     this.copied = true;
     clearTimeout(this.copyTimer);
