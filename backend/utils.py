@@ -203,23 +203,36 @@ def require_bounded(data: dict, *keys: str, min_val: float = 0.0001) -> str | No
 #       not be mutated by callers — they share the cached object.
 
 @lru_cache(maxsize=256)
-def calculate_sip(monthly_investment: float, annual_rate: float, years: float) -> dict:
+def calculate_sip(monthly_investment: float, annual_rate: float, years: float, step_up_rate: float = 0.0) -> dict:
     """
-    SIP Future Value formula:
-        FV = P × ((1+r)^n − 1) / r × (1+r)
+    SIP Future Value formula with optional step-up:
+        For basic SIP (step_up_rate=0):
+            FV = P × ((1+r)^n − 1) / r × (1+r)
+        
+        For step-up SIP (step_up_rate > 0):
+            Each year, the monthly investment increases by step_up_rate%.
+            Calculated month-by-month: FV = Σ(P_month × (1+r)^(months_remaining))
 
     Where r = monthly rate, n = total months.
     Results are cached in-memory for repeated identical inputs.
     """
     r = annual_rate / 100 / 12
-    n = int(years * 12)
-    if r == 0:
-        fv = monthly_investment * n
-    else:
-        fv = monthly_investment * ((math.pow(1 + r, n) - 1) / r) * (1 + r)
-
-    total_invested    = round(monthly_investment * n, 2)
-    total_value       = round(fv, 2)
+    step_up = step_up_rate / 100
+    
+    total_invested = 0.0
+    total_value = 0.0
+    
+    # Calculate month-by-month to support step-up
+    for year in range(1, int(years) + 1):
+        # Current year's monthly investment (increases each year by step_up %)
+        current_monthly = monthly_investment * math.pow(1 + step_up, year - 1)
+        
+        for _ in range(12):
+            total_invested += current_monthly
+            total_value = (total_value + current_monthly) * (1 + r)
+    
+    total_invested    = round(total_invested, 2)
+    total_value       = round(total_value, 2)
     estimated_returns = round(total_value - total_invested, 2)
 
     return {

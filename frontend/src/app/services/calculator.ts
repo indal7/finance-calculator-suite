@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-export interface SipRequest  { monthlyInvestment: number; annualRate: number; years: number; }
+export interface SipRequest  { monthlyInvestment: number; annualRate: number; years: number; stepUpRate?: number; }
 export interface EmiRequest  { principal: number; annualRate: number; years: number; }
 export interface FdRequest   { principal: number; annualRate: number; years: number; compoundingFrequency: number; }
 export interface CagrRequest { beginningValue: number; endingValue: number; years: number; }

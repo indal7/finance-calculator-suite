@@ -291,7 +291,14 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
 
     this.apiStatus = 'loading';
     this.sub?.unsubscribe();
-    this.sub = this.svc.calculateSip({ monthlyInvestment, annualRate, years }).subscribe({
+    
+    // Include step-up rate in API request
+    const payload: any = { monthlyInvestment, annualRate, years };
+    if (this.stepUpRate > 0) {
+      payload.stepUpRate = this.stepUpRate;
+    }
+    
+    this.sub = this.svc.calculateSip(payload).subscribe({
       next:  (res) => { this.result = { ...res, localCalc: true }; this.apiStatus = 'success'; this.cdr.markForCheck(); },
       error: (err) => { this.apiError = err.message;              this.apiStatus = 'error';   this.cdr.markForCheck(); }
     });
