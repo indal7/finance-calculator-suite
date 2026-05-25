@@ -14,6 +14,33 @@ class TestSip:
         r = calculate_sip(500, 8, 3)
         assert r["estimatedReturns"] > 0
 
+    def test_stepup_sip_5_percent(self):
+        """Test step-up SIP with 5% annual increase"""
+        r = calculate_sip(5000, 12, 10, step_up_rate=5)
+        # With step-up, total invested should be more than base SIP
+        base_r = calculate_sip(5000, 12, 10, step_up_rate=0)
+        assert r["totalInvested"] > base_r["totalInvested"]
+        assert r["totalValue"] > base_r["totalValue"]
+        # Verify returns are positive
+        assert r["estimatedReturns"] > 0
+
+    def test_stepup_sip_10_percent(self):
+        """Test step-up SIP with 10% annual increase"""
+        r = calculate_sip(5000, 12, 10, step_up_rate=10)
+        base_r = calculate_sip(5000, 12, 10, step_up_rate=0)
+        # With higher step-up, should be even more than 5% step-up
+        five_percent = calculate_sip(5000, 12, 10, step_up_rate=5)
+        assert r["totalInvested"] > five_percent["totalInvested"]
+        assert r["totalValue"] > five_percent["totalValue"]
+
+    def test_stepup_zero_equals_no_stepup(self):
+        """Test that step_up_rate=0 is same as no step-up"""
+        r1 = calculate_sip(5000, 12, 10)
+        r2 = calculate_sip(5000, 12, 10, step_up_rate=0)
+        assert r1["totalInvested"] == r2["totalInvested"]
+        assert r1["totalValue"] == r2["totalValue"]
+        assert r1["estimatedReturns"] == r2["estimatedReturns"]
+
 
 class TestEmi:
     def test_basic(self):
