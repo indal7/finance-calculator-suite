@@ -26,8 +26,9 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(CalculatorService);
   private readonly seo      = inject(SeoService);
-  private sub?: Subscription;
-  private quickSub?: Subscription;
+  private sub?: Subscription;              // For API HTTP calls
+  private quickSub?: Subscription;         // For quick estimate on value changes
+  private autoCalcSub?: Subscription;      // For auto-calculation on value changes
 
   @ViewChild('growthChart') growthChartRef!: ElementRef<HTMLCanvasElement>;
   private chartInstance: any = null;
@@ -205,6 +206,15 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
     this.quickSub = this.form.valueChanges
       .pipe(debounceTime(150))
       .subscribe(() => this.updateQuickEstimate());
+
+    // Auto-calculate main results when form values change (with debounce to avoid excessive API calls)
+    this.autoCalcSub = this.form.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(() => {
+        if (this.form.valid) {
+          this.calculate();
+        }
+      });
 
     // Calculate quick estimate with initial values
     this.updateQuickEstimate();
@@ -421,6 +431,7 @@ export class SipCalculator extends BaseCalculator implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.quickSub?.unsubscribe();
+    this.autoCalcSub?.unsubscribe();
     this.seo.removeJsonLd('sip-breadcrumb');
     this.seo.removeJsonLd('sip-howto');
     this.seo.removeFAQSchema();
