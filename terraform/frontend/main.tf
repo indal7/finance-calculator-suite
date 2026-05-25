@@ -209,6 +209,19 @@ resource "aws_cloudfront_distribution" "frontend" {
     }
   }
 
+  # Explicit cache behavior for ads.txt – ensure no error handling
+  ordered_cache_behavior {
+    path_pattern           = "/ads.txt"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = local.s3_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = false
+
+    # Use CachingOptimized policy for good cache hit rates
+    cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+  }
+
   # SPA routing – return index.html for Angular client-side routes
   custom_error_response {
     error_code            = 403
